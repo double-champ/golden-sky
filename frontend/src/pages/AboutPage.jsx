@@ -368,9 +368,9 @@ export default function AboutPage({ onOpenBooking }) {
       </section>
 
       {/* 4. REAL INTERACTIVE GOOGLE MAP */}
-      <section className="container" style={{ padding: '4rem 2rem 2rem 2rem' }}>
+      <section className="container map-section" style={{ padding: '4rem 2rem 2rem 2rem' }}>
         <div style={{ textAlign: 'left', marginBottom: '2.5rem' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>Sojourn & Sanctuary</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>Sojourn &amp; Sanctuary</span>
           <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-serif)', marginTop: '0.5rem', marginBottom: '1.5rem', color: 'var(--color-text-dark)', lineHeight: 1.1 }}>
             Find Your Way to <br />
             <span className="text-gold-gradient" style={{ fontStyle: 'italic', fontWeight: '400' }}>Golden Sky</span>
@@ -388,7 +388,7 @@ export default function AboutPage({ onOpenBooking }) {
           }}
         >
           {/* Map Frame Container */}
-          <div style={{
+          <div className="map-frame" style={{
             height: '350px',
             borderRadius: '16px',
             overflow: 'hidden',

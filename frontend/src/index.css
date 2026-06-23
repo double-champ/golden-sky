@@ -2088,6 +2088,7 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
 
 @media (max-width: 768px) {
   .responsive-layout-grid {
+    grid-template-columns: 1fr !important;
     gap: 1.5rem;
   }
 }
@@ -2159,9 +2160,15 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
     grid-template-columns: 1fr !important;
     min-height: auto !important;
   }
-  
-  .experience-carousel-item > div {
-    padding: 2.5rem 1.5rem !important;
+
+  /* Cap the image panel height on mobile so it doesn't dominate the screen */
+  .experience-carousel-item > div:first-child {
+    min-height: 220px !important;
+    max-height: 240px !important;
+  }
+
+  .experience-carousel-item > div:last-child {
+    padding: 1.8rem 1.4rem !important;
   }
 }
 /* Spa Page Therapies responsiveness */
@@ -2261,5 +2268,27 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
 
   .gallery-grid-container .gallery-item-card p {
     font-size: 0.78rem !important;
+  }
+}
+
+/* ============================================================
+   Mobile fixes: Map section & About page section headings
+   ============================================================ */
+
+/* Reduce map iframe container height on mobile */
+@media (max-width: 768px) {
+  .map-frame {
+    height: 230px !important;
+  }
+
+  /* Compress map section top/bottom padding so it fits on screen */
+  .map-section {
+    padding: 2rem 1.2rem 1rem 1.2rem !important;
+  }
+
+  /* Scale down the 3rem section headings to prevent overflow and save space */
+  .map-section h2,
+  .animate-slide-up h2 {
+    font-size: clamp(1.8rem, 6vw, 2.4rem) !important;
   }
 }
