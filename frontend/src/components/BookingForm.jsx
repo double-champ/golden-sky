@@ -36,6 +36,7 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successInfo, setSuccessInfo] = useState(null);
   const [errorMsg, setErrorMsg] = useState('');
+  const [checkoutDate, setCheckoutDate] = useState('');
 
   const fallbackRooms = [
     { name: "Hanthana Misty Suite", type: "STAY", price: 45000 },
@@ -95,13 +96,21 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
         return matched.length > 0 ? matched[0].name : '';
       };
 
+      const initDate = qDate || prev.targetDate || new Date().toISOString().split('T')[0];
+      const initNights = parseInt(qNights) || prev.durationDays || 1;
+      
+      const start = new Date(initDate);
+      const end = new Date(start);
+      end.setDate(end.getDate() + initNights);
+      setCheckoutDate(end.toISOString().split('T')[0]);
+
       setFormData(prev => ({
         ...prev,
         type: initialType,
         roomOrPackageName: initialPackage || getFirstItem(initialType, activeRooms),
-        targetDate: qDate || prev.targetDate,
+        targetDate: initDate,
         guestsCount: parseInt(qGuests) || prev.guestsCount,
-        durationDays: parseInt(qNights) || prev.durationDays
+        durationDays: initNights
       }));
     }
 
@@ -129,6 +138,58 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
+  };
+
+  const handleCheckinChange = (val) => {
+    setFormData(prev => {
+      const nextDate = val;
+      let nextNights = prev.durationDays;
+      
+      const start = new Date(nextDate);
+      let end = checkoutDate ? new Date(checkoutDate) : null;
+      
+      if (!end || end <= start) {
+        const nextEnd = new Date(start);
+        nextEnd.setDate(nextEnd.getDate() + prev.durationDays);
+        const nextEndStr = nextEnd.toISOString().split('T')[0];
+        setCheckoutDate(nextEndStr);
+        nextNights = prev.durationDays;
+      } else {
+        const diffTime = end - start;
+        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+        nextNights = diffDays >= 1 ? diffDays : 1;
+      }
+
+      return {
+        ...prev,
+        targetDate: nextDate,
+        durationDays: nextNights
+      };
+    });
+  };
+
+  const handleCheckoutChange = (val) => {
+    setCheckoutDate(val);
+    if (formData.targetDate && val) {
+      const start = new Date(formData.targetDate);
+      const end = new Date(val);
+      const diffTime = end - start;
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+      if (diffDays >= 1) {
+        setFormData(prev => ({
+          ...prev,
+          durationDays: diffDays
+        }));
+      }
+    }
+  };
+
+  const getMinCheckoutDate = () => {
+    if (!formData.targetDate) return new Date().toISOString().split('T')[0];
+    const checkin = new Date(formData.targetDate);
+    const minDate = new Date(checkin);
+    minDate.setDate(minDate.getDate() + 1);
+    return minDate.toISOString().split('T')[0];
   };
 
   const nextStep = () => setStep(prev => prev + 1);
@@ -314,37 +375,78 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
                 </select>
               </div>
 
-              {/* Date & Guests */}
-              <div className="form-grid-2-col">
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <label className="booking-label">Target Date</label>
-                  <input
-                    type="date"
-                    name="targetDate"
-                    value={formData.targetDate}
-                    onChange={handleChange}
-                    required
-                    min={new Date().toISOString().split('T')[0]}
-                    className="booking-input"
-                  />
-                </div>
+              {/* Date & Guests / Stays Duration */}
+              {formData.type === 'STAY' ? (
+                <>
+                  <div className="form-grid-2-col">
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label className="booking-label">Check-in Date (From)</label>
+                      <input
+                        type="date"
+                        name="targetDate"
+                        value={formData.targetDate}
+                        onChange={(e) => handleCheckinChange(e.target.value)}
+                        required
+                        min={new Date().toISOString().split('T')[0]}
+                        className="booking-input"
+                      />
+                    </div>
 
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <label className="booking-label">
-                    {formData.type === 'STAY' ? 'Nights' : 'Guests Count'}
-                  </label>
-                  <input
-                    type="number"
-                    name={formData.type === 'STAY' ? 'durationDays' : 'guestsCount'}
-                    value={formData.type === 'STAY' ? formData.durationDays : formData.guestsCount}
-                    onChange={handleChange}
-                    required
-                    min="1"
-                    max="10"
-                    className="booking-input"
-                  />
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                      <label className="booking-label">Check-out Date (To)</label>
+                      <input
+                        type="date"
+                        name="checkoutDate"
+                        value={checkoutDate}
+                        onChange={(e) => handleCheckoutChange(e.target.value)}
+                        required
+                        min={getMinCheckoutDate()}
+                        className="booking-input"
+                      />
+                    </div>
+                  </div>
+                  <div style={{ 
+                    fontSize: '0.78rem', 
+                    color: 'var(--color-gold)', 
+                    textTransform: 'uppercase', 
+                    letterSpacing: '0.05em',
+                    fontWeight: '600',
+                    marginTop: '-0.4rem',
+                    textAlign: 'left'
+                  }}>
+                    Duration: {formData.durationDays} night{formData.durationDays > 1 ? 's' : ''}
+                  </div>
+                </>
+              ) : (
+                <div className="form-grid-2-col">
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <label className="booking-label">Booking Date</label>
+                    <input
+                      type="date"
+                      name="targetDate"
+                      value={formData.targetDate}
+                      onChange={handleChange}
+                      required
+                      min={new Date().toISOString().split('T')[0]}
+                      className="booking-input"
+                    />
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+                    <label className="booking-label">Guests Count</label>
+                    <input
+                      type="number"
+                      name="guestsCount"
+                      value={formData.guestsCount}
+                      onChange={handleChange}
+                      required
+                      min="1"
+                      max="10"
+                      className="booking-input"
+                    />
+                  </div>
                 </div>
-              </div>
+              )}
 
               <button 
                 type="submit" 
