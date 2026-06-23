@@ -304,7 +304,7 @@ export default function SpaPage({ onOpenBooking }) {
             <span style={{ fontSize: '0.85rem', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Gathering Healing Rituals...</span>
           </div>
         ) : (
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
+          <div className="therapy-list-container" style={{ display: 'flex', flexDirection: 'column', gap: '4rem' }}>
             {therapies.map((item, idx) => {
               const meta = getMeta(item.name);
               const isEven = idx % 2 === 0;

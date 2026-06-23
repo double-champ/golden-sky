@@ -2250,9 +2250,39 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
 @media (max-width: 768px) {
   .therapy-card-image {
     order: 0 !important;
+    height: 180px !important;  /* shrink from 340px to 180px */
   }
   .therapy-card-details {
-    padding: 1.5rem !important;
+    padding: 1.2rem 1.2rem 1.4rem !important;
+  }
+  /* Compact card headings */
+  .therapy-card-details h3 {
+    font-size: 1.25rem !important;
+  }
+  /* Compact price */
+  .therapy-card-details h3 + span,
+  .therapy-card-details > div > div > span:last-child {
+    font-size: 1rem !important;
+  }
+  /* Clamp description to 3 lines */
+  .therapy-card-details p {
+    font-size: 0.82rem !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    margin-bottom: 1rem !important;
+  }
+  /* Tighten feature list */
+  .therapy-card-details ul {
+    gap: 0.3rem !important;
+    margin-bottom: 1.2rem !important;
+    font-size: 0.8rem !important;
+  }
+
+  /* Reduce gap between cards from 4rem to 1.5rem on mobile */
+  .therapy-list-container {
+    gap: 1.5rem !important;
   }
 }
 
