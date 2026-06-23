@@ -293,8 +293,9 @@ export default function Home({ onViewChange, onOpenBooking }) {
         </div>
       </section>
 
-      {/* 9-CELL GOLDEN BENTO GRID */}
-      <div id="dashboard-grid" className="container bento-section" style={{ paddingBottom: '3rem' }}>
+      <div style={{ backgroundColor: 'var(--color-bg-ivory)', width: '100%' }}>
+        {/* 9-CELL GOLDEN BENTO GRID */}
+        <div id="dashboard-grid" className="container bento-section" style={{ paddingBottom: '3rem' }}>
         <div className="bento-container">
           
           {/* Cell 1: Cinematic Greeting (span 2-2) */}
@@ -402,6 +403,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
 
         <Testimonials />
       </section>
+      </div>
 
     </div>
   );
