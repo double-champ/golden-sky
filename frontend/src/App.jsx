@@ -2,6 +2,7 @@ import React, { useState, useEffect, lazy, Suspense } from 'react';
 
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
+import OfferPopper from './components/OfferPopper';
 
 // Lazy load page components to optimize initial bundle size
 const Home = lazy(() => import('./pages/Home'));
@@ -195,6 +196,9 @@ export default function App() {
 
       {/* WhatsApp Floater */}
       {currentView !== 'admin' && <WhatsAppFloater />}
+
+      {/* Luxury Offer Promotion Popper */}
+      {currentView !== 'admin' && <OfferPopper onOpenBooking={handleOpenBooking} />}
     </div>
   );
 }
