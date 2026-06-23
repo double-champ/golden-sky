@@ -677,10 +677,18 @@ p {
   border: 1px solid rgba(212, 175, 55, 0.18);
   margin-bottom: 2.2rem;
   width: 100%;
+  overflow-x: auto;
+  flex-wrap: nowrap;
+  scrollbar-width: none;        /* Firefox */
+  -ms-overflow-style: none;     /* IE/Edge */
+}
+
+.luxury-tabs::-webkit-scrollbar {
+  display: none;                /* Chrome/Safari */
 }
 
 .luxury-tab-btn {
-  flex: 1;
+  flex: 0 0 auto;
   padding: 0.7rem 1.2rem;
   background: transparent;
   border: none;
@@ -692,6 +700,8 @@ p {
   color: var(--color-text-muted);
   transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
   border-radius: 30px;
+  white-space: nowrap;
+  cursor: pointer;
 }
 
 .luxury-tab-btn:hover:not(.active) {
