@@ -36,17 +36,21 @@ const OFFERS = [
 
 export default function OfferPopper({ onOpenBooking }) {
   const [isVisible, setIsVisible] = useState(false);
+  const [hasTriggered, setHasTriggered] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFloatingHovered, setIsFloatingHovered] = useState(false);
 
   useEffect(() => {
     // Check if user already dismissed offers in this session
     const isDismissed = sessionStorage.getItem('gs_offers_dismissed');
-    if (isDismissed) return;
 
-    // Premium entrance delay
+    // Premium entrance delay (shortened to 1.5s for better responsiveness during review)
     const timer = setTimeout(() => {
-      setIsVisible(true);
-    }, 2500);
+      setHasTriggered(true);
+      if (!isDismissed) {
+        setIsVisible(true);
+      }
+    }, 1500);
 
     return () => clearTimeout(timer);
   }, []);
@@ -54,6 +58,11 @@ export default function OfferPopper({ onOpenBooking }) {
   const handleDismiss = () => {
     setIsVisible(false);
     sessionStorage.setItem('gs_offers_dismissed', 'true');
+  };
+
+  const handleOpenPopper = () => {
+    setIsVisible(true);
+    sessionStorage.removeItem('gs_offers_dismissed');
   };
 
   const handleNext = (e) => {
@@ -72,208 +81,291 @@ export default function OfferPopper({ onOpenBooking }) {
     onOpenBooking(offer.type, offer.packageName);
   };
 
-  if (!isVisible) return null;
-
   const currentOffer = OFFERS[currentIndex];
 
   return (
-    <div 
-      style={{
-        position: 'fixed',
-        bottom: '2rem',
-        right: '2rem',
-        width: '340px',
-        backgroundColor: 'rgba(24, 23, 21, 0.95)',
-        backdropFilter: 'blur(20px)',
-        WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid rgba(212, 175, 55, 0.35)',
-        borderRadius: '20px',
-        padding: '1.5rem',
-        boxShadow: '0 15px 45px rgba(0, 0, 0, 0.35), 0 0 20px rgba(212, 175, 55, 0.1)',
-        zIndex: 10002, // Just above WhatsApp/sticky layers, below BookingForm modal
-        display: 'flex',
-        flexDirection: 'column',
-        gap: '1rem',
-        textAlign: 'left',
-        animation: 'slideUpPopper 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards'
-      }}
-      className="offer-popper-container"
-    >
-      {/* Header with Badge & Dismiss */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-gold)' }}>
-          <Sparkles size={14} className="animate-spin-slow" />
-          <span style={{ fontSize: '0.68rem', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-            {currentOffer.badge}
-          </span>
-        </div>
-        <button 
-          onClick={handleDismiss}
+    <>
+      {isVisible ? (
+        <div 
           style={{
-            background: 'none',
-            border: 'none',
-            color: 'rgba(255, 255, 255, 0.5)',
-            cursor: 'pointer',
-            padding: '2px',
+            position: 'fixed',
+            bottom: '2rem',
+            right: '2rem',
+            width: '340px',
+            backgroundColor: 'rgba(24, 23, 21, 0.95)',
+            backdropFilter: 'blur(20px)',
+            WebkitBackdropFilter: 'blur(20px)',
+            border: '1px solid rgba(212, 175, 55, 0.35)',
+            borderRadius: '20px',
+            padding: '1.5rem',
+            boxShadow: '0 15px 45px rgba(0, 0, 0, 0.35), 0 0 20px rgba(212, 175, 55, 0.1)',
+            zIndex: 10002, // Just above WhatsApp/sticky layers, below BookingForm modal
             display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            transition: 'color 0.25s'
+            flexDirection: 'column',
+            gap: '1rem',
+            textAlign: 'left',
+            animation: 'slideUpPopper 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
-          onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)'}
+          className="offer-popper-container"
         >
-          <X size={15} />
-        </button>
-      </div>
+          {/* Header with Badge & Dismiss */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-gold)' }}>
+              <Sparkles size={14} className="animate-spin-slow" />
+              <span style={{ fontSize: '0.68rem', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
+                {currentOffer.badge}
+              </span>
+            </div>
+            <button 
+              onClick={handleDismiss}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'rgba(255, 255, 255, 0.5)',
+                cursor: 'pointer',
+                padding: '2px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'color 0.25s'
+              }}
+              onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
+              onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)'}
+            >
+              <X size={15} />
+            </button>
+          </div>
 
-      {/* Offer Content */}
-      <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-        <h4 style={{ 
-          fontFamily: 'var(--font-serif)', 
-          fontSize: '1.25rem', 
-          margin: 0, 
-          color: '#ffffff',
-          lineHeight: '1.3'
-        }}>
-          {currentOffer.title}
-        </h4>
-        <div style={{ 
-          fontSize: '0.78rem', 
-          fontWeight: '700', 
-          color: 'var(--color-gold)', 
-          letterSpacing: '0.04em' 
-        }}>
-          {currentOffer.discount}
+          {/* Offer Content */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
+            <h4 style={{ 
+              fontFamily: 'var(--font-serif)', 
+              fontSize: '1.25rem', 
+              margin: 0, 
+              color: '#ffffff',
+              lineHeight: '1.3'
+            }}>
+              {currentOffer.title}
+            </h4>
+            <div style={{ 
+              fontSize: '0.78rem', 
+              fontWeight: '700', 
+              color: 'var(--color-gold)', 
+              letterSpacing: '0.04em' 
+            }}>
+              {currentOffer.discount}
+            </div>
+            <p style={{ 
+              fontSize: '0.82rem', 
+              color: 'rgba(255, 255, 255, 0.7)', 
+              margin: '0.2rem 0 0 0', 
+              lineHeight: '1.45' 
+            }}>
+              {currentOffer.description}
+            </p>
+          </div>
+
+          {/* Controls & CTA */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.2rem', gap: '1rem' }}>
+            {/* Navigation arrows */}
+            <div style={{ display: 'flex', gap: '0.3rem' }}>
+              <button 
+                onClick={handlePrev}
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '50%',
+                  border: '1px solid rgba(212, 175, 55, 0.25)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-gold)';
+                  e.currentTarget.style.color = '#ffffff';
+                  e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.25)';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
+                }}
+              >
+                <ChevronLeft size={14} />
+              </button>
+              <button 
+                onClick={handleNext}
+                style={{
+                  width: '28px',
+                  height: '28px',
+                  borderRadius: '50%',
+                  border: '1px solid rgba(212, 175, 55, 0.25)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: 'rgba(255, 255, 255, 0.6)',
+                  cursor: 'pointer',
+                  transition: 'all 0.25s'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = 'var(--color-gold)';
+                  e.currentTarget.style.color = '#ffffff';
+                  e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.25)';
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
+                }}
+              >
+                <ChevronRight size={14} />
+              </button>
+            </div>
+
+            {/* CTA Button */}
+            <button 
+              onClick={handleClaim}
+              style={{
+                backgroundColor: 'var(--color-gold)',
+                color: 'var(--color-primary)',
+                border: 'none',
+                borderRadius: '30px',
+                padding: '0.5rem 1.2rem',
+                fontSize: '0.78rem',
+                fontWeight: '700',
+                letterSpacing: '0.05em',
+                cursor: 'pointer',
+                transition: 'all 0.25s',
+                boxShadow: '0 4px 12px rgba(212,175,55,0.15)'
+              }}
+              className="claim-offer-btn"
+              onMouseEnter={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-gold-light)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.backgroundColor = 'var(--color-gold)';
+              }}
+            >
+              {currentOffer.cta}
+            </button>
+          </div>
+
+          <style>{`
+            @keyframes slideUpPopper {
+              from {
+                transform: translateY(120%) scale(0.95);
+                opacity: 0;
+              }
+              to {
+                transform: translateY(0) scale(1);
+                opacity: 1;
+              }
+            }
+            .animate-spin-slow {
+              animation: spin 8s linear infinite;
+            }
+            @keyframes spin {
+              from { transform: rotate(0deg); }
+              to { transform: rotate(360deg); }
+            }
+            @media (max-width: 480px) {
+              .offer-popper-container {
+                width: calc(100% - 2rem) !important;
+                bottom: 1rem !important;
+                right: 1rem !important;
+                left: 1rem !important;
+                padding: 1.2rem !important;
+              }
+            }
+          `}</style>
         </div>
-        <p style={{ 
-          fontSize: '0.82rem', 
-          color: 'rgba(255, 255, 255, 0.7)', 
-          margin: '0.2rem 0 0 0', 
-          lineHeight: '1.45' 
-        }}>
-          {currentOffer.description}
-        </p>
-      </div>
-
-      {/* Controls & CTA */}
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: '0.2rem', gap: '1rem' }}>
-        {/* Navigation arrows */}
-        <div style={{ display: 'flex', gap: '0.3rem' }}>
-          <button 
-            onClick={handlePrev}
+      ) : (
+        hasTriggered && (
+          <button
+            onClick={handleOpenPopper}
+            onMouseEnter={() => setIsFloatingHovered(true)}
+            onMouseLeave={() => setIsFloatingHovered(false)}
             style={{
-              width: '28px',
-              height: '28px',
+              position: 'fixed',
+              bottom: '2rem',
+              right: '2rem',
+              width: '56px',
+              height: '56px',
               borderRadius: '50%',
-              border: '1px solid rgba(212, 175, 55, 0.25)',
-              backgroundColor: 'rgba(255, 255, 255, 0.02)',
+              backgroundColor: 'rgba(24, 23, 21, 0.95)',
+              backdropFilter: 'blur(20px)',
+              WebkitBackdropFilter: 'blur(20px)',
+              border: '1px solid rgba(212, 175, 55, 0.5)',
+              boxShadow: '0 8px 25px rgba(212, 175, 55, 0.25), 0 0 15px rgba(212, 175, 55, 0.1)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'rgba(255, 255, 255, 0.6)',
+              color: 'var(--color-gold)',
               cursor: 'pointer',
-              transition: 'all 0.25s'
+              zIndex: 10002, // Align with the open popper's z-index
+              transition: 'all 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+              transform: isFloatingHovered ? 'scale(1.08) translateY(-3px)' : 'scale(1)',
+              animation: 'slideUpPopper 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards'
             }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-gold)';
-              e.currentTarget.style.color = '#ffffff';
-              e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.25)';
-              e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
-            }}
+            className="offers-floating-trigger"
+            title="View Exclusive Offers"
           >
-            <ChevronLeft size={14} />
+            <div style={{ position: 'relative', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Gift size={24} className={isFloatingHovered ? "animate-pulse" : ""} />
+              <span style={{
+                position: 'absolute',
+                top: '-4px',
+                right: '-4px',
+                width: '10px',
+                height: '10px',
+                backgroundColor: 'var(--color-gold)',
+                borderRadius: '50%',
+                border: '2px solid rgba(24, 23, 21, 0.95)'
+              }} />
+            </div>
+            {isFloatingHovered && (
+              <div style={{
+                position: 'absolute',
+                right: '70px',
+                backgroundColor: 'rgba(24, 23, 21, 0.95)',
+                border: '1px solid rgba(212, 175, 55, 0.3)',
+                padding: '0.4rem 0.8rem',
+                borderRadius: '8px',
+                fontSize: '0.75rem',
+                color: '#ffffff',
+                whiteSpace: 'nowrap',
+                pointerEvents: 'none',
+                boxShadow: '0 4px 12px rgba(0,0,0,0.2)'
+              }}>
+                Exclusive Offers
+              </div>
+            )}
+            <style>{`
+              @keyframes slideUpPopper {
+                from {
+                  transform: translateY(120%) scale(0.95);
+                  opacity: 0;
+                }
+                to {
+                  transform: translateY(0) scale(1);
+                  opacity: 1;
+                }
+              }
+              @media (max-width: 480px) {
+                .offers-floating-trigger {
+                  bottom: 1rem !important;
+                  right: 1rem !important;
+                }
+              }
+            `}</style>
           </button>
-          <button 
-            onClick={handleNext}
-            style={{
-              width: '28px',
-              height: '28px',
-              borderRadius: '50%',
-              border: '1px solid rgba(212, 175, 55, 0.25)',
-              backgroundColor: 'rgba(255, 255, 255, 0.02)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              color: 'rgba(255, 255, 255, 0.6)',
-              cursor: 'pointer',
-              transition: 'all 0.25s'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = 'var(--color-gold)';
-              e.currentTarget.style.color = '#ffffff';
-              e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.25)';
-              e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
-            }}
-          >
-            <ChevronRight size={14} />
-          </button>
-        </div>
-
-        {/* CTA Button */}
-        <button 
-          onClick={handleClaim}
-          style={{
-            backgroundColor: 'var(--color-gold)',
-            color: 'var(--color-primary)',
-            border: 'none',
-            borderRadius: '30px',
-            padding: '0.5rem 1.2rem',
-            fontSize: '0.78rem',
-            fontWeight: '700',
-            letterSpacing: '0.05em',
-            cursor: 'pointer',
-            transition: 'all 0.25s',
-            boxShadow: '0 4px 12px rgba(212,175,55,0.15)'
-          }}
-          className="claim-offer-btn"
-          onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--color-gold-light)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--color-gold)';
-          }}
-        >
-          {currentOffer.cta}
-        </button>
-      </div>
-
-      <style>{`
-        @keyframes slideUpPopper {
-          from {
-            transform: translateY(120%) scale(0.95);
-            opacity: 0;
-          }
-          to {
-            transform: translateY(0) scale(1);
-            opacity: 1;
-          }
-        }
-        .animate-spin-slow {
-          animation: spin 8s linear infinite;
-        }
-        @keyframes spin {
-          from { transform: rotate(0deg); }
-          to { transform: rotate(360deg); }
-        }
-        @media (max-width: 480px) {
-          .offer-popper-container {
-            width: calc(100% - 2rem) !important;
-            bottom: 1rem !important;
-            right: 1rem !important;
-            left: 1rem !important;
-            padding: 1.2rem !important;
-          }
-        }
-      `}</style>
-    </div>
+        )
+      )}
+    </>
   );
 }
