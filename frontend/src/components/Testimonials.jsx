@@ -90,7 +90,7 @@ export default function Testimonials() {
 
     autoPlayRef.current = setInterval(() => {
       handleNext();
-    }, 6000);
+    }, 4000);
   };
 
   const stopAutoPlay = () => {
@@ -191,7 +191,11 @@ export default function Testimonials() {
           overflow: 'hidden', 
           width: '100%', 
           cursor: 'grab',
-          touchAction: 'pan-y' // Prevent vertical page scrolling when swiping horizontally
+          touchAction: 'pan-y', // Prevent vertical page scrolling when swiping horizontally
+          paddingTop: '1.2rem', // Prevent absolute quote icons from being clipped
+          marginTop: '-1.2rem',
+          userSelect: 'none',
+          WebkitUserSelect: 'none'
         }}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
@@ -201,8 +205,9 @@ export default function Testimonials() {
           style={{
             display: 'flex',
             transform: `translate3d(-${currentIndex * (100 / visibleSlides)}%, 0, 0)`,
-            transition: transitionEnabled ? 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
-            width: '100%'
+            transition: transitionEnabled ? 'transform 0.45s cubic-bezier(0.25, 1, 0.5, 1)' : 'none',
+            width: '100%',
+            willChange: 'transform'
           }}
         >
           {slidesToRender.map((rev, idx) => {
