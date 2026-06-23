@@ -49,6 +49,20 @@ export default function App() {
     };
   }, []);
 
+  // Dynamically update document body background to match active view theme
+  // (Prevents jarring off-white or ivory viewport stripes on dark landing/rooftop headers)
+  useEffect(() => {
+    if (currentView === 'home') {
+      document.body.style.backgroundColor = '#181715';
+    } else if (currentView === 'spa') {
+      document.body.style.backgroundColor = '#f2f4f0';
+    } else if (currentView === 'rooftop') {
+      document.body.style.backgroundColor = '#141311';
+    } else {
+      document.body.style.backgroundColor = 'var(--color-bg-ivory)';
+    }
+  }, [currentView]);
+
   const handleOpenBooking = (type = 'STAY', packageName = '') => {
     setBookingParams({ type, package: packageName });
     setBookingModalOpen(true);
