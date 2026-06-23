@@ -27,6 +27,33 @@ export default function Testimonials() {
   const [visibleSlides, setVisibleSlides] = useState(3);
   const autoPlayRef = useRef(null);
 
+  // Swipe gesture hooks for mobile manual controls
+  const [touchStart, setTouchStart] = useState(null);
+  const [touchEnd, setTouchEnd] = useState(null);
+  const minSwipeDistance = 50;
+
+  const onTouchStart = (e) => {
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      handleNext();
+    } else if (isRightSwipe) {
+      handlePrev();
+    }
+  };
+
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth < 768) {
@@ -100,7 +127,12 @@ export default function Testimonials() {
       }}
     >
       {/* Slider Viewport */}
-      <div style={{ overflow: 'hidden', width: '100%' }}>
+      <div 
+        style={{ overflow: 'hidden', width: '100%', cursor: 'grab' }}
+        onTouchStart={onTouchStart}
+        onTouchMove={onTouchMove}
+        onTouchEnd={onTouchEnd}
+      >
         <div 
           style={{
             display: 'flex',
@@ -224,7 +256,7 @@ export default function Testimonials() {
             style={{
               display: 'flex',
               justifyContent: 'center',
-              gap: '0.75rem',
+              gap: '0.2rem',
               marginTop: '1.75rem'
             }}
           >
@@ -234,16 +266,26 @@ export default function Testimonials() {
                 onClick={() => setCurrentIndex(index)}
                 aria-label={`Go to slide ${index + 1}`}
                 style={{
-                  width: currentIndex === index ? '24px' : '8px',
-                  height: '8px',
-                  borderRadius: '8px',
-                  backgroundColor: currentIndex === index ? 'var(--color-gold)' : 'rgba(212, 175, 55, 0.25)',
+                  background: 'none',
                   border: 'none',
+                  padding: '12px 8px', // High hit hitbox for mobile fingertips
                   cursor: 'pointer',
-                  padding: 0,
-                  transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  outline: 'none'
                 }}
-              />
+              >
+                <div
+                  style={{
+                    width: currentIndex === index ? '24px' : '8px',
+                    height: '8px',
+                    borderRadius: '8px',
+                    backgroundColor: currentIndex === index ? 'var(--color-gold)' : 'rgba(212, 175, 55, 0.25)',
+                    transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                  }}
+                />
+              </button>
             ))}
           </div>
         </>
