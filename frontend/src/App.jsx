@@ -325,11 +325,11 @@ function HotelViewLoader({ isVisible }) {
       }}
     >
       {/* Luxury Golden Drawing Medallion */}
-      <div style={{ position: 'relative', width: '130px', height: '130px', marginBottom: '2rem' }}>
+      <div style={{ position: 'relative', width: '160px', height: '160px', marginBottom: '2rem' }}>
         {/* SVG Drawing Circle (Foil Crest effect) */}
         <svg
-          width="130"
-          height="130"
+          width="160"
+          height="160"
           viewBox="0 0 100 100"
           style={{
             position: 'absolute',
@@ -366,8 +366,8 @@ function HotelViewLoader({ isVisible }) {
           position: 'absolute',
           top: '15px',
           left: '15px',
-          width: '100px',
-          height: '100px',
+          width: '130px',
+          height: '130px',
           borderRadius: '50%',
           display: 'flex',
           alignItems: 'center',
