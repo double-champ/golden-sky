@@ -83,13 +83,13 @@ export default function OfferPopper({ onOpenBooking }) {
         bottom: '2rem',
         right: '2rem',
         width: '340px',
-        backgroundColor: 'rgba(255, 255, 255, 0.95)',
+        backgroundColor: 'rgba(24, 23, 21, 0.95)',
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
-        border: '1px solid rgba(212, 175, 55, 0.3)',
+        border: '1px solid rgba(212, 175, 55, 0.35)',
         borderRadius: '20px',
         padding: '1.5rem',
-        boxShadow: '0 15px 45px rgba(0, 0, 0, 0.08), 0 0 20px rgba(212, 175, 55, 0.05)',
+        boxShadow: '0 15px 45px rgba(0, 0, 0, 0.35), 0 0 20px rgba(212, 175, 55, 0.1)',
         zIndex: 10002, // Just above WhatsApp/sticky layers, below BookingForm modal
         display: 'flex',
         flexDirection: 'column',
@@ -101,7 +101,7 @@ export default function OfferPopper({ onOpenBooking }) {
     >
       {/* Header with Badge & Dismiss */}
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-gold-dark)' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-gold)' }}>
           <Sparkles size={14} className="animate-spin-slow" />
           <span style={{ fontSize: '0.68rem', fontWeight: '700', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
             {currentOffer.badge}
@@ -112,7 +112,7 @@ export default function OfferPopper({ onOpenBooking }) {
           style={{
             background: 'none',
             border: 'none',
-            color: 'var(--color-text-muted)',
+            color: 'rgba(255, 255, 255, 0.5)',
             cursor: 'pointer',
             padding: '2px',
             display: 'flex',
@@ -120,8 +120,8 @@ export default function OfferPopper({ onOpenBooking }) {
             justifyContent: 'center',
             transition: 'color 0.25s'
           }}
-          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-text-dark)'}
-          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--color-text-muted)'}
+          onMouseEnter={(e) => e.currentTarget.style.color = '#ffffff'}
+          onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255, 255, 255, 0.5)'}
         >
           <X size={15} />
         </button>
@@ -133,7 +133,7 @@ export default function OfferPopper({ onOpenBooking }) {
           fontFamily: 'var(--font-serif)', 
           fontSize: '1.25rem', 
           margin: 0, 
-          color: 'var(--color-text-dark)',
+          color: '#ffffff',
           lineHeight: '1.3'
         }}>
           {currentOffer.title}
@@ -141,14 +141,14 @@ export default function OfferPopper({ onOpenBooking }) {
         <div style={{ 
           fontSize: '0.78rem', 
           fontWeight: '700', 
-          color: 'var(--color-gold-dark)', 
+          color: 'var(--color-gold)', 
           letterSpacing: '0.04em' 
         }}>
           {currentOffer.discount}
         </div>
         <p style={{ 
           fontSize: '0.82rem', 
-          color: 'var(--color-text-muted)', 
+          color: 'rgba(255, 255, 255, 0.7)', 
           margin: '0.2rem 0 0 0', 
           lineHeight: '1.45' 
         }}>
@@ -166,22 +166,24 @@ export default function OfferPopper({ onOpenBooking }) {
               width: '28px',
               height: '28px',
               borderRadius: '50%',
-              border: '1px solid rgba(212, 175, 55, 0.2)',
-              backgroundColor: 'transparent',
+              border: '1px solid rgba(212, 175, 55, 0.25)',
+              backgroundColor: 'rgba(255, 255, 255, 0.02)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--color-text-muted)',
+              color: 'rgba(255, 255, 255, 0.6)',
               cursor: 'pointer',
               transition: 'all 0.25s'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = 'var(--color-gold)';
-              e.currentTarget.style.color = 'var(--color-gold-dark)';
+              e.currentTarget.style.color = '#ffffff';
+              e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
-              e.currentTarget.style.color = 'var(--color-text-muted)';
+              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.25)';
+              e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
             }}
           >
             <ChevronLeft size={14} />
@@ -192,22 +194,24 @@ export default function OfferPopper({ onOpenBooking }) {
               width: '28px',
               height: '28px',
               borderRadius: '50%',
-              border: '1px solid rgba(212, 175, 55, 0.2)',
-              backgroundColor: 'transparent',
+              border: '1px solid rgba(212, 175, 55, 0.25)',
+              backgroundColor: 'rgba(255, 255, 255, 0.02)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              color: 'var(--color-text-muted)',
+              color: 'rgba(255, 255, 255, 0.6)',
               cursor: 'pointer',
               transition: 'all 0.25s'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = 'var(--color-gold)';
-              e.currentTarget.style.color = 'var(--color-gold-dark)';
+              e.currentTarget.style.color = '#ffffff';
+              e.currentTarget.style.backgroundColor = 'rgba(212, 175, 55, 0.1)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.2)';
-              e.currentTarget.style.color = 'var(--color-text-muted)';
+              e.currentTarget.style.borderColor = 'rgba(212, 175, 55, 0.25)';
+              e.currentTarget.style.color = 'rgba(255, 255, 255, 0.6)';
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.02)';
             }}
           >
             <ChevronRight size={14} />
@@ -218,24 +222,24 @@ export default function OfferPopper({ onOpenBooking }) {
         <button 
           onClick={handleClaim}
           style={{
-            backgroundColor: 'var(--color-primary)',
-            color: '#fff',
+            backgroundColor: 'var(--color-gold)',
+            color: 'var(--color-primary)',
             border: 'none',
             borderRadius: '30px',
             padding: '0.5rem 1.2rem',
             fontSize: '0.78rem',
-            fontWeight: '600',
+            fontWeight: '700',
             letterSpacing: '0.05em',
             cursor: 'pointer',
             transition: 'all 0.25s',
-            boxShadow: '0 4px 10px rgba(0,0,0,0.05)'
+            boxShadow: '0 4px 12px rgba(212,175,55,0.15)'
           }}
           className="claim-offer-btn"
           onMouseEnter={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--color-gold-dark)';
+            e.currentTarget.style.backgroundColor = 'var(--color-gold-light)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.backgroundColor = 'var(--color-primary)';
+            e.currentTarget.style.backgroundColor = 'var(--color-gold)';
           }}
         >
           {currentOffer.cta}
