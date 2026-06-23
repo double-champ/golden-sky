@@ -78,7 +78,7 @@ export default function Testimonials() {
           setCurrentIndex(1); // Jump to first slide (index 1)
         }
       }
-    }, 600); // Matches CSS transition duration (0.6s)
+    }, 450); // Matches CSS transition duration (0.45s)
 
     return () => clearTimeout(transitionEndTimer);
   }, [currentIndex, isTransitioning, maxIndex]);
@@ -118,10 +118,15 @@ export default function Testimonials() {
     setCurrentIndex((prev) => prev + 1);
   };
 
+  const viewportRef = useRef(null);
+  const touchStartRef = useRef(null);
+
   const onTouchStart = (e) => {
     if (isTransitioning) return;
     setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
+    const clientX = e.targetTouches[0].clientX;
+    setTouchStart(clientX);
+    touchStartRef.current = clientX;
   };
 
   const onTouchMove = (e) => {
@@ -130,8 +135,12 @@ export default function Testimonials() {
   };
 
   const onTouchEnd = () => {
-    if (!touchStart || !touchEnd || isTransitioning) return;
-    const distance = touchStart - touchEnd;
+    const startX = touchStartRef.current;
+    touchStartRef.current = null;
+    setTouchStart(null);
+
+    if (!startX || !touchEnd || isTransitioning) return;
+    const distance = startX - touchEnd;
     const isLeftSwipe = distance > minSwipeDistance;
     const isRightSwipe = distance < -minSwipeDistance;
 
@@ -141,6 +150,33 @@ export default function Testimonials() {
       handlePrev();
     }
   };
+
+  // Lock page scrolling when horizontal swipe is active
+  useEffect(() => {
+    const viewport = viewportRef.current;
+    if (!viewport) return;
+
+    const handleTouchMove = (e) => {
+      const startX = touchStartRef.current;
+      if (startX !== null) {
+        const currentX = e.touches[0].clientX;
+        const diffX = Math.abs(startX - currentX);
+        const diffY = Math.abs(e.touches[0].clientY - e.touches[0].clientY); // Just focus on horizontal dominancy
+
+        // If horizontal movement is significant, prevent page scrolling
+        if (diffX > 8) {
+          if (e.cancelable) {
+            e.preventDefault();
+          }
+        }
+      }
+    };
+
+    viewport.addEventListener('touchmove', handleTouchMove, { passive: false });
+    return () => {
+      viewport.removeEventListener('touchmove', handleTouchMove);
+    };
+  }, []);
 
   const getInitials = (authorName) => {
     const clean = authorName.replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.)\s+/i, "");
@@ -187,6 +223,7 @@ export default function Testimonials() {
     >
       {/* Slider Viewport */}
       <div 
+        ref={viewportRef}
         style={{ 
           overflow: 'hidden', 
           width: '100%', 
