@@ -192,13 +192,6 @@ export default function Home({ onViewChange, onOpenBooking }) {
           <div className="hero-bg-overlay" />
         </div>
 
-        {/* Left Vertical Coordinates */}
-        <div className="hero-side-coordinates">
-          <span className="coord-text">07°17'26"N  80°38'01"E</span>
-          <div className="coord-line" />
-          <span className="coord-alt">780M ELEVATION</span>
-        </div>
-
         {/* Slide navigation indicators */}
         <div className="hero-slide-nav">
           {slides.map((_, index) => (
@@ -241,14 +234,6 @@ export default function Home({ onViewChange, onOpenBooking }) {
               </div>
             ))}
           </div>
-        </div>
-
-        {/* Scroll indicator */}
-        <div className="hero-scroll-indicator" onClick={scrollToDashboard}>
-          <span className="scroll-text">Explore</span>
-          <span className="scroll-arrow">
-            <ChevronRight size={16} style={{ transform: 'rotate(90deg)' }} />
-          </span>
         </div>
 
         {/* Floating Quick Booking panel */}
