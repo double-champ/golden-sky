@@ -12,7 +12,14 @@ import AdminDashboard from './pages/AdminDashboard';
 import Footer from './components/Footer';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('home');
+  // Restore last-visited page on refresh via sessionStorage.
+  // sessionStorage persists within the same tab (survives refresh)
+  // but clears when the tab is closed or user opens a fresh URL.
+  const [currentView, setCurrentView] = useState(() => {
+    const saved = sessionStorage.getItem('gs_view');
+    const valid = ['home', 'suites', 'spa', 'dining', 'rooftop', 'about'];
+    return valid.includes(saved) ? saved : 'home';
+  });
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [bookingParams, setBookingParams] = useState({ type: 'STAY', package: '' });
   const [isLoading, setIsLoading] = useState(true);
@@ -57,6 +64,7 @@ export default function App() {
       setIsLoading(true);
       setTimeout(() => {
         setCurrentView(view);
+        sessionStorage.setItem('gs_view', view);
         window.scrollTo(0, 0);
         setTimeout(() => {
           setIsLoading(false);
@@ -64,6 +72,7 @@ export default function App() {
       }, 550);
     } else {
       setCurrentView('home');
+      sessionStorage.setItem('gs_view', 'home');
       window.scrollTo(0, 0);
     }
   };
