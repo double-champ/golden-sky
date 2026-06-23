@@ -23,36 +23,16 @@ const testimonials = [
 ];
 
 export default function Testimonials() {
-  const [currentIndex, setCurrentIndex] = useState(0);
+  const [currentIndex, setCurrentIndex] = useState(1);
   const [visibleSlides, setVisibleSlides] = useState(3);
+  const [transitionEnabled, setTransitionEnabled] = useState(true);
+  const [isTransitioning, setIsTransitioning] = useState(false);
   const autoPlayRef = useRef(null);
 
   // Swipe gesture hooks for mobile manual controls
   const [touchStart, setTouchStart] = useState(null);
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50;
-
-  const onTouchStart = (e) => {
-    setTouchEnd(null);
-    setTouchStart(e.targetTouches[0].clientX);
-  };
-
-  const onTouchMove = (e) => {
-    setTouchEnd(e.targetTouches[0].clientX);
-  };
-
-  const onTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
-    const distance = touchStart - touchEnd;
-    const isLeftSwipe = distance > minSwipeDistance;
-    const isRightSwipe = distance < -minSwipeDistance;
-
-    if (isLeftSwipe) {
-      handleNext();
-    } else if (isRightSwipe) {
-      handlePrev();
-    }
-  };
 
   useEffect(() => {
     const handleResize = () => {
@@ -72,13 +52,44 @@ export default function Testimonials() {
 
   const maxIndex = testimonials.length - visibleSlides;
 
+  // Set initial position based on visible slides (starts at 1 if looping, 0 if static)
+  useEffect(() => {
+    if (maxIndex > 0) {
+      setCurrentIndex(1);
+    } else {
+      setCurrentIndex(0);
+    }
+  }, [visibleSlides]);
+
+  // Infinite seamless loop transition check
+  useEffect(() => {
+    if (!isTransitioning) return;
+
+    const transitionEndTimer = setTimeout(() => {
+      setIsTransitioning(false);
+      
+      // If we slid to cloned slides, jump back/forward instantly without transition
+      if (maxIndex > 0) {
+        if (currentIndex === 0) {
+          setTransitionEnabled(false);
+          setCurrentIndex(testimonials.length); // Jump to last slide (index 3)
+        } else if (currentIndex === testimonials.length + 1) {
+          setTransitionEnabled(false);
+          setCurrentIndex(1); // Jump to first slide (index 1)
+        }
+      }
+    }, 600); // Matches CSS transition duration (0.6s)
+
+    return () => clearTimeout(transitionEndTimer);
+  }, [currentIndex, isTransitioning, maxIndex]);
+
   // Auto-play logic
   const startAutoPlay = () => {
     stopAutoPlay();
-    if (maxIndex <= 0) return; // No need to auto-play if all slides fit on screen
+    if (maxIndex <= 0) return; // No auto-play if all slides fit
 
     autoPlayRef.current = setInterval(() => {
-      setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+      handleNext();
     }, 6000);
   };
 
@@ -94,13 +105,41 @@ export default function Testimonials() {
   }, [currentIndex, visibleSlides]);
 
   const handlePrev = () => {
-    if (maxIndex <= 0) return;
-    setCurrentIndex((prev) => (prev === 0 ? maxIndex : prev - 1));
+    if (maxIndex <= 0 || isTransitioning) return;
+    setIsTransitioning(true);
+    setTransitionEnabled(true);
+    setCurrentIndex((prev) => prev - 1);
   };
 
   const handleNext = () => {
-    if (maxIndex <= 0) return;
-    setCurrentIndex((prev) => (prev >= maxIndex ? 0 : prev + 1));
+    if (maxIndex <= 0 || isTransitioning) return;
+    setIsTransitioning(true);
+    setTransitionEnabled(true);
+    setCurrentIndex((prev) => prev + 1);
+  };
+
+  const onTouchStart = (e) => {
+    if (isTransitioning) return;
+    setTouchEnd(null);
+    setTouchStart(e.targetTouches[0].clientX);
+  };
+
+  const onTouchMove = (e) => {
+    if (isTransitioning) return;
+    setTouchEnd(e.targetTouches[0].clientX);
+  };
+
+  const onTouchEnd = () => {
+    if (!touchStart || !touchEnd || isTransitioning) return;
+    const distance = touchStart - touchEnd;
+    const isLeftSwipe = distance > minSwipeDistance;
+    const isRightSwipe = distance < -minSwipeDistance;
+
+    if (isLeftSwipe) {
+      handleNext();
+    } else if (isRightSwipe) {
+      handlePrev();
+    }
   };
 
   const getInitials = (authorName) => {
@@ -114,6 +153,26 @@ export default function Testimonials() {
     return parts[0] ? parts[0][0].toUpperCase() : "";
   };
 
+  // Get active dot index mapping for looping array
+  const getActiveDotIndex = () => {
+    if (maxIndex <= 0) return 0;
+    if (currentIndex === 0) return testimonials.length - 1;
+    if (currentIndex === testimonials.length + 1) return 0;
+    return currentIndex - 1;
+  };
+
+  const handleDotClick = (index) => {
+    if (isTransitioning) return;
+    setIsTransitioning(true);
+    setTransitionEnabled(true);
+    setCurrentIndex(index + 1);
+  };
+
+  // Define slides to render: extend with clones on ends if carousel is active
+  const slidesToRender = maxIndex > 0
+    ? [testimonials[testimonials.length - 1], ...testimonials, testimonials[0]]
+    : testimonials;
+
   return (
     <div 
       className="testimonials-section-wrapper"
@@ -123,12 +182,17 @@ export default function Testimonials() {
         position: 'relative',
         width: '100%',
         margin: '0 auto',
-        padding: maxIndex > 0 ? '0 3.5rem' : '0' // Add padding only if controls are visible
+        padding: maxIndex > 0 ? '0 3.5rem' : '0' // Pad arrow space if carousel is active
       }}
     >
       {/* Slider Viewport */}
       <div 
-        style={{ overflow: 'hidden', width: '100%', cursor: 'grab' }}
+        style={{ 
+          overflow: 'hidden', 
+          width: '100%', 
+          cursor: 'grab',
+          touchAction: 'pan-y' // Prevent vertical page scrolling when swiping horizontally
+        }}
         onTouchStart={onTouchStart}
         onTouchMove={onTouchMove}
         onTouchEnd={onTouchEnd}
@@ -137,11 +201,11 @@ export default function Testimonials() {
           style={{
             display: 'flex',
             transform: `translate3d(-${currentIndex * (100 / visibleSlides)}%, 0, 0)`,
-            transition: 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: transitionEnabled ? 'transform 0.6s cubic-bezier(0.16, 1, 0.3, 1)' : 'none',
             width: '100%'
           }}
         >
-          {testimonials.map((rev, idx) => {
+          {slidesToRender.map((rev, idx) => {
             const initials = getInitials(rev.author);
             return (
               <div 
@@ -260,33 +324,36 @@ export default function Testimonials() {
               marginTop: '1.75rem'
             }}
           >
-            {Array.from({ length: maxIndex + 1 }).map((_, index) => (
-              <button
-                key={index}
-                onClick={() => setCurrentIndex(index)}
-                aria-label={`Go to slide ${index + 1}`}
-                style={{
-                  background: 'none',
-                  border: 'none',
-                  padding: '12px 8px', // High hit hitbox for mobile fingertips
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  outline: 'none'
-                }}
-              >
-                <div
+            {testimonials.map((_, index) => {
+              const isActive = getActiveDotIndex() === index;
+              return (
+                <button
+                  key={index}
+                  onClick={() => handleDotClick(index)}
+                  aria-label={`Go to slide ${index + 1}`}
                   style={{
-                    width: currentIndex === index ? '24px' : '8px',
-                    height: '8px',
-                    borderRadius: '8px',
-                    backgroundColor: currentIndex === index ? 'var(--color-gold)' : 'rgba(212, 175, 55, 0.25)',
-                    transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                    background: 'none',
+                    border: 'none',
+                    padding: '12px 8px', // High hit hitbox for mobile fingertips
+                    cursor: 'pointer',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    outline: 'none'
                   }}
-                />
-              </button>
-            ))}
+                >
+                  <div
+                    style={{
+                      width: isActive ? '24px' : '8px',
+                      height: '8px',
+                      borderRadius: '8px',
+                      backgroundColor: isActive ? 'var(--color-gold)' : 'rgba(212, 175, 55, 0.25)',
+                      transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}
+                  />
+                </button>
+              );
+            })}
           </div>
         </>
       )}
