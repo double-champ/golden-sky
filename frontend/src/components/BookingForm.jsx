@@ -210,7 +210,7 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
       display: 'flex',
       alignItems: 'center',
       justifyContent: 'center',
-      zIndex: 999,
+      zIndex: 10005, // Raised z-index to stay on top of the luxury sticky header (zIndex: 9999)
       padding: '2rem 1rem',
       overflowY: 'auto'
     }}>
@@ -223,13 +223,14 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
           onClick={onClose}
           style={{
             position: 'absolute',
-            top: '25px',
-            right: '25px',
+            top: '20px',
+            right: '20px',
             background: 'none',
             border: 'none',
             color: 'rgba(255, 255, 255, 0.5)',
             cursor: 'pointer',
-            transition: 'color 0.3s ease'
+            transition: 'color 0.3s ease',
+            zIndex: 10 // Ensure it stays on top of content layers
           }}
           className="cursor-hover"
           onMouseEnter={(e) => e.currentTarget.style.color = 'var(--color-gold)'}
@@ -240,7 +241,7 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
 
         {/* Wizard Progress Bar */}
         {step < 3 && (
-          <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '2.5rem' }}>
+          <div style={{ display: 'flex', gap: '0.8rem', marginBottom: '2.5rem', marginTop: '1rem' }}>
             <div style={{ height: '3px', flex: 1, backgroundColor: step >= 1 ? 'var(--color-gold)' : 'rgba(255,255,255,0.1)', borderRadius: '4px', transition: '0.3s' }} />
             <div style={{ height: '3px', flex: 1, backgroundColor: step >= 2 ? 'var(--color-gold)' : 'rgba(255,255,255,0.1)', borderRadius: '4px', transition: '0.3s' }} />
           </div>
