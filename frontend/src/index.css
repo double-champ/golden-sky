@@ -2207,11 +2207,15 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
 /* Fullscreen Navigation Menu mobile styling */
 .nav-menu-logo {
   height: 160px;
+  width: auto;
+  display: block;
 }
 
 @media (max-width: 768px) {
   .nav-menu-logo {
     height: 100px !important;
+    width: auto !important;
+    display: block !important;
   }
   .nav-menu-overlay {
     justify-content: flex-start !important;
