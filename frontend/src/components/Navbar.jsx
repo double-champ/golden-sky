@@ -348,6 +348,12 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
           .menu-btn {
             gap: 0;
           }
+          .header-center {
+            gap: 0.4rem;
+          }
+          .luxury-header.scrolled .header-center {
+            gap: 0.3rem;
+          }
           .header-title {
             font-size: 1.2rem;
             letter-spacing: 0.18em;
