@@ -348,19 +348,22 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
           .menu-btn {
             gap: 0;
           }
+          .header-center {
+            gap: 0.4rem;
+          }
           .header-title {
-            font-size: 1.2rem;
-            letter-spacing: 0.18em;
+            font-size: 1.1rem;
+            letter-spacing: 0.14em;
           }
           .luxury-header.scrolled .header-title {
-            font-size: 1rem;
-            letter-spacing: 0.12em;
+            font-size: 0.95rem;
+            letter-spacing: 0.1em;
           }
           .header-logo {
-            height: 40px;
+            height: 34px;
           }
           .luxury-header.scrolled .header-logo {
-            height: 28px;
+            height: 26px;
           }
           .reserve-text {
             display: none;
