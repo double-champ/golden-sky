@@ -245,11 +245,11 @@ export default function DiningPage({ onOpenBooking }) {
               }}>
                 <div>
                   <span style={{ fontSize: '0.72rem', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.3rem', fontWeight: '600' }}>Reservations Policy</span>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0, lineHeight: '1.4' }}>Prior booking is highly recommended for dining tables, especially for Aura Fire-pit seating. Bookings are held for up to 15 minutes.</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0, lineHeight: '1.4' }}>Prior booking is highly recommended for dining tables, especially for Aura Fire-pit seating. Bookings are held for up to <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>15 minutes</strong>.</p>
                 </div>
                 <div>
                   <span style={{ fontSize: '0.72rem', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.05em', display: 'block', marginBottom: '0.3rem', fontWeight: '600' }}>Operational Hours</span>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0, lineHeight: '1.4' }}>Lunch service runs from 12:00 PM to 3:00 PM. Sunset and dinner service operates from 7:00 PM until 10:30 PM daily.</p>
+                  <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0, lineHeight: '1.4' }}>Lunch service runs from <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>12:00 PM to 3:00 PM</strong>. Sunset and dinner service operates from <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>7:00 PM until 10:30 PM daily</strong>.</p>
                 </div>
               </div>
 

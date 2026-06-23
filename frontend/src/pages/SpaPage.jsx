@@ -151,7 +151,7 @@ export default function SpaPage({ onOpenBooking }) {
               </div>
               <div style={{ fontSize: '0.9rem', color: 'var(--color-text-dark)', lineHeight: '1.6' }}>
                 <span style={{ color: 'var(--color-gold-dark)', fontWeight: '600', fontFamily: 'var(--font-serif)', fontStyle: 'italic', marginRight: '0.5rem' }}>Sanctuary Hours:</span>
-                Open from 8:00 AM to 9:00 PM daily. Prior reservations recommended for herbal baths and wellness consultations.
+                Open from <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>8:00 AM to 9:00 PM daily</strong>. Prior reservations recommended for herbal baths and wellness consultations.
               </div>
             </div>
           </div>
@@ -181,7 +181,7 @@ export default function SpaPage({ onOpenBooking }) {
       </section>
 
       {/* MINDFUL BREATHING SANCTUARY (INTERACTIVE SPA INTERACTION) */}
-      <section ref={breathingRef} className="container reveal" style={{ padding: '1.5rem 2rem 2.5rem 2rem' }}>
+      <section ref={breathingRef} className="container" style={{ padding: '1.5rem 2rem 2.5rem 2rem' }}>
         <div 
           className="responsive-block-padding"
           style={{
@@ -409,15 +409,15 @@ export default function SpaPage({ onOpenBooking }) {
           <div className="responsive-layout-grid" style={{ marginTop: '3rem', textAlign: 'left' }}>
             <div>
               <span style={{ fontSize: '0.72rem', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.5rem' }}>Arrive Early</span>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', lineHeight: '1.6' }}>We recommend arriving 15 minutes before your treatment time. Enjoy a freshly brewed hibiscus oil infusion and complete a wellness questionnaire to tailor your massage oils.</p>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', lineHeight: '1.6' }}>We recommend arriving <strong style={{ color: 'var(--color-gold)', fontWeight: '650' }}>15 minutes before</strong> your treatment time. Enjoy a freshly brewed hibiscus oil infusion and complete a wellness questionnaire to tailor your massage oils.</p>
             </div>
             <div>
               <span style={{ fontSize: '0.72rem', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.5rem' }}>Sanctuary Wear</span>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', lineHeight: '1.6' }}>We supply plush luxury cotton robes, towels, and slippers. Lockers are available for personal items; however, we suggest leaving jewelry in your in-room safe.</p>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', lineHeight: '1.6' }}>We supply <strong style={{ color: 'var(--color-gold)', fontWeight: '650' }}>plush luxury cotton robes, towels, and slippers</strong>. Lockers are available for personal items; however, we suggest leaving jewelry in your in-room safe.</p>
             </div>
             <div>
               <span style={{ fontSize: '0.72rem', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.08em', display: 'block', marginBottom: '0.5rem' }}>Aroma customizer</span>
-              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', lineHeight: '1.6' }}>Each guest selects their preferred essential oil blend—cooling lemongrass, spiced mountain cinnamon, or floral lotus. Inform your therapist of any physical pressure preferences.</p>
+              <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '0.85rem', lineHeight: '1.6' }}>Each guest selects their preferred essential oil blend—<strong style={{ color: 'var(--color-gold)', fontWeight: '650' }}>cooling lemongrass, spiced mountain cinnamon, or floral lotus</strong>. Inform your therapist of any physical pressure preferences.</p>
             </div>
           </div>
         </div>

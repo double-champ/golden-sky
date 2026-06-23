@@ -699,23 +699,23 @@ export default function SuitesPage({ onOpenBooking }) {
             {[
               {
                 question: "What are the check-in and check-out times?",
-                answer: "Check-in begins at 2:00 PM, and check-out is until 12:00 PM. Early check-in or late check-out can be requested and is subject to availability."
+                answer: <span>Check-in begins at <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>2:00 PM</strong>, and check-out is until <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>12:00 PM</strong>. Early check-in or late check-out can be requested and is subject to availability.</span>
               },
               {
                 question: "What is your cancellation policy?",
-                answer: "Reservations can be modified or canceled free of charge up to 72 hours prior to your scheduled arrival. Cancellations made within 72 hours of arrival may be subject to a fee."
+                answer: <span>Reservations can be modified or canceled free of charge up to <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>72 hours</strong> prior to your scheduled arrival. Cancellations made within <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>72 hours</strong> of arrival may be subject to a fee.</span>
               },
               {
                 question: "Is high-speed Wi-Fi available at the hotel?",
-                answer: "Yes, complimentary high-speed Wi-Fi is available in all guest rooms and throughout all common areas of the property."
+                answer: <span>Yes, <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>complimentary</strong> high-speed Wi-Fi is available in all guest rooms and throughout all common areas of the property.</span>
               },
               {
                 question: "Can I store my luggage before check-in or after check-out?",
-                answer: "Yes, we offer complimentary secure luggage storage at the front desk, so you can explore the area hands-free before your room is ready or after you check out."
+                answer: <span>Yes, we offer <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>complimentary secure luggage storage</strong> at the front desk, so you can explore the area hands-free before your room is ready or after you check out.</span>
               },
               {
                 question: "Is guest parking available on-site?",
-                answer: "Yes, complimentary secure self-parking is available on-site for all staying guests. No prior reservation is required."
+                answer: <span>Yes, <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>complimentary secure self-parking</strong> is available on-site for all staying guests. No prior reservation is required.</span>
               }
             ].map((faq, index) => {
               const isOpen = openFaqIndex === index;

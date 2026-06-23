@@ -73,8 +73,11 @@ export default function RooftopPage({ onOpenBooking }) {
             <div style={{ display: 'flex', alignItems: 'center', gap: '1.2rem', borderTop: '1px solid rgba(212,175,55,0.15)', paddingTop: '1.8rem' }}>
               <Music size={22} style={{ color: 'var(--color-gold)' }} />
               <div>
-                <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#fff', display: 'block' }}>Acoustic Sessions</span>
-                <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)' }}>Friday & Saturday: 7:00 PM onwards</span>
+                <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#fff', display: 'block' }}>Acoustic Sessions & Lounge Hours</span>
+                <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', lineHeight: '1.5', display: 'block' }}>
+                  Lounge Hours: <strong style={{ color: 'var(--color-gold)', fontWeight: '600' }}>Daily 5:00 PM – 11:30 PM</strong> (Sunset Happy Hour <strong style={{ color: 'var(--color-gold)', fontWeight: '600' }}>5:00 PM – 7:00 PM</strong>) <br />
+                  Acoustic Live: <strong style={{ color: 'var(--color-gold)', fontWeight: '600' }}>Friday & Saturday from 7:00 PM onwards</strong>
+                </span>
               </div>
             </div>
           </div>
