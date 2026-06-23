@@ -300,7 +300,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
           
           {/* Cell 1: Cinematic Greeting (span 2-2) */}
           <div className="bento-item span-2-2 reveal" style={{ border: 'none', background: '#1c1b18', cursor: 'pointer' }} onClick={() => onViewChange('about')}>
-            <img src="/images/20260418_112608_1.jpg" alt="Misty Hills" className="bento-img-bg bento-hero-pan" style={{ opacity: 0.6 }} />
+            <img src="/images/20260418_112608_1.jpg" alt="Misty Hills" className="bento-img-bg bento-hero-pan" style={{ opacity: 0.6 }} loading="lazy" decoding="async" />
             <div className="bento-dark-overlay" />
             <div className="bento-content" style={{ color: '#fff', maxWidth: '480px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-gold)', marginBottom: '0.8rem' }}>
@@ -323,7 +323,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
    
           {/* Cell 2: Luxury Suites card (span 1-2) */}
           <div className="bento-item span-1-2 reveal" style={{ cursor: 'pointer' }} onClick={() => onViewChange('suites')}>
-            <img src="/images/20260418_064528_1.jpg" alt="Suites" className="bento-img-bg" />
+            <img src="/images/20260418_064528_1.jpg" alt="Suites" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
               <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>01 / ACCOMMODATIONS</span>
@@ -356,7 +356,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
    
           {/* Cell 5: Spa & Ayurveda (span 2-1) */}
           <div className="bento-item span-2-1 reveal" style={{ cursor: 'pointer' }} onClick={() => onViewChange('spa')}>
-            <img src="/images/20260418_111209_1.jpg" alt="Spa" className="bento-img-bg" />
+            <img src="/images/20260418_111209_1.jpg" alt="Spa" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
               <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>02 / HEALTH</span>
@@ -366,7 +366,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
    
           {/* Cell 6: Culinary & Restaurant (span 1-1) */}
           <div className="bento-item span-1-1 reveal" style={{ cursor: 'pointer' }} onClick={() => onViewChange('dining')}>
-            <img src="/images/20260418_074232_1.jpg" alt="Restaurant" className="bento-img-bg" />
+            <img src="/images/20260418_074232_1.jpg" alt="Restaurant" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
               <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>03 / CULINARY</span>
@@ -376,7 +376,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
    
           {/* Cell 7: Rooftop Lounge (span 1-1) */}
           <div className="bento-item span-1-1 reveal" style={{ cursor: 'pointer' }} onClick={() => onViewChange('rooftop')}>
-            <img src="/images/20260418_112422_1.jpg" alt="Rooftop" className="bento-img-bg" />
+            <img src="/images/20260418_112422_1.jpg" alt="Rooftop" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
               <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>04 / BAR</span>

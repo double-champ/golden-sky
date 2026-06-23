@@ -1,15 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 
 import Navbar from './components/Navbar';
-import Home from './pages/Home';
-import SuitesPage from './pages/SuitesPage';
-import SpaPage from './pages/SpaPage';
-import DiningPage from './pages/DiningPage';
-import RooftopPage from './pages/RooftopPage';
-import AboutPage from './pages/AboutPage';
-import BookingForm from './components/BookingForm';
-import AdminDashboard from './pages/AdminDashboard';
 import Footer from './components/Footer';
+
+// Lazy load page components to optimize initial bundle size
+const Home = lazy(() => import('./pages/Home'));
+const SuitesPage = lazy(() => import('./pages/SuitesPage'));
+const SpaPage = lazy(() => import('./pages/SpaPage'));
+const DiningPage = lazy(() => import('./pages/DiningPage'));
+const RooftopPage = lazy(() => import('./pages/RooftopPage'));
+const AboutPage = lazy(() => import('./pages/AboutPage'));
+const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
+const BookingForm = lazy(() => import('./components/BookingForm'));
 
 export default function App() {
   // Restore last-visited page on refresh via sessionStorage.
@@ -126,12 +128,14 @@ export default function App() {
       <HotelViewLoader isVisible={isLoading} />
 
       {/* Booking Form Overlay */}
-      <BookingForm
-        isOpen={bookingModalOpen}
-        onClose={() => setBookingModalOpen(false)}
-        initialType={bookingParams.type}
-        initialPackage={bookingParams.package}
-      />
+      <Suspense fallback={null}>
+        <BookingForm
+          isOpen={bookingModalOpen}
+          onClose={() => setBookingModalOpen(false)}
+          initialType={bookingParams.type}
+          initialPackage={bookingParams.package}
+        />
+      </Suspense>
 
       {/* Header / Navbar */}
       <Navbar 
@@ -142,30 +146,32 @@ export default function App() {
 
       {/* Main Content Area */}
       <main style={{ flex: 1 }}>
-        {currentView === 'home' && (
-          <Home 
-            onViewChange={handleViewChange} 
-            onOpenBooking={handleOpenBooking}
-          />
-        )}
-        {currentView === 'suites' && (
-          <SuitesPage onOpenBooking={handleOpenBooking} />
-        )}
-        {currentView === 'spa' && (
-          <SpaPage onOpenBooking={handleOpenBooking} />
-        )}
-        {currentView === 'dining' && (
-          <DiningPage onOpenBooking={handleOpenBooking} />
-        )}
-        {currentView === 'rooftop' && (
-          <RooftopPage onOpenBooking={handleOpenBooking} />
-        )}
-        {currentView === 'about' && (
-          <AboutPage onOpenBooking={handleOpenBooking} />
-        )}
-        {currentView === 'admin' && (
-          <AdminDashboard onGoBack={() => handleViewChange('home')} />
-        )}
+        <Suspense fallback={<HotelViewLoader isVisible={true} />}>
+          {currentView === 'home' && (
+            <Home 
+              onViewChange={handleViewChange} 
+              onOpenBooking={handleOpenBooking}
+            />
+          )}
+          {currentView === 'suites' && (
+            <SuitesPage onOpenBooking={handleOpenBooking} />
+          )}
+          {currentView === 'spa' && (
+            <SpaPage onOpenBooking={handleOpenBooking} />
+          )}
+          {currentView === 'dining' && (
+            <DiningPage onOpenBooking={handleOpenBooking} />
+          )}
+          {currentView === 'rooftop' && (
+            <RooftopPage onOpenBooking={handleOpenBooking} />
+          )}
+          {currentView === 'about' && (
+            <AboutPage onOpenBooking={handleOpenBooking} />
+          )}
+          {currentView === 'admin' && (
+            <AdminDashboard onGoBack={() => handleViewChange('home')} />
+          )}
+        </Suspense>
       </main>
 
       {/* Footer (Rendered on all pages for consistent premium branding) */}

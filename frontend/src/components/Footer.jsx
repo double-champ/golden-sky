@@ -8,7 +8,9 @@ export default function Footer({ onViewChange, onOpenBooking }) {
       borderTop: '1px solid rgba(197, 160, 89, 0.1)', 
       padding: '5rem 0 2rem 0',
       position: 'relative',
-      zIndex: 10
+      zIndex: 10,
+      contentVisibility: 'auto',
+      containIntrinsicSize: '0 500px'
     }}>
       <div className="container">
         {/* Logo Section (Centered above the grid for perfect alignment) */}

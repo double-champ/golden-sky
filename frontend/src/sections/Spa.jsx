@@ -66,6 +66,8 @@ export default function SpaSanctuary({ onOpenBooking }) {
             <img 
               src={spaImage} 
               alt="Golden Shanti Spa Sanctuary" 
+              loading="lazy"
+              decoding="async"
               style={{ 
                 width: '100%', 
                 height: '480px', 

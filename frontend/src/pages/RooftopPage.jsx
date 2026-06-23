@@ -90,6 +90,8 @@ export default function RooftopPage({ onOpenBooking }) {
             <img 
               src="/images/20260418_112530_1.jpg" 
               alt="Rooftop Bar & Lounge at Golden Sky Hotel & Wellness" 
+              loading="lazy"
+              decoding="async"
               style={{
                 width: '100%',
                 height: '100%',
@@ -167,6 +169,8 @@ export default function RooftopPage({ onOpenBooking }) {
             <img 
               src="/images/20260418_112608_1.jpg" 
               alt="Cozy mountainside fire-pit dinner" 
+              loading="lazy"
+              decoding="async"
               style={{
                 width: '100%',
                 height: '100%',

@@ -502,6 +502,8 @@ export default function SuitesPage({ onOpenBooking }) {
                   <img 
                     src={activeRoom.imageUrl} 
                     alt={activeRoom.name} 
+                    loading="lazy"
+                    decoding="async"
                     style={{
                       width: '100%',
                       height: '100%',

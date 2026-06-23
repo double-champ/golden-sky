@@ -255,6 +255,8 @@ export default function AboutPage({ onOpenBooking }) {
                   <img 
                     src={exp.image} 
                     alt={exp.title} 
+                    loading="lazy"
+                    decoding="async"
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                     className={carouselIndex === idx ? 'ken-burns-image' : ''}
                   />
@@ -502,6 +504,8 @@ export default function AboutPage({ onOpenBooking }) {
                 <img 
                   src={item.url} 
                   alt={item.title} 
+                  loading="lazy"
+                  decoding="async"
                   style={{ 
                     width: '100%', 
                     height: '100%', 
@@ -610,6 +614,7 @@ export default function AboutPage({ onOpenBooking }) {
               <img 
                 src={lightboxImage.url} 
                 alt={lightboxImage.title} 
+                decoding="async"
                 style={{ width: '100%', height: 'auto', maxHeight: '70vh', objectFit: 'contain', display: 'block', margin: '0 auto' }} 
               />
             </div>

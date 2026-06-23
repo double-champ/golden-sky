@@ -110,6 +110,8 @@ export default function RooftopBar({ onOpenBooking }) {
             <img 
               src={rooftopImage} 
               alt="Aura Rooftop Lounge View" 
+              loading="lazy"
+              decoding="async"
               style={{ 
                 width: '100%', 
                 height: '500px', 

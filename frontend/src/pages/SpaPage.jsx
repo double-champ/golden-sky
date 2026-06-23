@@ -166,6 +166,8 @@ export default function SpaPage({ onOpenBooking }) {
             <img 
               src="/images/20260418_111209_1.jpg" 
               alt="Botanical Shanti Spa Lounge at Golden Sky Hotel & Wellness" 
+              loading="lazy"
+              decoding="async"
               style={{
                 width: '100%',
                 height: '100%',
@@ -330,6 +332,8 @@ export default function SpaPage({ onOpenBooking }) {
                     <img 
                       src={item.imageUrl} 
                       alt={item.name} 
+                      loading="lazy"
+                      decoding="async"
                       style={{ width: '100%', height: '100%', objectFit: 'cover' }} 
                     />
                     <div style={{

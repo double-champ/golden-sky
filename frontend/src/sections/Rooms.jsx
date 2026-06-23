@@ -66,7 +66,7 @@ export default function Rooms({ onOpenBooking }) {
         <div className="showcase-grid">
           {suites.map((suite) => (
             <div key={suite.id} className="luxury-card interactive-card">
-              <img src={suite.image} alt={suite.name} className="luxury-card-img" />
+              <img src={suite.image} alt={suite.name} className="luxury-card-img" loading="lazy" decoding="async" />
               <div className="luxury-card-overlay">
                 <div className="luxury-card-content">
                   <div className="luxury-card-tags">
