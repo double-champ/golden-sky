@@ -1857,6 +1857,8 @@ p {
   max-width: 550px;
   max-height: 90vh;
   overflow-y: auto;
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+  -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
   padding: 3rem !important;
   position: relative;
   background: rgba(18, 17, 15, 0.96) !important;
@@ -1867,6 +1869,11 @@ p {
   box-shadow: 0 25px 60px rgba(0, 0, 0, 0.75), 0 0 40px rgba(212, 175, 55, 0.05) !important;
   color: #ffffff !important;
   z-index: 1000;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.luxury-booking-modal::-webkit-scrollbar {
+  display: none;
 }
 
 /* Luxury Form Labels */
