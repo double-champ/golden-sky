@@ -1095,7 +1095,7 @@ p {
 .hero-actions {
   display: flex;
   gap: 1.2rem;
-  margin-top: 1rem;
+  margin-top: clamp(1.2rem, 3.5vw, 2.5rem);
 }
 
 .hero-btn {
