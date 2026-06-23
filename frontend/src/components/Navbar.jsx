@@ -86,17 +86,17 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'center',
+            justifyContent: 'flex-start', // Align to top
             animation: 'fadeInOverlay 0.4s ease-out',
             overflowY: 'auto',
-            padding: '2rem 1rem'
+            padding: '5rem 1rem 3rem 1rem' // Shift elements up on PC/mobile
           }}
         >
           {/* Close Button */}
           <button
             onClick={() => setMenuOpen(false)}
             style={{
-              position: 'absolute',
+              position: 'fixed', // Stay fixed while scrolling
               top: '25px',
               left: '30px',
               width: '50px',
@@ -120,15 +120,15 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
           </button>
 
           {/* Luxury Navigation Links */}
-          <div className="nav-menu-content-wrapper">
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', alignItems: 'center', margin: '0' }}>
             <div 
               onClick={() => {
                 setMenuOpen(false);
                 onViewChange('home');
               }}
-              className="nav-menu-logo-container"
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '2.5rem', cursor: 'pointer' }}
             >
-              <img src="/logo.png" className="nav-menu-logo" alt="Golden Sky Logo" style={{ height: '180px', objectFit: 'contain' }} />
+              <img src="/logo.png" className="nav-menu-logo" alt="Golden Sky Logo" style={{ objectFit: 'contain' }} />
             </div>
             
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center' }}>
