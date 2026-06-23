@@ -96,8 +96,8 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
         return matched.length > 0 ? matched[0].name : '';
       };
 
-      const initDate = qDate || prev.targetDate || new Date().toISOString().split('T')[0];
-      const initNights = parseInt(qNights) || prev.durationDays || 1;
+      const initDate = qDate || formData.targetDate || new Date().toISOString().split('T')[0];
+      const initNights = parseInt(qNights) || formData.durationDays || 1;
       
       const start = new Date(initDate);
       const end = new Date(start);
