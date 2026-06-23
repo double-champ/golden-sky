@@ -2203,32 +2203,32 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
     flex-shrink: 0 !important;
   }
 
-  /* Shrink the 160px orb down to 125px on mobile */
+  /* Shrink the 160px orb down to 100px on mobile */
   .breathing-orb-col > div {
-    width: 125px !important;
-    height: 125px !important;
+    width: 100px !important;
+    height: 100px !important;
   }
 
   /* Shrink inner glow circle to match */
   .breathing-orb-col > div > div:last-child {
-    width: 85px !important;
-    height: 85px !important;
-    font-size: 0.8rem !important;
+    width: 68px !important;
+    height: 68px !important;
+    font-size: 0.7rem !important;
   }
 
   /* Compact the text paragraph on mobile */
   .breathing-desc {
-    font-size: 0.8rem !important;
-    line-height: 1.6 !important;
+    font-size: 0.78rem !important;
+    line-height: 1.55 !important;
     display: -webkit-box;
-    -webkit-line-clamp: 5;
+    -webkit-line-clamp: 4;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
 
   /* Scale down the section heading */
   .breathing-layout h3 {
-    font-size: 1.6rem !important;
+    font-size: 1.35rem !important;
   }
 }
 
