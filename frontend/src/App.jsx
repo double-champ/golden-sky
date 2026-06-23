@@ -110,15 +110,31 @@ export default function App() {
       });
     }, { threshold: 0.08 });
 
-    // Query and observe after page render completes (coordinating with load transitions)
-    const timer = setTimeout(() => {
-      const elements = document.querySelectorAll('.reveal');
-      elements.forEach((el) => revealObserver.observe(el));
-    }, 600);
+    // Function to scan and observe all unobserved .reveal elements
+    const observeElements = () => {
+      const elements = document.querySelectorAll('.reveal:not([data-observed])');
+      elements.forEach((el) => {
+        el.setAttribute('data-observed', 'true');
+        revealObserver.observe(el);
+      });
+    };
+
+    // Run initial scan
+    observeElements();
+
+    // Set up MutationObserver to detect lazy loaded page mounts and observe new elements
+    const mutationObserver = new MutationObserver(() => {
+      observeElements();
+    });
+
+    mutationObserver.observe(document.body, {
+      childList: true,
+      subtree: true
+    });
 
     return () => {
       revealObserver.disconnect();
-      clearTimeout(timer);
+      mutationObserver.disconnect();
     };
   }, [currentView]);
 
