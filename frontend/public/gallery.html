@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Golden Sky Image Gallery Inspector</title>
+  <style>
+    body { font-family: sans-serif; background: #faf8f5; padding: 20px; }
+    h1 { color: #d4af37; text-align: center; }
+    .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+    .card { background: white; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; padding: 10px; text-align: center; }
+    img { width: 100%; height: 200px; object-fit: cover; border-radius: 4px; }
+    .name { font-size: 14px; margin-top: 10px; font-weight: bold; word-break: break-all; }
+  </style>
+</head>
+<body>
+  <h1>Image Gallery Inspector</h1>
+  <div class="grid" id="gallery"></div>
+  <script>
+    const images = [
+      "20260418_061119_1.jpg", "20260418_062826_1.jpg", "20260418_063038_1.jpg", "20260418_063431_2.jpg",
+      "20260418_063729_1.jpg", "20260418_064528_1.jpg", "20260418_064654_1.jpg", "20260418_064811(0)_1.jpg",
+      "20260418_065313_1.jpg", "20260418_065800_1.jpg", "20260418_0720517.jpg.jpg", "20260418_072116_1.jpg",
+      "20260418_072549_1.jpg", "20260418_072718_1.jpg", "20260418_074232_1.jpg", "20260418_084942_1.jpg",
+      "20260418_085140_1.jpg", "20260418_085423_1.jpg", "20260418_085951_2.jpg", "20260418_091520_1.jpg",
+      "20260418_091808_1.jpg", "20260418_092315_1.jpg", "20260418_095058_1.jpg", "20260418_095058_2.jpg",
+      "20260418_095209_1.jpg", "20260418_095209_2.jpg", "20260418_095354_1.jpg", "20260418_102057_1.jpg",
+      "20260418_103811_1.jpg", "20260418_104010_1.jpg", "20260418_105355_1.jpg", "20260418_105523_1.jpg",
+      "20260418_111209_1.jpg", "20260418_111410_1.jpg", "20260418_111748_1.jpg", "20260418_112034_1.jpg",
+      "20260418_112422_1.jpg", "20260418_112530_1.jpg", "20260418_112608_1.jpg", "20260418_113827_1.jpg",
+      "20260418_114222_1.jpg", "20260418_114324_1.jpg"
+    ];
+    const container = document.getElementById('gallery');
+    images.forEach(img => {
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <img src="/images/${img}" alt="${img}">
+        <div class="name">${img}</div>
+      `;
+      container.appendChild(card);
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Room {
+  id          String   @id @default(uuid())
+  name        String
+  type        String   // STAY, DAYOUT, SPA, DINING
+  description String   @db.Text
+  price       Float
+  capacity    Int
+  amenities   String   // Comma-separated list
+  imageUrl    String
+  createdAt   DateTime @default(now())
+}
+
+model Booking {
+  id                String   @id @default(uuid())
+  type              String   // STAY, DAYOUT, SPA, DINING
+  guestName         String
+  guestEmail        String
+  guestPhone        String
+  targetDate        DateTime
+  durationDays      Int?     // for stays
+  guestsCount       Int
+  roomOrPackageName String
+  specialRequests   String?  @db.Text
+  status            String   @default("PENDING") // PENDING, CONFIRMED, CANCELLED
+  createdAt         DateTime @default(now())
+}
