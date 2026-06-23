@@ -2209,43 +2209,52 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
 @media (max-width: 768px) {
   .breathing-layout {
     display: flex !important;
-    flex-direction: row !important;
+    flex-direction: column !important;
     align-items: center !important;
-    gap: 1.2rem !important;
+    text-align: center !important;
+    gap: 2.2rem !important;
   }
 
-  /* Shrink orb column so it fits beside the text */
+  .breathing-layout > div:first-child {
+    text-align: center !important;
+    align-items: center !important;
+  }
+
+  /* Allow orb column to take full width and center */
   .breathing-orb-col {
-    min-height: unset !important;
+    min-height: 180px !important;
+    width: 100% !important;
+    justify-content: center !important;
     flex-shrink: 0 !important;
   }
 
-  /* Orb: middle-ground size on mobile */
+  /* Enlarge the breathing orb for touch comfort on mobile */
   .breathing-orb-col > div {
-    width: 115px !important;
-    height: 115px !important;
+    width: 150px !important;
+    height: 150px !important;
   }
 
   /* Inner glow circle */
   .breathing-orb-col > div > div:last-child {
-    width: 78px !important;
-    height: 78px !important;
-    font-size: 0.78rem !important;
+    width: 90px !important;
+    height: 90px !important;
+    font-size: 0.85rem !important;
   }
 
-  /* Paragraph on mobile */
+  /* Paragraph on mobile: remove clamp and display in full */
   .breathing-desc {
-    font-size: 0.82rem !important;
-    line-height: 1.6 !important;
-    display: -webkit-box;
-    -webkit-line-clamp: 5;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+    font-size: 0.88rem !important;
+    line-height: 1.65 !important;
+    text-align: center !important;
+    display: block !important;
+    overflow: visible !important;
+    max-width: 550px;
+    margin: 0 auto !important;
   }
 
   /* Section heading */
   .breathing-layout h3 {
-    font-size: 1.5rem !important;
+    font-size: 1.8rem !important;
   }
 }
 
