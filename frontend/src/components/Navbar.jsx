@@ -120,13 +120,13 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
           </button>
 
           {/* Luxury Navigation Links */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', alignItems: 'center', margin: 'auto 0' }}>
+          <div className="nav-menu-content-wrapper">
             <div 
               onClick={() => {
                 setMenuOpen(false);
                 onViewChange('home');
               }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '2.5rem', cursor: 'pointer' }}
+              className="nav-menu-logo-container"
             >
               <img src="/logo.png" className="nav-menu-logo" alt="Golden Sky Logo" style={{ height: '180px', objectFit: 'contain' }} />
             </div>
