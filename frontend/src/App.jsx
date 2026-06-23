@@ -169,7 +169,7 @@ export default function App() {
       </main>
 
       {/* Footer (Rendered on all pages for consistent premium branding) */}
-      {currentView !== 'admin' && <Footer onViewChange={handleViewChange} onOpenBooking={() => handleOpenBooking('STAY', '')} />}
+      {currentView !== 'admin' && <Footer onViewChange={handleViewChange} onOpenBooking={handleOpenBooking} />}
 
       {/* WhatsApp Floater */}
       {currentView !== 'admin' && <WhatsAppFloater />}

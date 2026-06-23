@@ -195,7 +195,7 @@ export default function Footer({ onViewChange, onOpenBooking }) {
             <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.8rem', paddingLeft: 0 }}>
               <li>
                 <button 
-                  onClick={onOpenBooking} 
+                  onClick={() => onOpenBooking && onOpenBooking('STAY', '')} 
                   className="nav-link"
                   style={{ 
                     background: 'none', 
@@ -215,7 +215,7 @@ export default function Footer({ onViewChange, onOpenBooking }) {
               </li>
               <li>
                 <button 
-                  onClick={onOpenBooking} 
+                  onClick={() => onOpenBooking && onOpenBooking('SPA', '')} 
                   className="nav-link"
                   style={{ 
                     background: 'none', 
@@ -235,7 +235,7 @@ export default function Footer({ onViewChange, onOpenBooking }) {
               </li>
               <li>
                 <button 
-                  onClick={onOpenBooking} 
+                  onClick={() => onOpenBooking && onOpenBooking('DAYOUT', '')} 
                   className="nav-link"
                   style={{ 
                     background: 'none', 
