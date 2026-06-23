@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { MapPin, Compass, ShieldCheck, Sparkles, Clock, Camera, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import Testimonials from '../components/Testimonials';
 
 export default function AboutPage({ onOpenBooking }) {
   const [activeCategory, setActiveCategory] = useState('All');
@@ -641,78 +642,7 @@ export default function AboutPage({ onOpenBooking }) {
           </div>
         </div>
 
-        <div className="responsive-layout-grid">
-          {[
-            {
-              quote: "A heavenly escape above the mist. Waking up to panoramic mountain ridges engulfed in cooling mist while our private butler served estate-grown tea was unforgettable.",
-              author: "John & Sarah D.",
-              role: "United Kingdom — Honeymooners",
-              date: "May 2026"
-            },
-            {
-              quote: "The Hanthana Herbal Wellness and Spiced Glow massage at Shanti Spa are legendary. I felt a profound sense of relaxation and detox. Architectural luxury at its finest.",
-              author: "Dr. Evelyn R.",
-              role: "Australia — Wellness Consultant",
-              date: "April 2026"
-            },
-            {
-              quote: "Fine dining with mountain sunsets, followed by starlit cocktails around the fire-pit at Aura Rooftop was a dream. The service is incredibly polite, personalized, and seamless.",
-              author: "Marcus L.",
-              role: "Singapore — Travel Writer",
-              date: "March 2026"
-            }
-          ].map((rev, idx) => {
-            // Compute initials
-            const clean = rev.author.replace(/^(Dr\.|Mr\.|Mrs\.|Ms\.)\s+/i, "");
-            const parts = clean.split(/\s+/).filter(Boolean);
-            let initials = "";
-            if (parts.length > 1) {
-              initials = (parts[1] === '&' && parts[2]) 
-                ? (parts[0][0] + parts[2][0]).toUpperCase()
-                : (parts[0][0] + parts[1][0]).toUpperCase();
-            } else {
-              initials = parts[0] ? parts[0][0].toUpperCase() : "";
-            }
-
-            return (
-              <div 
-                key={idx} 
-                className="review-card-premium"
-              >
-                <div className="review-card-quote-icon">“</div>
-                <div>
-                  <div className="review-card-stars">
-                    {Array(5).fill(0).map((_, i) => (
-                      <span key={i}>★</span>
-                    ))}
-                  </div>
-                  <p style={{
-                    fontFamily: 'var(--font-serif)',
-                    fontSize: '1.08rem',
-                    lineHeight: '1.7',
-                    color: 'var(--color-text-dark)',
-                    fontStyle: 'italic',
-                    marginBottom: '2rem',
-                    position: 'relative',
-                    zIndex: 2
-                  }}>
-                    "{rev.quote}"
-                  </p>
-                </div>
-                <div style={{ borderTop: '1px solid rgba(212,175,55,0.12)', paddingTop: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                  <div className="review-card-avatar">
-                    {initials}
-                  </div>
-                  <div style={{ flex: 1 }}>
-                    <h4 style={{ fontSize: '0.95rem', fontWeight: '600', color: 'var(--color-text-dark)', fontFamily: 'var(--font-sans)', margin: 0 }}>{rev.author}</h4>
-                    <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', display: 'block', marginTop: '0.2rem' }}>{rev.role}</span>
-                  </div>
-                  <span style={{ fontSize: '0.72rem', color: 'var(--color-gold-dark)', fontWeight: '600' }}>{rev.date}</span>
-                </div>
-              </div>
-            );
-          })}
-        </div>
+        <Testimonials />
       </section>
 
     </div>
