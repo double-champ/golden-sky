@@ -385,6 +385,58 @@ app.post('/api/bookings', async (req, res) => {
     return res.status(400).json({ error: "Missing required booking details." });
   }
 
+  const parsedDate = new Date(targetDate);
+  const duration = durationDays ? parseInt(durationDays) : 1;
+  const requestedStart = new Date(parsedDate);
+  const requestedEnd = new Date(requestedStart);
+  requestedEnd.setDate(requestedEnd.getDate() + duration);
+
+  // 1. Fetch existing bookings for checking availability (filtering out CANCELLED)
+  let existingBookings = [];
+  if (useDatabase) {
+    try {
+      existingBookings = await prisma.booking.findMany({
+        where: {
+          roomOrPackageName,
+          status: { not: "CANCELLED" }
+        }
+      });
+    } catch (err) {
+      console.error("Failed to query database bookings for validation:", err.message);
+      existingBookings = inMemoryBookings;
+    }
+  } else {
+    existingBookings = inMemoryBookings;
+  }
+
+  // 2. Perform overlap/conflict validation
+  const hasConflict = existingBookings.some(b => {
+    if (b.roomOrPackageName.toLowerCase() !== roomOrPackageName.toLowerCase()) return false;
+    if (b.status === "CANCELLED") return false;
+
+    const existStart = new Date(b.targetDate);
+    
+    if (type === 'STAY') {
+      const existDuration = b.durationDays ? parseInt(b.durationDays) : 1;
+      const existEnd = new Date(existStart);
+      existEnd.setDate(existEnd.getDate() + existDuration);
+
+      // Overlap check: startA < endB && startB < endA
+      return requestedStart < existEnd && existStart < requestedEnd;
+    } else {
+      // Single day calendar match check
+      return requestedStart.toDateString() === existStart.toDateString();
+    }
+  });
+
+  if (hasConflict) {
+    return res.status(409).json({ 
+      error: type === 'STAY' 
+        ? `The selected room (${roomOrPackageName}) is already booked for the chosen date range.` 
+        : `This package (${roomOrPackageName}) is already reserved for the selected date.`
+    });
+  }
+
   // Generate customized RES-XXX ID
   let nextId;
   if (useDatabase) {
@@ -419,7 +471,6 @@ app.post('/api/bookings', async (req, res) => {
     nextId = `RES-${String(lastNum + 1).padStart(3, '0')}`;
   }
 
-  const parsedDate = new Date(targetDate);
   const newBooking = {
     id: nextId,
     type,

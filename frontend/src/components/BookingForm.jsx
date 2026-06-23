@@ -215,15 +215,54 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
         });
         setStep(3);
       } else {
-        throw new Error("API server responded with error code.");
+        const data = await response.json();
+        const err = new Error(data.error || "The selected dates/times are not available.");
+        err.isApiError = true;
+        throw err;
       }
     } catch (err) {
+      if (err.isApiError) {
+        setErrorMsg(err.message);
+        setIsSubmitting(false);
+        return;
+      }
+
       console.warn("Backend server offline. Saving booking to Local Storage Fallback...");
       // Save locally to display in Admin dashboard instantly
       try {
         const localSaved = localStorage.getItem('golden_sky_bookings');
         const bookingsList = localSaved ? JSON.parse(localSaved) : [];
         
+        // 1. Offline availability check
+        const reqStart = new Date(formData.targetDate);
+        const duration = formData.type === 'STAY' ? formData.durationDays : 1;
+        const reqEnd = new Date(reqStart);
+        reqEnd.setDate(reqEnd.getDate() + duration);
+
+        const hasLocalConflict = bookingsList.some(b => {
+          if (b.roomOrPackageName.toLowerCase() !== formData.roomOrPackageName.toLowerCase()) return false;
+          if (b.status === "CANCELLED") return false;
+
+          const existStart = new Date(b.targetDate);
+          if (formData.type === 'STAY') {
+            const existDuration = b.durationDays ? parseInt(b.durationDays) : 1;
+            const existEnd = new Date(existStart);
+            existEnd.setDate(existEnd.getDate() + existDuration);
+            return reqStart < existEnd && existStart < reqEnd;
+          } else {
+            return reqStart.toDateString() === existStart.toDateString();
+          }
+        });
+
+        if (hasLocalConflict) {
+          setErrorMsg(formData.type === 'STAY' 
+            ? "Offline Mode: This room is already reserved locally for the selected dates." 
+            : "Offline Mode: This experience is already booked locally for the selected date.");
+          setIsSubmitting(false);
+          return;
+        }
+
+        // 2. Proceed to save simulated booking
         let lastNum = 0;
         bookingsList.forEach(b => {
           if (b.id && b.id.startsWith("RES-")) {
