@@ -670,17 +670,28 @@ p {
 
 /* Luxury Pills Tab Bar */
 .luxury-tabs {
-  display: flex;
+  display: inline-flex;
+  align-items: center;
   background: rgba(212, 175, 55, 0.03);
   padding: 6px;
   border-radius: 40px;
   border: 1px solid rgba(212, 175, 55, 0.18);
   margin-bottom: 2.2rem;
-  width: 100%;
+  width: fit-content;
+  max-width: 100%;
   overflow-x: auto;
   flex-wrap: nowrap;
   scrollbar-width: none;        /* Firefox */
   -ms-overflow-style: none;     /* IE/Edge */
+  -webkit-overflow-scrolling: touch;
+}
+
+.luxury-tabs::after {
+  content: '';
+  flex: 0 0 6px;
+  width: 6px;
+  height: 1px;
+  visibility: hidden;
 }
 
 .luxury-tabs::-webkit-scrollbar {

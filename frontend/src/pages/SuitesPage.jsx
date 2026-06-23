@@ -188,7 +188,7 @@ export default function SuitesPage({ onOpenBooking }) {
       <section className="container" style={{ padding: '4rem 2rem' }}>
         {/* Luxury Category Selection Filter Bar */}
         <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '1.5rem' }}>
-          <div className="luxury-tabs" style={{ maxWidth: '900px', overflowX: 'auto', whiteSpace: 'nowrap' }}>
+          <div className="luxury-tabs" style={{ maxWidth: '900px' }}>
             {categories.map((cat) => (
               <button
                 key={cat}

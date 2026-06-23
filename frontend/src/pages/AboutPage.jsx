@@ -454,7 +454,7 @@ export default function AboutPage({ onOpenBooking }) {
           </div>
 
           {/* Luxury Tab Bar */}
-          <div style={{ maxWidth: '600px', width: '100%' }}>
+          <div style={{ maxWidth: '600px', width: '100%', display: 'flex', justifyContent: 'flex-end' }}>
             <div className="luxury-tabs" style={{ marginBottom: 0 }}>
               {categories.map(cat => (
                 <button
