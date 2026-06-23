@@ -471,7 +471,7 @@ export default function AboutPage({ onOpenBooking }) {
         {/* Redesigned Gallery Grid with Editorial Card Details */}
         <div 
           key={activeCategory}
-          className="responsive-layout-grid"
+          className="responsive-layout-grid gallery-grid-container"
           style={{ 
             gap: '3rem 2rem',
             minHeight: '450px'
