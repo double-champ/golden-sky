@@ -141,7 +141,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
       desc: "Luxury glass and stone villas featuring private outdoor jacuzzis, personal butler services, and panoramic views of the mountain sunset."
     },
     {
-      image: "/images/20260418_111209_1.jpg",
+      image: "/images/20260418_102057_1.jpg",
       tag: "HOLISTIC RETREAT",
       title: "Botanical Rejuvenation",
       subtitle: "Shanti Spa & Wellness",
@@ -192,6 +192,13 @@ export default function Home({ onViewChange, onOpenBooking }) {
           <div className="hero-bg-overlay" />
         </div>
 
+        {/* Left Vertical Coordinates */}
+        <div className="hero-side-coordinates">
+          <span className="coord-text">07°17'26"N  80°38'01"E</span>
+          <div className="coord-line" />
+          <span className="coord-alt">780M ELEVATION</span>
+        </div>
+
         {/* Slide navigation indicators */}
         <div className="hero-slide-nav">
           {slides.map((_, index) => (
@@ -234,6 +241,14 @@ export default function Home({ onViewChange, onOpenBooking }) {
               </div>
             ))}
           </div>
+        </div>
+
+        {/* Scroll indicator */}
+        <div className="hero-scroll-indicator" onClick={scrollToDashboard}>
+          <span className="scroll-text">Explore</span>
+          <span className="scroll-arrow">
+            <ChevronRight size={16} style={{ transform: 'rotate(90deg)' }} />
+          </span>
         </div>
 
         {/* Floating Quick Booking panel */}
@@ -384,8 +399,6 @@ export default function Home({ onViewChange, onOpenBooking }) {
    
         </div>
       </div>
-
-
 
       {/* CUSTOMER REVIEWS SECTION */}
       <section className="container reveal" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
