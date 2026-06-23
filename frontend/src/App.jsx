@@ -26,8 +26,15 @@ export default function App() {
 
   // Initial loading screen timer
   useEffect(() => {
+    // Disable automatic scroll restoration to prevent browser scroll jumps on load/refresh
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+    window.scrollTo(0, 0);
+
     const timer = setTimeout(() => {
       setIsLoading(false);
+      window.scrollTo(0, 0);
     }, 1500);
     return () => clearTimeout(timer);
   }, []);
