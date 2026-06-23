@@ -1287,7 +1287,7 @@ p {
     letter-spacing: 0.2em;
   }
   .hero-content-wrapper {
-    margin-top: -65px; /* Lift center text up slightly to avoid overlapping booking container */
+    margin-top: -115px; /* Lift center text up to avoid overlapping booking container */
     width: 84%;
     max-width: 650px;
   }
@@ -1384,7 +1384,7 @@ p {
     display: none !important;
   }
   .hero-content-wrapper {
-    margin-top: -35px;
+    margin-top: -85px;
   }
   .hero-content-slider {
     min-height: 220px;
