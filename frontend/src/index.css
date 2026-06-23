@@ -2215,10 +2215,6 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
   }
   .nav-menu-overlay {
     justify-content: flex-start !important;
-    padding-top: 5rem !important;
+    padding-top: 3.5rem !important;
   }
 }
-
-
-
-

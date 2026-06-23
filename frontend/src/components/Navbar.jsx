@@ -89,7 +89,7 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
             justifyContent: 'flex-start', // Align to top
             animation: 'fadeInOverlay 0.4s ease-out',
             overflowY: 'auto',
-            padding: '5rem 1rem 3rem 1rem' // Shift elements up on PC/mobile
+            padding: '3.5rem 1rem 3rem 1rem' // Shift elements up on PC/mobile
           }}
         >
           {/* Close Button */}
@@ -120,13 +120,13 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
           </button>
 
           {/* Luxury Navigation Links */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '2rem', alignItems: 'center', margin: '0' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center', margin: '0' }}>
             <div 
               onClick={() => {
                 setMenuOpen(false);
                 onViewChange('home');
               }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '2.5rem', cursor: 'pointer' }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '1rem', cursor: 'pointer' }}
             >
               <img src="/logo.png" className="nav-menu-logo" alt="Golden Sky Logo" style={{ objectFit: 'contain' }} />
             </div>
