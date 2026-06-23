@@ -212,6 +212,7 @@ function WhatsAppFloater() {
         href="https://wa.me/94714831035?text=Hello%20Golden%20Sky%20Hotel%20%26%20Wellness%2C%20I%20would%20like%20to%20inquire%20about%20a%20booking."
         target="_blank"
         rel="noopener noreferrer"
+        className="whatsapp-floater-link"
         style={{
           position: 'fixed',
           bottom: '2rem',
@@ -287,6 +288,12 @@ function WhatsAppFloater() {
         }
         .whatsapp-pulse-btn {
           animation: whatsappPulse 2.2s infinite;
+        }
+        @media (max-width: 480px) {
+          .whatsapp-floater-link {
+            bottom: 1rem !important;
+            left: 1rem !important;
+          }
         }
       `}</style>
     </>
