@@ -2182,6 +2182,56 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
     padding: 1.8rem 1.4rem !important;
   }
 }
+/* Breathing Sanctuary Section Layout */
+.breathing-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+}
+
+@media (max-width: 768px) {
+  .breathing-layout {
+    display: flex !important;
+    flex-direction: row !important;
+    align-items: center !important;
+    gap: 1.2rem !important;
+  }
+
+  /* Shrink orb column so it fits beside the text */
+  .breathing-orb-col {
+    min-height: unset !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Shrink the 160px orb down to 100px on mobile */
+  .breathing-orb-col > div {
+    width: 100px !important;
+    height: 100px !important;
+  }
+
+  /* Shrink inner glow circle to match */
+  .breathing-orb-col > div > div:last-child {
+    width: 68px !important;
+    height: 68px !important;
+    font-size: 0.7rem !important;
+  }
+
+  /* Compact the text paragraph on mobile */
+  .breathing-desc {
+    font-size: 0.78rem !important;
+    line-height: 1.55 !important;
+    display: -webkit-box;
+    -webkit-line-clamp: 4;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  /* Scale down the section heading */
+  .breathing-layout h3 {
+    font-size: 1.35rem !important;
+  }
+}
+
 /* Spa Page Therapies responsiveness */
 .therapy-card-image {
   height: 340px;

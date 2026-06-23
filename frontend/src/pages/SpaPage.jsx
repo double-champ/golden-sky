@@ -208,10 +208,10 @@ export default function SpaPage({ onOpenBooking }) {
           }} />
 
           <div 
-            className="responsive-layout-grid"
+            className="breathing-layout"
             style={{
               alignItems: 'center',
-              gap: '3rem',
+              gap: '2rem',
               position: 'relative',
               zIndex: 2
             }}
@@ -221,7 +221,8 @@ export default function SpaPage({ onOpenBooking }) {
               textAlign: 'left',
               display: 'flex',
               flexDirection: 'column',
-              gap: '1rem'
+              gap: '1rem',
+              flex: 1
             }}>
               <span style={{ fontSize: '0.72rem', fontWeight: '600', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>
                 High-Altitude Relaxation
@@ -230,18 +231,19 @@ export default function SpaPage({ onOpenBooking }) {
                 Acclimatize Your Lungs <br />
                 <span className="text-gold-gradient" style={{ fontStyle: 'italic', fontWeight: '400' }}>with Kandy's Peak Mist</span>
               </h3>
-              <p style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.75)', lineHeight: '1.65', margin: 0 }}>
+              <p className="breathing-desc" style={{ fontSize: '0.88rem', color: 'rgba(255,255,255,0.75)', lineHeight: '1.65', margin: 0 }}>
                 Before embarking on your spa treatments, we invite you to take a moment to adjust to the high-altitude rhythm of the Hanthana Mountains. Sit comfortably, focus on a slow breathing rhythm, and draw in the pure, crisp mountain air infused with wild eucalyptus and pine mist. This natural respiration helps adjust your lungs to our 780m elevation, oxygenating your system and preparing your body for deep herbal relaxation.
               </p>
             </div>
 
             {/* Right Circle Column */}
-            <div style={{
+            <div className="breathing-orb-col" style={{
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
               minHeight: '220px',
-              position: 'relative'
+              position: 'relative',
+              flexShrink: 0
             }}>
               {/* Pulsing Breathing Circle */}
               <div style={{
