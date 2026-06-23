@@ -12,7 +12,9 @@ import AdminDashboard from './pages/AdminDashboard';
 import Footer from './components/Footer';
 
 export default function App() {
-  const [currentView, setCurrentView] = useState('home');
+  const [currentView, setCurrentView] = useState(() => {
+    return localStorage.getItem('currentView') || 'home';
+  });
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [bookingParams, setBookingParams] = useState({ type: 'STAY', package: '' });
   const [isLoading, setIsLoading] = useState(true);
@@ -40,6 +42,7 @@ export default function App() {
       setIsLoading(true);
       setTimeout(() => {
         setCurrentView(view);
+        localStorage.setItem('currentView', view);
         window.scrollTo(0, 0);
         setTimeout(() => {
           setIsLoading(false);
@@ -47,6 +50,7 @@ export default function App() {
       }, 550);
     } else {
       setCurrentView('home');
+      localStorage.setItem('currentView', 'home');
       window.scrollTo(0, 0);
     }
   };
