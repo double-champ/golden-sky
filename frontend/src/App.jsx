@@ -25,6 +25,23 @@ export default function App() {
     return () => clearTimeout(timer);
   }, []);
 
+  // iOS Safari viewport height fix:
+  // 100vh includes the browser chrome (address bar) area on iOS.
+  // We set --app-height to window.innerHeight so the hero section
+  // fills exactly the visible screen regardless of the browser UI.
+  useEffect(() => {
+    const setAppHeight = () => {
+      document.documentElement.style.setProperty('--app-height', `${window.innerHeight}px`);
+    };
+    setAppHeight();
+    window.addEventListener('resize', setAppHeight);
+    window.addEventListener('orientationchange', setAppHeight);
+    return () => {
+      window.removeEventListener('resize', setAppHeight);
+      window.removeEventListener('orientationchange', setAppHeight);
+    };
+  }, []);
+
   const handleOpenBooking = (type = 'STAY', packageName = '') => {
     setBookingParams({ type, package: packageName });
     setBookingModalOpen(true);
