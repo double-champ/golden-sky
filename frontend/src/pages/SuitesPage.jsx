@@ -561,7 +561,7 @@ export default function SuitesPage({ onOpenBooking }) {
                   </div>
 
                   {/* Specs Grid */}
-                  <div style={{
+                  <div className="room-specs-grid" style={{
                     display: 'grid',
                     gridTemplateColumns: 'repeat(3, 1fr)',
                     gap: '1rem',
@@ -825,6 +825,28 @@ export default function SuitesPage({ onOpenBooking }) {
           }
           .mobile-room-selector {
             display: block !important;
+          }
+          .showroom-showcase {
+            border-radius: 16px !important;
+            margin: 0 0.5rem !important;
+          }
+          .showroom-showcase > div:first-child {
+            height: 180px !important;
+          }
+          .room-specs-grid {
+            grid-template-columns: 1fr !important;
+            gap: 0.8rem !important;
+            padding: 0.8rem 0 !important;
+          }
+          .room-specs-grid > div {
+            flex-direction: row !important;
+            justify-content: space-between !important;
+            align-items: center !important;
+            padding: 0.2rem 0 !important;
+            border-bottom: 1px dashed rgba(212, 175, 55, 0.1);
+          }
+          .room-specs-grid > div:last-child {
+            border-bottom: none !important;
           }
         }
       `}</style>
