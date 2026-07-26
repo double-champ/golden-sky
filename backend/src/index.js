@@ -1,5 +1,7 @@
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
+const fs = require('fs');
 const { PrismaClient } = require('@prisma/client');
 require('dotenv').config();
 
@@ -33,7 +35,7 @@ let inMemoryBookings = [
     targetDate: new Date(Date.now() + 86400000 * 2).toISOString(),
     durationDays: 3,
     guestsCount: 2,
-    roomOrPackageName: "Hanthana Misty Suite",
+    roomOrPackageName: "Standard Room 01",
     specialRequests: "Anniversary celebration setup, high floor if possible.",
     status: "CONFIRMED",
     createdAt: new Date().toISOString()
@@ -71,133 +73,133 @@ let inMemoryBookings = [
 let inMemoryRooms = [
   {
     id: "r1",
-    name: "Hanthana Misty Suite",
+    name: "Standard Room 01",
     type: "STAY",
     description: "A quiet mountain retreat with views of the Hanthana range. Features a private jacuzzi, organic Ceylon tea bar, and a scenic mountainside balcony.",
-    price: 45000,
+    price: 10000,
     capacity: 2,
     amenities: "Mountain View, Jacuzzi, Private balcony, Tea Bar, Wi-Fi, King Bed",
     imageUrl: "/images/20260418_064528_1.jpg"
   },
   {
     id: "r2",
-    name: "Golden Sky Canopy Villa",
+    name: "Deluxe Triple Room 01",
     type: "STAY",
     description: "A private standalone villa with glass walls overlooking the sunset. Features a private butler and an outdoor infinity deck.",
-    price: 75000,
+    price: 14000,
     capacity: 3,
-    amenities: "Infinity Pool Access, Glass Walls, Mini Bar, Private Butler, Sun Deck, Air Conditioning",
+    amenities: "Mountain View, Glass Walls, Mini Bar, Private Butler, Sun Deck, Air Conditioning",
     imageUrl: "/images/20260418_072549_1.jpg"
   },
   {
     id: "r3",
-    name: "Serenity Sanctuary Suite",
+    name: "Standard Room 02",
     type: "STAY",
     description: "A dedicated wellness suite for rejuvenation. Features custom aromatherapy, a private soaking tub, and spaces for yoga and stretching.",
-    price: 55000,
+    price: 10000,
     capacity: 2,
-    amenities: "Soaking Tub, Aroma Diffuser, Organic Bedding, Yoga Mat, Balcony, Wi-Fi",
+    amenities: "Mountain View, Soaking Tub, Aroma Diffuser, Organic Bedding, Yoga Mat, Balcony, Wi-Fi",
     imageUrl: "/images/20260418_102057_1.jpg"
   },
   {
     id: "r4",
-    name: "Cloud Nine Penthouse",
+    name: "Deluxe Family Suite",
     type: "STAY",
-    description: "Our ultra-luxury signature penthouse featuring a private infinity pool, a glass floor, and a dedicated butler team.",
-    price: 120000,
-    capacity: 4,
-    amenities: "Glass Floor, Private Infinity Pool, Panoramic View, 24/7 Butler, Wine Cellar, Airport Transfer",
+    description: "Our signature Haritha family suite featuring a private stargazing deck, a glass floor, and a dedicated butler team.",
+    price: 17000,
+    capacity: 3,
+    amenities: "City View, Glass Floor, Private Stargazing Deck, Panoramic View, 24/7 Butler, Wine Cellar, Airport Transfer",
     imageUrl: "/images/20260418_114222_1.jpg"
   },
   {
     id: "r5",
-    name: "Pine Forest Pavilion",
+    name: "Standard Room 03",
     type: "STAY",
     description: "A cozy cabin nestled in the pine woods, featuring a stone fireplace, open-sky rain shower, and a private patio.",
-    price: 65000,
+    price: 10000,
     capacity: 2,
-    amenities: "Pine Forest View, Outdoor Shower, Fireplace, King Bed, Private Patio, Wi-Fi",
+    amenities: "Mountain View, Pine Forest View, Outdoor Shower, Fireplace, King Bed, Private Patio, Wi-Fi",
     imageUrl: "/images/20260418_063038_1.jpg"
   },
   {
     id: "r6",
-    name: "Royal Lotus Water Villa",
+    name: "Deluxe Double Room 01",
     type: "STAY",
     description: "A unique water villa suspended over a spring lotus pond. Features glass floor view panels and private sun decks.",
-    price: 90000,
+    price: 12000,
     capacity: 2,
-    amenities: "Glass Bottom, Spring Pond View, King Bed, Sun loungers, Coffee Machine, Organic toiletries",
+    amenities: "City View, Glass Bottom, Spring Pond View, King Bed, Sun loungers, Coffee Machine, Organic toiletries",
     imageUrl: "/images/20260418_064654_1.jpg"
   },
   {
     id: "r7",
-    name: "Sunrise Horizon Suite",
+    name: "Deluxe Double Room 02",
     type: "STAY",
     description: "A beautiful east-facing suite designed to catch the Kandy sunrise. Equipped with telescopes and private viewing decks.",
-    price: 50000,
+    price: 12000,
     capacity: 2,
-    amenities: "Sunrise View, Telescope, Outdoor Tea Deck, King Bed, Mini bar, Wi-Fi",
+    amenities: "City View, Sunrise View, Telescope, Outdoor Tea Deck, King Bed, Mini bar, Wi-Fi",
     imageUrl: "/images/20260418_065800_1.jpg"
   },
   {
     id: "r8",
-    name: "Majestic Peaks Residence",
+    name: "Deluxe Triple Room 02",
     type: "STAY",
     description: "A spacious 2-bedroom mountainside estate with a private heated hot tub, fireplace lounge, and personal butler.",
-    price: 150000,
-    capacity: 6,
-    amenities: "2 Bedrooms, Private Butler, Luxury Hot Tub, Full Kitchen, Private Terrace, Cardamom tea bar",
+    price: 14000,
+    capacity: 3,
+    amenities: "Mountain View, 2 Bedrooms, Private Butler, Luxury Hot Tub, Full Kitchen, Private Terrace, Cardamom tea bar",
     imageUrl: "/images/20260418_113827_1.jpg"
   },
   {
     id: "r9",
-    name: "Cardamom Hill Chalet",
+    name: "Deluxe Triple Room 03",
     type: "STAY",
     description: "A quiet chalet surrounded by wild cardamom fields, featuring a wood-fired hot tub and scenic valley views.",
-    price: 60000,
-    capacity: 2,
-    amenities: "Aromatherapy room, Cardamom fields view, King Bed, Fireplace, Rainshower, Organic bedding",
+    price: 14000,
+    capacity: 3,
+    amenities: "Mountain View, Aromatherapy room, Cardamom fields view, King Bed, Fireplace, Rainshower, Organic bedding",
     imageUrl: "/images/20260418_062826_1.jpg"
   },
   {
     id: "r10",
-    name: "Whispering Bamboo Loft",
+    name: "Standard Room 04",
     type: "STAY",
     description: "An eco-friendly bamboo loft with cozy hand-woven hammocks, natural breeze cooling, and panoramic forest views.",
-    price: 48000,
+    price: 10000,
     capacity: 2,
-    amenities: "Eco Loft, Bamboo structures, Hammock, Natural Breeze, Wi-Fi, King Bed",
+    amenities: "City View, Eco Loft, Bamboo structures, Hammock, Natural Breeze, Wi-Fi, King Bed",
     imageUrl: "/images/20260418_065313_1.jpg"
   },
   {
     id: "r11",
-    name: "Hanthana Forest Studio",
+    name: "Standard Room 05",
     type: "STAY",
     description: "A peaceful soundproof studio space complete with premium aromatherapy and organic cotton yoga mats.",
-    price: 52000,
+    price: 10000,
     capacity: 2,
-    amenities: "Yoga Studio, Soundproof walls, Yoga mats, Organic tea bar, Wi-Fi",
+    amenities: "Mountain View, Yoga Studio, Soundproof walls, Yoga mats, Organic tea bar, Wi-Fi",
     imageUrl: "/images/20260418_111748_1.jpg"
   },
   {
     id: "r12",
-    name: "Kandy Kings Suite",
+    name: "Deluxe Triple Room 04",
     type: "STAY",
     description: "A suite decorated in royal Kandyan style, featuring antique clawfoot tubs, private viewing decks, and elite butler service.",
-    price: 85000,
+    price: 14000,
     capacity: 3,
-    amenities: "Royal Kandyan decor, Antique tub, Private terrace, Cardamom tea bar, Butler service",
+    amenities: "City View, Royal Kandyan decor, Antique tub, Private terrace, Cardamom tea bar, Butler service",
     imageUrl: "/images/20260418_063431_2.jpg"
   },
   {
     id: "do1",
     name: "Hanthana Escape Dayout",
     type: "DAYOUT",
-    description: "A classic day outing package featuring a mountain lunch buffet and access to our sky pool deck.",
+    description: "A classic day outing package featuring a mountain lunch buffet and access to our scenic viewpoints.",
     price: 6500,
     capacity: 10,
-    amenities: "Welcome drink, Organic Buffet Lunch, Pool entry (2 hours), Ceylon High tea, Wi-Fi",
-    imageUrl: "/images/20260418_084942_1.jpg"
+    amenities: "Welcome drink, Organic Buffet Lunch, Ceylon High tea, Wi-Fi",
+    imageUrl: "/images/dining_escape.jpg"
   },
   {
     id: "do2",
@@ -207,7 +209,7 @@ let inMemoryRooms = [
     price: 12500,
     capacity: 6,
     amenities: "Detox elixir, 3-course spa lunch, Steam bath (30 min), Yoga lawn, 15% Spa discount",
-    imageUrl: "/images/20260418_085140_1.jpg"
+    imageUrl: "/images/dining_wellness.jpg"
   },
   {
     id: "do3",
@@ -216,8 +218,8 @@ let inMemoryRooms = [
     description: "An active day package including a guided mountain trek, tea factory tour, and traditional high tea.",
     price: 9500,
     capacity: 8,
-    amenities: "Guided mountain trek, Tea factory visit, Historic high tea, Buffet Lunch, Pool Access",
-    imageUrl: "/images/20260418_085423_1.jpg"
+    amenities: "Guided mountain trek, Tea factory visit, Historic high tea, Buffet Lunch",
+    imageUrl: "/images/dining_heritage.jpg"
   },
   {
     id: "s1",
@@ -227,7 +229,7 @@ let inMemoryRooms = [
     price: 18000,
     capacity: 1,
     amenities: "Pure lotus oil, Deep tissue massage, Warm copper head wash, Hibiscus tea",
-    imageUrl: "/images/20260418_111209_1.jpg"
+    imageUrl: "/images/spa_therapy_1.jpg"
   },
   {
     id: "s2",
@@ -237,7 +239,7 @@ let inMemoryRooms = [
     price: 15000,
     capacity: 1,
     amenities: "Cardamom & cinnamon scrub, Volcanic clay wrap, Herbal steam box, Lemongrass oil",
-    imageUrl: "/images/20260418_105523_1.jpg"
+    imageUrl: "/images/spa_therapy_2.jpg"
   },
   {
     id: "s3",
@@ -247,7 +249,17 @@ let inMemoryRooms = [
     price: 10000,
     capacity: 1,
     amenities: "Herbal compresses, Organic local oils, Forest audio atmosphere, Relaxation coach",
-    imageUrl: "/images/20260418_111748_1.jpg"
+    imageUrl: "/images/spa_therapy_3.jpg"
+  },
+  {
+    id: "s4",
+    name: "Hanthana Peak Sunrise Yoga",
+    type: "SPA",
+    description: "A guided sunrise Hatha yoga and breathwork session on our panoramic outdoor deck, surrounded by the misty peaks.",
+    price: 6000,
+    capacity: 10,
+    amenities: "Sunrise session, Guided Hatha yoga, Organic herbal tea, Premium mats & blocks provided",
+    imageUrl: "/images/spa_yoga.jpg"
   },
   {
     id: "dn1",
@@ -257,17 +269,17 @@ let inMemoryRooms = [
     price: 9500,
     capacity: 2,
     amenities: "5-Course fine dining, Organic harvest, Valley sunset views, Sommelier pairing",
-    imageUrl: "/images/20260418_095058_1.jpg"
+    imageUrl: "/images/dining_dinner.jpg"
   },
   {
     id: "dn2",
     name: "Hanthana Sunset High Tea",
     type: "DINING",
     description: "A selection of sweet and savory pastries served alongside single-estate organic tea.",
-    price: 4000,
+    price: 4500,
     capacity: 2,
     amenities: "Sweet & savory platters, Organic Hanthana tea, Valley sunset, Live flute music",
-    imageUrl: "/images/20260418_074232_1.jpg"
+    imageUrl: "/images/dining_hightea.jpg"
   },
   {
     id: "dn3",
@@ -277,8 +289,8 @@ let inMemoryRooms = [
     price: 15000,
     capacity: 4,
     amenities: "Private fire-pit table, Mixology pairings, Private chef service, Starlit skies",
-    imageUrl: "/images/20260418_112422_1.jpg"
-  }
+    imageUrl: "/images/dining_rooftop.jpg"
+  },
 ];
 
 // Verify database connection and seed if using DB
@@ -358,6 +370,181 @@ app.get('/api/rooms', async (req, res) => {
     }
   }
   return res.json(inMemoryRooms);
+});
+
+const OFFERS_FILE = path.join(__dirname, 'offers.json');
+
+// Helper to load offers
+function loadOffers() {
+  try {
+    if (fs.existsSync(OFFERS_FILE)) {
+      return JSON.parse(fs.readFileSync(OFFERS_FILE, 'utf8'));
+    }
+  } catch (e) {
+    console.warn("Could not read offers.json, falling back to default offers.");
+  }
+  return [
+    {
+      id: "offer-misty-retreat",
+      title: "Misty Hanthana Retreat",
+      badge: "Limited Stay Offer",
+      discount: "20% OFF ALL SUITES",
+      description: "Enjoy 20% off when you book for 3+ nights. Includes complimentary Hanthana Sunset High Tea.",
+      type: "STAY",
+      packageName: "Standard Room 01",
+      cta: "Book Stay"
+    },
+    {
+      id: "offer-spa-glow",
+      title: "Ayurveda Wellness Glow",
+      badge: "Spa Special",
+      discount: "FREE HERBAL SCRUB",
+      description: "Book any Signature Ritual wellness therapy and receive a complimentary cardamon scrub add-on.",
+      type: "SPA",
+      packageName: "Royal Lotus Relaxation Therapy",
+      cta: "Book Spa"
+    },
+    {
+      id: "offer-dayout-group",
+      title: "Heritage Corporate Dayout",
+      badge: "Group Package Discount",
+      discount: "10% OFF ON 5+ GUESTS",
+      description: "Plan your team retreat with us. Get 10% off on Royal Heritage dayouts when booking for 5 or more guests.",
+      type: "DAYOUT",
+      packageName: "Royal Heritage Dayout",
+      cta: "Book Dayout"
+    }
+  ];
+}
+
+let inMemoryOffers = loadOffers();
+
+function saveOffers() {
+  try {
+    fs.writeFileSync(OFFERS_FILE, JSON.stringify(inMemoryOffers, null, 2), 'utf8');
+  } catch (e) {
+    console.error("Could not write offers.json:", e.message);
+  }
+}
+
+// Room Management Routes
+app.put('/api/rooms/:id', async (req, res) => {
+  const { id } = req.params;
+  const { name, type, description, price, capacity, amenities, imageUrl } = req.body;
+  
+  const memIndex = inMemoryRooms.findIndex(r => r.id === id);
+  if (memIndex !== -1) {
+    inMemoryRooms[memIndex] = {
+      ...inMemoryRooms[memIndex],
+      name: name || inMemoryRooms[memIndex].name,
+      type: type || inMemoryRooms[memIndex].type,
+      description: description || inMemoryRooms[memIndex].description,
+      price: price !== undefined ? parseFloat(price) : inMemoryRooms[memIndex].price,
+      capacity: capacity !== undefined ? parseInt(capacity) : inMemoryRooms[memIndex].capacity,
+      amenities: amenities || inMemoryRooms[memIndex].amenities,
+      imageUrl: imageUrl || inMemoryRooms[memIndex].imageUrl
+    };
+  }
+  
+  if (useDatabase) {
+    try {
+      const updated = await prisma.room.update({
+        where: { id },
+        data: {
+          name,
+          type,
+          description,
+          price: price !== undefined ? parseFloat(price) : undefined,
+          capacity: capacity !== undefined ? parseInt(capacity) : undefined,
+          amenities,
+          imageUrl
+        }
+      });
+      return res.json({ success: true, room: updated });
+    } catch (err) {
+      console.error("Database room update failed:", err.message);
+    }
+  }
+  
+  if (memIndex !== -1) {
+    return res.json({ success: true, room: inMemoryRooms[memIndex] });
+  }
+  return res.status(404).json({ error: "Room not found" });
+});
+
+app.post('/api/rooms', async (req, res) => {
+  const { name, type, description, price, capacity, amenities, imageUrl } = req.body;
+  const newId = `r-${Date.now()}`;
+  const newRoom = {
+    id: newId,
+    name,
+    type,
+    description,
+    price: parseFloat(price) || 0,
+    capacity: parseInt(capacity) || 2,
+    amenities: amenities || "",
+    imageUrl: imageUrl || ""
+  };
+  
+  inMemoryRooms.push(newRoom);
+  
+  if (useDatabase) {
+    try {
+      const dbRoom = await prisma.room.create({
+        data: newRoom
+      });
+      return res.status(201).json({ success: true, room: dbRoom });
+    } catch (err) {
+      console.error("Database room creation failed:", err.message);
+    }
+  }
+  return res.status(201).json({ success: true, room: newRoom });
+});
+
+app.delete('/api/rooms/:id', async (req, res) => {
+  const { id } = req.params;
+  inMemoryRooms = inMemoryRooms.filter(r => r.id !== id);
+  if (useDatabase) {
+    try {
+      await prisma.room.delete({ where: { id } });
+      return res.json({ success: true });
+    } catch (err) {
+      console.error("Database room delete failed:", err.message);
+    }
+  }
+  return res.json({ success: true });
+});
+
+// Offers Management Routes
+app.get('/api/offers', (req, res) => {
+  res.json(inMemoryOffers);
+});
+
+app.post('/api/offers', (req, res) => {
+  const { title, badge, discount, description, type, packageName, cta } = req.body;
+  if (!title || !discount || !description) {
+    return res.status(400).json({ error: "Missing offer details." });
+  }
+  const newOffer = {
+    id: `offer-${Date.now()}`,
+    title,
+    badge: badge || "Special Promo",
+    discount,
+    description,
+    type: type || "STAY",
+    packageName: packageName || "",
+    cta: cta || "Learn More"
+  };
+  inMemoryOffers.push(newOffer);
+  saveOffers();
+  res.status(201).json({ success: true, offer: newOffer });
+});
+
+app.delete('/api/offers/:id', (req, res) => {
+  const { id } = req.params;
+  inMemoryOffers = inMemoryOffers.filter(o => o.id !== id);
+  saveOffers();
+  res.json({ success: true });
 });
 
 // 2. GET ALL BOOKINGS (ADMIN)
@@ -593,6 +780,22 @@ app.get('/api/analytics', async (req, res) => {
     cancelledCount,
     estimatedRevenue,
     categories
+  });
+});
+
+// Serve raw images from Golden Sky Residence folder
+const rawImagesDir = 'd:\\Golden Sky Hotel and Wellness\\Golden Sky Residence';
+
+app.use('/raw-images', express.static(rawImagesDir));
+
+app.get('/api/raw-images-list', (req, res) => {
+  fs.readdir(rawImagesDir, (err, files) => {
+    if (err) return res.status(500).json({ error: err.message });
+    const imageFiles = files.filter(f => {
+      const ext = path.extname(f).toLowerCase();
+      return ext === '.jpg' || ext === '.jpeg' || ext === '.png' || ext === '.webp';
+    });
+    res.json(imageFiles);
   });
 });
 

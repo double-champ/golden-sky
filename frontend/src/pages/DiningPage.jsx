@@ -28,31 +28,39 @@ export default function DiningPage({ onOpenBooking }) {
       } catch (err) {
         console.warn("Backend API offline. Loading fallback dayout and dining options...");
         // Fallback mock items list representing the seeded packages
+        const fallbackImages = [
+          "/images/dining_escape.jpg",
+          "/images/dining_wellness.jpg",
+          "/images/dining_heritage.jpg",
+          "/images/dining_dinner.jpg",
+          "/images/dining_hightea.jpg",
+          "/images/dining_rooftop.jpg"
+        ];
         const fallbackItems = Object.keys(diningMetadata).map((name, index) => ({
           id: `fallback-d${index + 1}`,
           name,
           type: diningMetadata[name].type,
-          price: name.includes("Escape") ? 6500 : (name.includes("Wellness") ? 12500 : (name.includes("Heritage") ? 9500 : (name.includes("Dinner") ? 9500 : (name.includes("High Tea") ? 4000 : 15000)))),
+          price: name.includes("Escape") ? 6500 : (name.includes("Wellness") ? 12500 : (name.includes("Heritage") ? 9500 : (name.includes("Dinner") ? 9500 : (name.includes("High Tea") ? 4500 : 15000)))),
           capacity: name.includes("Heritage") ? 4 : (name.includes("Escape") ? 2 : 1),
           description: name.includes("Escape")
-            ? "Our classic dayout package designed to offer a peaceful mountain escape with gourmet buffet dining and access to our sky pool."
+            ? "Our classic dayout package designed to offer a peaceful mountain escape with gourmet buffet dining and access to our scenic viewpoints."
             : (name.includes("Wellness")
                 ? "An elevated package that combines healthy 3-course organic lunches with private herbal steam baths and wellness review consultations."
                 : (name.includes("Heritage")
-                    ? "Includes a guided mountain peak trek, tour of a historic tea factory, customized high tea experience, and panoramic pool access."
+                    ? "Includes a guided mountain peak trek, tour of a historic tea factory, customized high tea experience, and panoramic forest deck access."
                     : (name.includes("Dinner")
                         ? "A fine-dining gastronomic tour showcasing Kandyan heritage spices, fresh mountain greens, and organic mountain harvests."
                         : (name.includes("High Tea")
                             ? "A gorgeous collection of local and international pastries served alongside single-estate organic Hanthana tea."
                             : "Private starlit dining around copper fire-pits, including custom mixology drink pairings and a dedicated chef.")))),
           amenities: name.includes("Escape")
-            ? "Welcome Fruit Elixir, Organic Lunch Buffet, Panoramic Pool Access (2 hrs), Ceylon High Tea Platter"
+            ? "Welcome Fruit Elixir, Organic Lunch Buffet, Scenic View Deck Access, Ceylon High Tea Platter"
             : (name.includes("Wellness")
                 ? "Welcome Detox Shot, Curated 3-Course Organic Lunch, 30-min Herbal Steam Bath, Yoga Lawn access"
                 : (name.includes("Heritage")
-                    ? "Guided Mountain Trek, Tea Factory Tour, Historic High Tea, Buffet Lunch, Pool Access"
+                    ? "Guided Mountain Trek, Tea Factory Tour, Historic High Tea, Buffet Lunch, Viewing Deck Access"
                     : "Organic cardamon, Cinnamon infusions, Sunset views, Cardamon tea bar")),
-          imageUrl: `/images/20260418_09${50 + index}_1.jpg`
+          imageUrl: fallbackImages[index]
         }));
         setItems(fallbackItems);
       } finally {
@@ -72,7 +80,7 @@ export default function DiningPage({ onOpenBooking }) {
       <section className="page-hero-banner" style={{
         position: 'relative',
         height: '55vh',
-        background: 'linear-gradient(rgba(24, 23, 21, 0.45), rgba(24, 23, 21, 0.7)), url("/images/20260418_095058_1.jpg")',
+        background: 'linear-gradient(rgba(14, 13, 11, 0.45), rgba(14, 13, 11, 0.7)), url("/images/20260418_095058_1.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'scroll',

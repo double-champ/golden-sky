@@ -6,10 +6,10 @@ import Testimonials from '../components/Testimonials';
 const suitesList = [
   {
     id: "r1",
-    name: "Hanthana Misty Suite",
-    price: "LKR 45,000",
+    name: "Standard Room 01",
+    price: "LKR 10,000",
     size: "65 m²",
-    capacity: "2 Adults",
+    capacity: "2 Guests",
     bed: "King Bed",
     description: "A quiet mountain retreat with views of the Hanthana range. Features a private jacuzzi, organic Ceylon tea bar, and a scenic mountainside balcony.",
     features: [
@@ -22,14 +22,14 @@ const suitesList = [
   },
   {
     id: "r2",
-    name: "Golden Sky Canopy Villa",
-    price: "LKR 75,000",
+    name: "Deluxe Triple Room 01",
+    price: "LKR 14,000",
     size: "95 m²",
     capacity: "3 Guests",
     bed: "King & Daybed",
     description: "A private standalone villa with glass walls overlooking the sunset. Features a private butler and an outdoor infinity deck.",
     features: [
-      "Infinity pool deck access",
+      "Scenic panoramic view deck",
       "24/7 dedicated private butler service",
       "Panoramic cliff-edge glass walls",
       "Aromatherapy sleep selection catalog"
@@ -38,10 +38,10 @@ const suitesList = [
   },
   {
     id: "r3",
-    name: "Serenity Sanctuary Suite",
-    price: "LKR 55,000",
+    name: "Standard Room 02",
+    price: "LKR 10,000",
     size: "72 m²",
-    capacity: "2 Adults",
+    capacity: "2 Guests",
     bed: "King Bed",
     description: "A dedicated wellness suite for rejuvenation. Features custom aromatherapy, a private soaking tub, and spaces for yoga and stretching.",
     features: [
@@ -91,7 +91,7 @@ const dayoutPackagesList = [
     id: "do1",
     name: "Hanthana Escape Dayout",
     price: "LKR 6,500",
-    description: "Includes organic lunch buffet at The Canopy, pool entry (2 Hrs), Ceylon High Tea, and free Wi-Fi."
+    description: "Includes organic lunch buffet at The Canopy, scenic viewpoints access, Ceylon High Tea, and free Wi-Fi."
   },
   {
     id: "do2",
@@ -145,7 +145,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
       image: "/images/20260418_102057_1.jpg",
       tag: "HOLISTIC RETREAT",
       title: "Botanical Rejuvenation",
-      subtitle: "Shanti Spa & Wellness",
+      subtitle: "Shadara Wellness",
       desc: "Rejuvenate your body and mind with our organic lotus oil massages, herbal body scrubs, and warm herbal compress sessions."
     }
   ];
@@ -224,14 +224,6 @@ export default function Home({ onViewChange, onOpenBooking }) {
                   <span className="hero-subtitle">{slide.subtitle}</span>
                 </h1>
                 <p className="hero-desc">{slide.desc}</p>
-                <div className="hero-actions">
-                  <button className="btn-gold-solid hero-btn" onClick={scrollToDashboard}>
-                    Explore Sanctuary
-                  </button>
-                  <button className="btn-gold hero-btn" style={{ borderColor: 'rgba(255,255,255,0.3)', color: '#fff' }} onClick={() => onOpenBooking(slide.tag.includes('SPA') ? 'SPA' : 'STAY', '')}>
-                    Book Experience
-                  </button>
-                </div>
               </div>
             ))}
           </div>
@@ -314,53 +306,27 @@ export default function Home({ onViewChange, onOpenBooking }) {
               <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
                 A unique hotel dashboard perched high above the clouds in Hanthana, Kandy. Select an interactive cell to explore our chambers, spa, and dining.
               </p>
-              <div style={{ display: 'inline-flex', gap: '0.5rem', alignItems: 'center', fontSize: '0.75rem', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em' }}>
-                <span>Click a grid card to begin</span>
-                <div style={{ width: '20px', height: '1px', backgroundColor: 'var(--color-gold)' }} />
-              </div>
             </div>
           </div>
    
-          {/* Cell 2: Luxury Suites card (span 1-2) */}
-          <div className="bento-item span-1-2 reveal" style={{ cursor: 'pointer' }} onClick={() => onViewChange('suites')}>
+          {/* Cell 2: Luxury Suites card (span 2-2) */}
+          <div className="bento-item span-2-2 reveal" style={{ cursor: 'pointer' }} onClick={() => onViewChange('suites')}>
             <img src="/images/20260418_064528_1.jpg" alt="Suites" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>01 / ACCOMMODATIONS</span>
-              <h3 style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)' }}>Luxury Suites</h3>
-              <p style={{ fontSize: '0.8rem', marginTop: '0.5rem' }}>Chambers perched in the clouds with panoramic jacuzzis.</p>
-            </div>
-          </div>
-   
-          {/* Cell 3: Reserve Booking CTAs (span 1-2) */}
-          <div 
-            className="bento-item span-1-2 bento-pulse reveal" 
-            style={{ 
-              cursor: 'pointer', 
-              background: 'linear-gradient(135deg, #fdfcf9 0%, #faf3db 100%)', 
-              borderColor: 'var(--color-gold)', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              textAlign: 'center' 
-            }}
-            onClick={() => onOpenBooking('STAY', '')}
-          >
-            <div className="bento-content" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '0.5rem' }}>
-              <div style={{ background: 'rgba(212, 175, 55, 0.1)', padding: '0.8rem', borderRadius: '50%', color: 'var(--color-gold)' }}>
-                <Calendar size={20} />
-              </div>
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', letterSpacing: '0.15em', textTransform: 'uppercase', fontWeight: '600' }}>Instant Check</span>
-              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)' }}>Book Stays</h3>
+              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>01 / ACCOMMODATIONS</span>
+              <h3 style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Luxury Suites</h3>
+              <p style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.8)', marginTop: '0.5rem' }}>Chambers perched in the clouds with panoramic jacuzzis.</p>
             </div>
           </div>
    
           {/* Cell 5: Spa & Ayurveda (span 2-1) */}
           <div className="bento-item span-2-1 reveal" style={{ cursor: 'pointer' }} onClick={() => onViewChange('spa')}>
-            <img src="/images/20260418_111209_1.jpg" alt="Spa" className="bento-img-bg" loading="lazy" decoding="async" />
+            <img src="/images/spa_section.jpg" alt="Spa" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>02 / HEALTH</span>
-              <h3 style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)' }}>Shanti Spa & Wellness</h3>
+              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>02 / HEALTH</span>
+              <h3 style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Shadara Wellness</h3>
             </div>
           </div>
    
@@ -369,8 +335,8 @@ export default function Home({ onViewChange, onOpenBooking }) {
             <img src="/images/20260418_074232_1.jpg" alt="Restaurant" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>03 / CULINARY</span>
-              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)' }}>Dine & Dayouts</h3>
+              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>03 / CULINARY</span>
+              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Dine & Dayouts</h3>
             </div>
           </div>
    
@@ -379,8 +345,8 @@ export default function Home({ onViewChange, onOpenBooking }) {
             <img src="/images/20260418_112422_1.jpg" alt="Rooftop" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>04 / BAR</span>
-              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)' }}>Aura Lounge</h3>
+              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>04 / BAR</span>
+              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Aura Lounge</h3>
             </div>
           </div>
    

@@ -4,21 +4,21 @@ import { Maximize2, Users, BedDouble, ChevronRight } from 'lucide-react';
 const suites = [
   {
     id: "r1",
-    name: "Hanthana Misty Suite",
+    name: "Standard Room 01",
     tag: "Mountain Retreat",
     description: "A quiet mountain retreat with views of the Hanthana range. Features a private jacuzzi, organic Ceylon tea bar, and a scenic mountainside balcony.",
-    price: "LKR 45,000",
+    price: "LKR 10,000",
     size: "65 m²",
-    capacity: "2 Adults",
+    capacity: "2 Guests",
     bed: "King Bed",
     image: "/images/20260418_064528_1.jpg"
   },
   {
     id: "r2",
-    name: "Golden Sky Canopy Villa",
+    name: "Deluxe Triple Room 01",
     tag: "Signature Villa",
     description: "A private standalone villa with glass walls overlooking the sunset. Features a private butler and an outdoor infinity deck.",
-    price: "LKR 75,000",
+    price: "LKR 14,000",
     size: "95 m²",
     capacity: "3 Guests",
     bed: "King & Daybed",
@@ -26,12 +26,12 @@ const suites = [
   },
   {
     id: "r3",
-    name: "Serenity Sanctuary Suite",
+    name: "Standard Room 02",
     tag: "Wellness Special",
     description: "A dedicated wellness suite for rejuvenation. Features custom aromatherapy, a private soaking tub, and spaces for yoga and stretching.",
-    price: "LKR 55,000",
+    price: "LKR 10,000",
     size: "72 m²",
-    capacity: "2 Adults",
+    capacity: "2 Guests",
     bed: "King Bed",
     image: "/images/20260418_102057_1.jpg"
   }

@@ -4,18 +4,18 @@ import { X, Calendar, User, Mail, Phone, FileText, CheckCircle, AlertTriangle } 
 const API_BASE = "http://localhost:5000/api";
 
 const ROOM_CATEGORIES = {
-  "Hanthana Misty Suite": "Double rooms",
-  "Golden Sky Canopy Villa": "Triple rooms",
-  "Ayur Sanctuary Suite": "Double rooms",
-  "Cloud Nine Penthouse": "Suite",
-  "Pine Forest Pavilion": "Double rooms",
-  "Sacred Lotus Water Villa": "Double rooms",
-  "Sunrise Horizon Suite": "Double rooms",
-  "Majestic Peaks Residence": "Triple rooms",
-  "Cardamom Hill Chalet": "Triple rooms",
-  "Whispering Bamboo Loft": "Single rooms",
-  "Nirvana Zen Studio": "Double rooms",
-  "Kandy Kings Suite": "Triple rooms"
+  "Standard Room 01": "Standard rooms",
+  "Deluxe Triple Room 01": "Deluxe rooms",
+  "Standard Room 02": "Standard rooms",
+  "Deluxe Family Suite": "Suite",
+  "Standard Room 03": "Standard rooms",
+  "Deluxe Double Room 01": "Deluxe rooms",
+  "Deluxe Double Room 02": "Deluxe rooms",
+  "Deluxe Triple Room 02": "Deluxe rooms",
+  "Deluxe Triple Room 03": "Deluxe rooms",
+  "Standard Room 04": "Standard rooms",
+  "Standard Room 05": "Standard rooms",
+  "Deluxe Triple Room 04": "Deluxe rooms"
 };
 
 export default function BookingForm({ isOpen, onClose, initialType = 'STAY', initialPackage = '' }) {
@@ -39,26 +39,27 @@ export default function BookingForm({ isOpen, onClose, initialType = 'STAY', ini
   const [checkoutDate, setCheckoutDate] = useState('');
 
   const fallbackRooms = [
-    { name: "Hanthana Misty Suite", type: "STAY", price: 45000 },
-    { name: "Golden Sky Canopy Villa", type: "STAY", price: 75000 },
-    { name: "Serenity Sanctuary Suite", type: "STAY", price: 55000 },
-    { name: "Cloud Nine Penthouse", type: "STAY", price: 120000 },
-    { name: "Pine Forest Pavilion", type: "STAY", price: 65000 },
-    { name: "Royal Lotus Water Villa", type: "STAY", price: 90000 },
-    { name: "Sunrise Horizon Suite", type: "STAY", price: 50000 },
-    { name: "Majestic Peaks Residence", type: "STAY", price: 150000 },
-    { name: "Cardamom Hill Chalet", type: "STAY", price: 60000 },
-    { name: "Whispering Bamboo Loft", type: "STAY", price: 48000 },
-    { name: "Hanthana Forest Studio", type: "STAY", price: 52000 },
-    { name: "Kandy Kings Suite", type: "STAY", price: 85000 },
+    { name: "Standard Room 01", type: "STAY", price: 10000 },
+    { name: "Deluxe Triple Room 01", type: "STAY", price: 14000 },
+    { name: "Standard Room 02", type: "STAY", price: 10000 },
+    { name: "Deluxe Family Suite", type: "STAY", price: 17000 },
+    { name: "Standard Room 03", type: "STAY", price: 10000 },
+    { name: "Deluxe Double Room 01", type: "STAY", price: 12000 },
+    { name: "Deluxe Double Room 02", type: "STAY", price: 12000 },
+    { name: "Deluxe Triple Room 02", type: "STAY", price: 14000 },
+    { name: "Deluxe Triple Room 03", type: "STAY", price: 14000 },
+    { name: "Standard Room 04", type: "STAY", price: 10000 },
+    { name: "Standard Room 05", type: "STAY", price: 10000 },
+    { name: "Deluxe Triple Room 04", type: "STAY", price: 14000 },
     { name: "Hanthana Escape Dayout", type: "DAYOUT", price: 6500 },
     { name: "Golden Wellness Dayout", type: "DAYOUT", price: 12500 },
     { name: "Royal Heritage Dayout", type: "DAYOUT", price: 9500 },
     { name: "Royal Lotus Relaxation Therapy", type: "SPA", price: 18000 },
     { name: "Kandy Spiced Herbal Glow", type: "SPA", price: 15000 },
     { name: "Hanthana Herbal Wellness Massage", type: "SPA", price: 10000 },
+    { name: "Hanthana Peak Sunrise Yoga", type: "SPA", price: 6000 },
     { name: "Curated 5-Course Dinner", type: "DINING", price: 9500 },
-    { name: "Hanthana Sunset High Tea", type: "DINING", price: 4000 },
+    { name: "Hanthana Sunset High Tea", type: "DINING", price: 4500 },
     { name: "Aura Rooftop Fire-pit Dining", type: "DINING", price: 15000 }
   ];
 

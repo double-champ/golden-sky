@@ -1,20 +1,29 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Tenor+Sans&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap');
 
 :root {
-  /* Design Tokens - Warm White & Gold Dashboard */
-  --color-primary: #181715;          /* Obsidian Slate */
-  --color-gold: #d4af37;             /* Bright Gold */
-  --color-gold-light: #f3e5be;       /* Champagne */
-  --color-gold-dark: #b89228;
-  --color-bg-ivory: #faf8f5;         /* Soft Cream Background */
+  /* Design Tokens - Luminous Gold & Alabaster with Obsidian Contrast */
+  --color-primary: #0e0d0b;          /* Soft Charcoal Obsidian (for dark panels and headers) */
+  --color-bg-obsidian: #0e0d0b;      /* Support components fallback */
+  --color-gold: #cfa851;             /* Radiant Sunlit Gold */
+  --color-gold-light: #f7eed7;       /* Champagne Ivory / Light Cream */
+  --color-gold-dark: #ad8330;        /* Deep Burnished Gold */
+  
+  /* Mineral Accents */
+  --color-forest: #1a1714;           /* Warm Earth Stone */
+  --color-sage: #8b8070;             /* Warm Taupe / Sand Stone */
+  --color-sage-light: #fdfcf9;       /* Luminous Alabaster White */
+  
+  --color-bg-ivory: #faf8f4;         /* Soft Satin Ivory Background (warm white) */
   --color-bg-white: #ffffff;
-  --color-text-dark: #1b1a18;
-  --color-text-muted: #6e6b66;
-  --color-border-gold: rgba(212, 175, 55, 0.2);
+  --color-text-dark: #1b1916;        /* Deep Mineral Obsidian */
+  --color-text-muted: #7d7568;       /* Muted Warm Sand */
+  --color-border-gold: rgba(207, 168, 81, 0.25);
+  --color-border-sage: rgba(125, 117, 104, 0.15);
   
   /* Fonts */
-  --font-serif: 'Playfair Display', serif;
-  --font-sans: 'Inter', sans-serif;
+  --font-serif: 'Tenor Sans', sans-serif;
+  --font-sans: 'Plus Jakarta Sans', sans-serif;
+  --font-helvetica: 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
   /* Animation Speeds */
   --transition-smooth: all 0.6s cubic-bezier(0.16, 1, 0.3, 1);
@@ -97,45 +106,78 @@ p {
   -webkit-text-fill-color: transparent;
 }
 
-/* Luxury buttons */
+/* Luxury outline button */
 .btn-gold {
+  position: relative;
+  overflow: hidden;
   padding: 0.65rem 1.6rem;
-  background: transparent;
-  color: var(--color-gold);
-  border: 1px solid var(--color-gold);
+  background: transparent !important;
+  color: var(--color-gold-dark) !important;
+  border: 1px solid var(--color-gold-dark) !important;
   font-family: var(--font-sans);
   font-weight: 500;
-  font-size: 0.8rem;
-  letter-spacing: 0.1em;
+  font-size: 0.75rem;
+  letter-spacing: 0.15em;
   text-transform: uppercase;
   border-radius: 30px !important;
-  transition: var(--transition-smooth);
+  transition: all 0.3s ease !important;
+  z-index: 1;
+  cursor: pointer;
 }
 
 .btn-gold:hover {
-  background: var(--color-gold);
-  color: var(--color-bg-white);
-  box-shadow: 0 4px 15px rgba(212, 175, 55, 0.2);
+  background: var(--color-gold) !important;
+  color: #ffffff !important;
+  border-color: var(--color-gold) !important;
+  box-shadow: 0 8px 20px rgba(197, 160, 89, 0.3) !important;
+  transform: translateY(-2px) !important;
 }
 
 .btn-gold-solid {
+  position: relative;
+  overflow: hidden;
   padding: 0.65rem 1.6rem;
   background: var(--color-gold);
   color: var(--color-bg-white);
   border: 1px solid var(--color-gold);
-  font-family: var(--font-sans);
+  font-family: var(--font-helvetica);
   font-weight: 600;
   font-size: 0.8rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   border-radius: 30px !important;
   transition: var(--transition-smooth);
+  z-index: 1;
+}
+
+.btn-gold-solid::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    rgba(255, 255, 255, 0) 0%,
+    rgba(255, 255, 255, 0.3) 50%,
+    rgba(255, 255, 255, 0) 100%
+  );
+  transform: skewX(-25deg);
+  transition: none;
+  z-index: -1;
 }
 
 .btn-gold-solid:hover {
-  background: var(--color-primary);
-  border-color: var(--color-primary);
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.12);
+  background: var(--color-gold-dark);
+  border-color: var(--color-gold-dark);
+  box-shadow: 0 8px 25px rgba(207, 168, 81, 0.4);
+  transform: translateY(-2px);
+}
+
+.btn-gold-solid:hover::before {
+  left: 200%;
+  transition: all 0.9s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 /* Custom cursor tracker */
@@ -238,6 +280,7 @@ p {
 }
 
 .nav-link {
+  font-family: var(--font-helvetica);
   text-decoration: none;
   color: rgba(255, 255, 255, 0.8);
   font-size: 0.75rem;
@@ -375,7 +418,7 @@ p {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to top, rgba(255,255,255,0.35) 0%, rgba(255,255,255,0.1) 25%, rgba(255,255,255,0) 100%);
+  background: linear-gradient(to top, rgba(14, 13, 11, 0.95) 0%, rgba(14, 13, 11, 0.5) 50%, rgba(14, 13, 11, 0.05) 100%);
   z-index: 2;
   pointer-events: none;
 }
@@ -884,7 +927,7 @@ p {
   overflow: hidden;
   padding: 0 2rem;
   box-sizing: border-box;
-  background-color: #181715;
+  background-color: var(--color-primary);
   margin-bottom: -1px;
 }
 
@@ -924,9 +967,9 @@ p {
   height: calc(100% + 1px); /* Extend height by 1px to match container */
   background: linear-gradient(
     to bottom,
-    rgba(24, 23, 21, 0.45) 0%,
-    rgba(24, 23, 21, 0.65) 60%,
-    rgba(24, 23, 21, 0.85) 100%
+    rgba(14, 13, 11, 0.45) 0%,
+    rgba(14, 13, 11, 0.65) 60%,
+    rgba(14, 13, 11, 0.85) 100%
   );
   z-index: 2;
 }
@@ -946,7 +989,7 @@ p {
   font-size: 0.65rem;
   letter-spacing: 0.25em;
   font-weight: 500;
-  font-family: var(--font-sans);
+  font-family: var(--font-helvetica);
   pointer-events: none;
 }
 
@@ -1055,6 +1098,7 @@ p {
 }
 
 .hero-tag {
+  font-family: var(--font-helvetica);
   display: flex;
   align-items: center;
   gap: 0.5rem;
@@ -1086,9 +1130,9 @@ p {
 }
 
 .hero-desc {
-  font-size: clamp(0.9rem, 1.8vw, 1rem);
-  color: rgba(255, 255, 255, 0.8);
-  max-width: 650px;
+  font-size: clamp(1.05rem, 2.2vw, 1.25rem);
+  color: rgba(255, 255, 255, 0.85);
+  max-width: 720px;
   line-height: 1.75;
 }
 
@@ -1125,6 +1169,7 @@ p {
 }
 
 .scroll-text {
+  font-family: var(--font-helvetica);
   font-size: 0.65rem;
   text-transform: uppercase;
   letter-spacing: 0.25em;
@@ -1200,7 +1245,7 @@ p {
 }
 
 .booking-field select option {
-  background: #181715;
+  background: var(--color-primary);
   color: #ffffff;
 }
 
@@ -1327,8 +1372,8 @@ p {
     font-size: clamp(1.1rem, 3vw, 1.5rem);
   }
   .hero-desc {
-    font-size: 0.8rem;
-    line-height: 1.5;
+    font-size: 0.9rem;
+    line-height: 1.55;
     max-width: 90%;
     margin-bottom: 0.3rem;
   }
@@ -1563,46 +1608,7 @@ p {
   box-shadow: 0 10px 25px rgba(197, 160, 89, 0.45) !important;
 }
 
-/* Premium outline button: transparent base with smooth slide-up background fill */
-.btn-gold {
-  position: relative;
-  overflow: hidden;
-  background: transparent !important;
-  color: var(--color-gold) !important;
-  border: 1px solid var(--color-gold) !important;
-  font-family: var(--font-sans);
-  font-weight: 500 !important;
-  font-size: 0.75rem !important;
-  letter-spacing: 0.15em !important;
-  text-transform: uppercase !important;
-  border-radius: 30px !important;
-  transition: color 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1) !important;
-  z-index: 1;
-}
-
-.btn-gold::before {
-  content: '';
-  position: absolute;
-  top: 100%;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: linear-gradient(135deg, var(--color-gold) 0%, #a48123 100%);
-  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
-  z-index: -1;
-  transform: translateY(0);
-}
-
-.btn-gold:hover {
-  color: #fff !important;
-  border-color: var(--color-gold) !important;
-  box-shadow: 0 8px 20px rgba(197, 160, 89, 0.25) !important;
-  transform: translateY(-2px) !important;
-}
-
-.btn-gold:hover::before {
-  transform: translateY(-100%);
-}
+/* Premium outline button transition rules cleared (merged above) */
 
 /* Make map responsive */
 @media (max-width: 1024px) {
@@ -2029,26 +2035,22 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
 /* Redesigned Premium Review/Testimonial Cards */
 .review-card-premium {
   position: relative;
-  border-radius: 24px;
-  padding: 3rem 2.5rem 2.5rem 2.5rem;
-  background: rgba(255, 252, 245, 0.7);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(212, 175, 55, 0.16);
-  box-shadow: 0 10px 40px rgba(24, 23, 21, 0.02);
+  background: transparent;
+  border: none;
+  box-shadow: none;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  height: 100%;
-  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-  overflow: hidden;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  height: auto;
+  transition: all 0.4s ease;
 }
 
 .review-card-premium:hover {
-  transform: translateY(-8px);
-  border-color: rgba(212, 175, 55, 0.45);
-  box-shadow: 0 20px 50px rgba(212, 175, 55, 0.08);
-  background: rgba(255, 252, 245, 0.95);
+  transform: none;
+  box-shadow: none;
+  background: transparent;
 }
 
 .review-card-quote-icon {
@@ -2182,8 +2184,8 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
   flex: 0 0 100%;
   width: 100%;
   box-sizing: border-box;
-  background-color: #1c1b18;
-  color: #fff;
+  background: linear-gradient(135deg, #ffffff 40%, #faf5e6 85%, #f2e3be 100%); /* Warm white transitioning into a soft champagne gold lining wash */
+  color: var(--color-text-dark);
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   min-height: 480px;
@@ -2415,4 +2417,31 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
   .animate-slide-up h2 {
     font-size: clamp(1.8rem, 6vw, 2.4rem) !important;
   }
+}
+
+/* Premium experiences scrolling deck styles */
+.experience-card-deck-item:hover .deck-img {
+  transform: scale(1.08);
+}
+
+.experience-card-deck-item:hover .deck-glass-panel {
+  max-height: 380px !important;
+  background: rgba(255, 255, 255, 0.12) !important;
+  border-color: rgba(207, 168, 81, 0.3) !important;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  overflow-y: auto;
+}
+
+.experience-card-deck-item:hover .deck-desc {
+  opacity: 1 !important;
+  margin-top: 0.8rem !important;
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

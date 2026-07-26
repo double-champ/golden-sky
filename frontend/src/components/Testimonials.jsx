@@ -9,7 +9,7 @@ const testimonials = [
     date: "May 2026"
   },
   {
-    quote: "The Hanthana Herbal Wellness and Spiced Glow massage at Shanti Spa are legendary. I felt a profound sense of relaxation and detox. Architectural luxury at its finest.",
+    quote: "The Hanthana Herbal Wellness and Spiced Glow massage at Shadara Wellness are legendary. I felt a profound sense of relaxation and detox. Architectural luxury at its finest.",
     author: "Dr. Evelyn R.",
     role: "Australia — Wellness Consultant",
     date: "April 2026"
@@ -24,7 +24,7 @@ const testimonials = [
 
 export default function Testimonials() {
   const [currentIndex, setCurrentIndex] = useState(1);
-  const [visibleSlides, setVisibleSlides] = useState(3);
+  const visibleSlides = 1;
   const [transitionEnabled, setTransitionEnabled] = useState(true);
   const [isTransitioning, setIsTransitioning] = useState(false);
   const autoPlayRef = useRef(null);
@@ -34,51 +34,25 @@ export default function Testimonials() {
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50;
 
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setVisibleSlides(1);
-      } else if (window.innerWidth < 1024) {
-        setVisibleSlides(2);
-      } else {
-        setVisibleSlides(3);
-      }
-    };
-
-    handleResize();
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
   const maxIndex = testimonials.length - visibleSlides;
 
-  // Set initial position based on visible slides (starts at 1 if looping, 0 if static)
-  useEffect(() => {
-    if (maxIndex > 0) {
-      setCurrentIndex(1);
-    } else {
-      setCurrentIndex(0);
-    }
-  }, [visibleSlides]);
-
-  // Infinite seamless loop transition check
+  // Seamless loop transition timer
   useEffect(() => {
     if (!isTransitioning) return;
 
     const transitionEndTimer = setTimeout(() => {
       setIsTransitioning(false);
       
-      // If we slid to cloned slides, jump back/forward instantly without transition
       if (maxIndex > 0) {
         if (currentIndex === 0) {
           setTransitionEnabled(false);
-          setCurrentIndex(testimonials.length); // Jump to last slide (index 3)
+          setCurrentIndex(testimonials.length);
         } else if (currentIndex === testimonials.length + 1) {
           setTransitionEnabled(false);
-          setCurrentIndex(1); // Jump to first slide (index 1)
+          setCurrentIndex(1);
         }
       }
-    }, 450); // Matches CSS transition duration (0.45s)
+    }, 450);
 
     return () => clearTimeout(transitionEndTimer);
   }, [currentIndex, isTransitioning, maxIndex]);
@@ -86,11 +60,11 @@ export default function Testimonials() {
   // Auto-play logic
   const startAutoPlay = () => {
     stopAutoPlay();
-    if (maxIndex <= 0) return; // No auto-play if all slides fit
+    if (maxIndex <= 0) return;
 
     autoPlayRef.current = setInterval(() => {
       handleNext();
-    }, 4000);
+    }, 4500);
   };
 
   const stopAutoPlay = () => {
@@ -102,7 +76,7 @@ export default function Testimonials() {
   useEffect(() => {
     startAutoPlay();
     return () => stopAutoPlay();
-  }, [currentIndex, visibleSlides]);
+  }, [currentIndex]);
 
   const handlePrev = () => {
     if (maxIndex <= 0 || isTransitioning) return;
@@ -259,37 +233,27 @@ export default function Testimonials() {
                   boxSizing: 'border-box'
                 }}
               >
-                <div className="review-card-premium" style={{ height: '100%' }}>
-                  <div className="review-card-quote-icon">“</div>
-                  <div>
-                    <div className="review-card-stars">
-                      {Array(5).fill(0).map((_, i) => (
-                        <span key={i}>★</span>
-                      ))}
-                    </div>
+                <div className="review-card-premium" style={{ border: 'none', background: 'none', boxShadow: 'none', padding: 0 }}>
+                  <div style={{ maxWidth: '800px', margin: '0 auto', textAlign: 'center' }}>
                     <p style={{
                       fontFamily: 'var(--font-serif)',
-                      fontSize: '1.08rem',
-                      lineHeight: '1.7',
+                      fontSize: 'clamp(1.15rem, 2.5vw, 1.45rem)',
+                      lineHeight: '1.8',
                       color: 'var(--color-text-dark)',
                       fontStyle: 'italic',
-                      marginBottom: '2rem',
-                      position: 'relative',
-                      zIndex: 2,
-                      textAlign: 'left'
+                      marginBottom: '0'
                     }}>
-                      "{rev.quote}"
+                      “{rev.quote}”
                     </p>
                   </div>
-                  <div style={{ borderTop: '1px solid rgba(212,175,55,0.12)', paddingTop: '1.5rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-                    <div className="review-card-avatar">
-                      {initials}
-                    </div>
-                    <div style={{ flex: 1, textAlign: 'left' }}>
-                      <h4 style={{ fontSize: '0.95rem', fontWeight: '600', color: 'var(--color-text-dark)', fontFamily: 'var(--font-sans)', margin: 0 }}>{rev.author}</h4>
-                      <span style={{ fontSize: '0.75rem', color: 'var(--color-text-muted)', display: 'block', marginTop: '0.2rem' }}>{rev.role}</span>
-                    </div>
-                    <span style={{ fontSize: '0.72rem', color: 'var(--color-gold-dark)', fontWeight: '600' }}>{rev.date}</span>
+                  <div style={{ width: '40px', height: '1px', backgroundColor: 'var(--color-gold)', margin: '1.8rem auto' }} />
+                  <div style={{ textAlign: 'center' }}>
+                    <h4 style={{ fontSize: '0.85rem', fontWeight: '700', color: 'var(--color-text-dark)', fontFamily: 'var(--font-helvetica)', letterSpacing: '0.12em', textTransform: 'uppercase', margin: 0 }}>
+                      {rev.author}
+                    </h4>
+                    <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', display: 'block', marginTop: '0.4rem', letterSpacing: '0.05em' }}>
+                      {rev.role} — <span style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>{rev.date}</span>
+                    </span>
                   </div>
                 </div>
               </div>

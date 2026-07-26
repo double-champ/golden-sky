@@ -4,18 +4,18 @@ import { Maximize2, Users, BedDouble, Check, X, Calendar, ArrowRight, Loader2, S
 const API_BASE = "http://localhost:5000/api";
 
 const roomMetadata = {
-  "Hanthana Misty Suite": { size: "65 m²", bed: "King Bed", category: "Double rooms" },
-  "Golden Sky Canopy Villa": { size: "95 m²", bed: "King & Daybed", category: "Triple rooms" },
-  "Serenity Sanctuary Suite": { size: "72 m²", bed: "King Bed", category: "Double rooms" },
-  "Cloud Nine Penthouse": { size: "120 m²", bed: "King & Queen Bed", category: "Suite" },
-  "Pine Forest Pavilion": { size: "65 m²", bed: "King Bed", category: "Double rooms" },
-  "Sacred Lotus Water Villa": { size: "85 m²", bed: "King Bed", category: "Double rooms" },
-  "Sunrise Horizon Suite": { size: "60 m²", bed: "King Bed", category: "Double rooms" },
-  "Majestic Peaks Residence": { size: "150 m²", bed: "2 King Beds", category: "Triple rooms" },
-  "Cardamom Hill Chalet": { size: "78 m²", bed: "King & Daybed", category: "Triple rooms" },
-  "Whispering Bamboo Loft": { size: "55 m²", bed: "Twin Bed", category: "Single rooms" },
-  "Hanthana Forest Studio": { size: "70 m²", bed: "Queen Bed", category: "Double rooms" },
-  "Kandy Kings Suite": { size: "88 m²", bed: "King Bed", category: "Triple rooms" }
+  "Standard Room 01": { size: "65 m²", bed: "King Bed", category: "Standard rooms" },
+  "Deluxe Triple Room 01": { size: "95 m²", bed: "King & Daybed", category: "Deluxe rooms" },
+  "Standard Room 02": { size: "72 m²", bed: "King Bed", category: "Standard rooms" },
+  "Deluxe Family Suite": { size: "120 m²", bed: "King & Queen Bed", category: "Suite" },
+  "Standard Room 03": { size: "65 m²", bed: "King Bed", category: "Standard rooms" },
+  "Deluxe Double Room 01": { size: "85 m²", bed: "King Bed", category: "Deluxe rooms" },
+  "Deluxe Double Room 02": { size: "60 m²", bed: "King Bed", category: "Deluxe rooms" },
+  "Deluxe Triple Room 02": { size: "150 m²", bed: "2 King Beds", category: "Deluxe rooms" },
+  "Deluxe Triple Room 03": { size: "78 m²", bed: "King & Daybed", category: "Deluxe rooms" },
+  "Standard Room 04": { size: "55 m²", bed: "Twin Bed", category: "Standard rooms" },
+  "Standard Room 05": { size: "70 m²", bed: "Queen Bed", category: "Standard rooms" },
+  "Deluxe Triple Room 04": { size: "88 m²", bed: "King Bed", category: "Deluxe rooms" }
 };
 
 export default function SuitesPage({ onOpenBooking }) {
@@ -30,7 +30,7 @@ export default function SuitesPage({ onOpenBooking }) {
   const [filtersVisible, setFiltersVisible] = useState(false);
   const [priceFilter, setPriceFilter] = useState("all");
   const [capacityFilter, setCapacityFilter] = useState("all");
-  const [amenityFilter, setAmenityFilter] = useState("all");
+  const [viewFilter, setViewFilter] = useState("all");
   const [sortBy, setSortBy] = useState("default");
   const [openFaqIndex, setOpenFaqIndex] = useState(null);
 
@@ -38,7 +38,7 @@ export default function SuitesPage({ onOpenBooking }) {
 
   useEffect(() => {
     setActiveSlideIndex(0);
-  }, [selectedCategory, priceFilter, capacityFilter, amenityFilter, sortBy]);
+  }, [selectedCategory, priceFilter, capacityFilter, viewFilter, sortBy]);
 
   useEffect(() => {
     async function fetchRooms() {
@@ -71,19 +71,21 @@ export default function SuitesPage({ onOpenBooking }) {
           id: `fallback-r${index + 1}`,
           name,
           type: "STAY",
-          price: name.includes("Penthouse") ? 120000 : (name.includes("Residence") ? 150000 : (name.includes("Canopy") ? 75000 : 55000)),
-          capacity: name.includes("Residence") ? 6 : (name.includes("Penthouse") ? 4 : 2),
-          description: name === "Hanthana Misty Suite" ? "A quiet mountain retreat with views of the Hanthana range. Features a private jacuzzi, organic Ceylon tea bar, and a scenic mountainside balcony." :
-                       name === "Golden Sky Canopy Villa" ? "A private standalone villa with glass walls overlooking the sunset. Features a private butler and an outdoor infinity deck." :
-                       name === "Serenity Sanctuary Suite" ? "A dedicated wellness suite for rejuvenation. Features custom aromatherapy, a private soaking tub, and spaces for yoga and stretching." :
-                       name === "Cloud Nine Penthouse" ? "Our ultra-luxury signature penthouse featuring a private infinity pool, a glass floor, and a dedicated butler team." :
-                       name === "Pine Forest Pavilion" ? "A cozy cabin nestled in the pine woods, featuring a stone fireplace, open-sky rain shower, and a private patio." :
-                       name === "Sacred Lotus Water Villa" ? "A unique water villa suspended over a spring lotus pond. Features glass floor view panels and private sun decks." :
-                       name === "Sunrise Horizon Suite" ? "A beautiful east-facing suite designed to catch the Kandy sunrise. Equipped with telescopes and private viewing decks." :
-                       name === "Majestic Peaks Residence" ? "A spacious 2-bedroom mountainside estate with a private heated hot tub, fireplace lounge, and personal butler." :
-                       name === "Cardamom Hill Chalet" ? "A quiet chalet surrounded by wild cardamom fields, featuring a wood-fired hot tub and scenic valley views." :
-                       name === "Whispering Bamboo Loft" ? "An eco-friendly bamboo loft with cozy hand-woven hammocks, natural breeze cooling, and panoramic forest views." :
-                       name === "Hanthana Forest Studio" ? "A peaceful soundproof studio space complete with premium aromatherapy and organic cotton yoga mats." :
+          price: name === "Deluxe Family Suite" ? 17000 : 
+                 (roomMetadata[name].category === "Standard rooms" ? 10000 : 
+                 (name.includes("Triple") ? 14000 : 12000)),
+          capacity: (name.includes("Triple") || name === "Deluxe Family Suite") ? 3 : 2,
+          description: name === "Standard Room 01" ? "A quiet mountain retreat with views of the Hanthana range. Features a private jacuzzi, organic Ceylon tea bar, and a scenic mountainside balcony." :
+                       name === "Deluxe Triple Room 01" ? "A private standalone villa with glass walls overlooking the sunset. Features a private butler and an outdoor infinity deck." :
+                       name === "Standard Room 02" ? "A dedicated wellness suite for rejuvenation. Features custom aromatherapy, a private soaking tub, and spaces for yoga and stretching." :
+                       name === "Deluxe Family Suite" ? "Our signature Haritha family suite featuring a private stargazing deck, a glass floor, and a dedicated butler team." :
+                       name === "Standard Room 03" ? "A cozy cabin nestled in the pine woods, featuring a stone fireplace, open-sky rain shower, and a private patio." :
+                       name === "Deluxe Double Room 01" ? "A unique water villa suspended over a spring lotus pond. Features glass floor view panels and private sun decks." :
+                       name === "Deluxe Double Room 02" ? "A beautiful east-facing suite designed to catch the Kandy sunrise. Equipped with telescopes and private viewing decks." :
+                       name === "Deluxe Triple Room 02" ? "A spacious 2-bedroom mountainside estate with a private heated hot tub, fireplace lounge, and personal butler." :
+                       name === "Deluxe Triple Room 03" ? "A quiet chalet surrounded by wild cardamom fields, featuring a wood-fired hot tub and scenic valley views." :
+                       name === "Standard Room 04" ? "An eco-friendly bamboo loft with cozy hand-woven hammocks, natural breeze cooling, and panoramic forest views." :
+                       name === "Standard Room 05" ? "A peaceful soundproof studio space complete with premium aromatherapy and organic cotton yoga mats." :
                        "A suite decorated in royal Kandyan style, featuring antique clawfoot tubs, private viewing decks, and elite butler service.",
           amenities: "Mountain View, Wi-Fi, Coffee Machine, Organic Bedding, Private Terrace",
           imageUrl: fallbackImages[index]
@@ -116,17 +118,16 @@ export default function SuitesPage({ onOpenBooking }) {
       if (priceFilter === 'over90' && room.price <= 90000) return false;
 
       // 3. Capacity Filter
-      if (capacityFilter === '2' && room.capacity !== 2) return false;
-      if (capacityFilter === '3' && room.capacity !== 3) return false;
-      if (capacityFilter === '4plus' && room.capacity < 4) return false;
+      if (capacityFilter === '2' && room.capacity < 2) return false;
+      if (capacityFilter === '3' && room.capacity < 3) return false;
 
-      // 4. Amenity Filter
-      if (amenityFilter !== 'all') {
+      // 4. View Filter
+      if (viewFilter !== 'all') {
         const amenitiesLower = room.amenities.toLowerCase();
-        if (amenityFilter === 'Jacuzzi' && !amenitiesLower.includes('jacuzzi')) return false;
-        if (amenityFilter === 'Butler' && !amenitiesLower.includes('butler')) return false;
-        if (amenityFilter === 'View' && !amenitiesLower.includes('view')) return false;
-        if (amenityFilter === 'Fireplace' && !amenitiesLower.includes('fireplace')) return false;
+        const descriptionLower = room.description.toLowerCase();
+        const combined = (amenitiesLower + " " + descriptionLower);
+        if (viewFilter === 'mountain' && !combined.includes('mountain')) return false;
+        if (viewFilter === 'city' && !combined.includes('city')) return false;
       }
 
       return true;
@@ -142,7 +143,7 @@ export default function SuitesPage({ onOpenBooking }) {
       return 0; // Default
     });
 
-  const categories = ["All Chambers", "Single rooms", "Double rooms", "Triple rooms", "Suite"];
+  const categories = ["All Chambers", "Standard rooms", "Deluxe rooms", "Suite"];
 
   const activeRoom = filteredRooms[activeSlideIndex] || filteredRooms[0] || null;
   const halfCount = Math.ceil(filteredRooms.length / 2);
@@ -161,7 +162,7 @@ export default function SuitesPage({ onOpenBooking }) {
       <section className="page-hero-banner" style={{
         position: 'relative',
         height: '55vh',
-        background: 'linear-gradient(rgba(24, 23, 21, 0.45), rgba(24, 23, 21, 0.7)), url("/images/20260418_114222_1.jpg")',
+        background: 'linear-gradient(rgba(14, 13, 11, 0.45), rgba(14, 13, 11, 0.7)), url("/images/20260418_114222_1.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'scroll',
@@ -279,20 +280,19 @@ export default function SuitesPage({ onOpenBooking }) {
                   cursor: 'pointer'
                 }}
               >
-                <option value="all">Any Capacity</option>
+                <option value="all">Any Occupancy</option>
                 <option value="2">2 Guests</option>
                 <option value="3">3 Guests</option>
-                <option value="4plus">4 or more Guests</option>
               </select>
             </div>
 
-            {/* Spec / Amenity Filter */}
+            {/* Scenic View Filter */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-              <label style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-gold-dark)', fontWeight: '600' }}>Key Amenity</label>
+              <label style={{ fontSize: '0.68rem', textTransform: 'uppercase', letterSpacing: '0.05em', color: 'var(--color-gold-dark)', fontWeight: '600' }}>Scenic View</label>
               <select
                 className="refinement-select"
-                value={amenityFilter}
-                onChange={(e) => setAmenityFilter(e.target.value)}
+                value={viewFilter}
+                onChange={(e) => setViewFilter(e.target.value)}
                 style={{
                   backgroundColor: 'var(--color-bg-ivory)',
                   border: '1px solid rgba(212,175,55,0.2)',
@@ -305,11 +305,9 @@ export default function SuitesPage({ onOpenBooking }) {
                   cursor: 'pointer'
                 }}
               >
-                <option value="all">Any Amenity</option>
-                <option value="Jacuzzi">Private Jacuzzi</option>
-                <option value="Butler">Private Butler</option>
-                <option value="View">Scenic View</option>
-                <option value="Fireplace">Fireplace</option>
+                <option value="all">Any View</option>
+                <option value="mountain">Mountain View</option>
+                <option value="city">City View</option>
               </select>
             </div>
 
@@ -514,11 +512,11 @@ export default function SuitesPage({ onOpenBooking }) {
                     position: 'absolute',
                     top: '15px',
                     left: '15px',
-                    background: 'rgba(24, 23, 21, 0.8)',
+                    background: 'rgba(14, 13, 11, 0.8)',
                     backdropFilter: 'blur(5px)',
                     padding: '0.3rem 0.8rem',
                     borderRadius: '30px',
-                    border: '1px solid rgba(212, 175, 55, 0.25)'
+                    border: '1px solid var(--color-border-gold)'
                   }}>
                     <span style={{ fontSize: '0.6rem', textTransform: 'uppercase', color: 'var(--color-gold)', letterSpacing: '0.08em', fontWeight: '600' }}>
                       {getMeta(activeRoom.name).category}
@@ -537,9 +535,30 @@ export default function SuitesPage({ onOpenBooking }) {
                     </span>
                   </div>
 
-                  <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: '1.6', marginBottom: '1rem', fontWeight: '300' }}>
+                  <p style={{ fontSize: '0.85rem', color: 'var(--color-text-muted)', lineHeight: '1.6', marginBottom: '1.2rem', fontWeight: '300' }}>
                     {activeRoom.description}
                   </p>
+
+                  {/* Standard Sanctuary Specifications Panel */}
+                  <div style={{
+                    backgroundColor: 'rgba(212,175,55,0.04)',
+                    border: '1px solid rgba(212,175,55,0.15)',
+                    borderRadius: '12px',
+                    padding: '1rem',
+                    marginBottom: '1.2rem',
+                    fontSize: '0.8rem',
+                    lineHeight: '1.5',
+                    color: 'var(--color-text-dark)'
+                  }}>
+                    <span style={{ fontSize: '0.68rem', textTransform: 'uppercase', color: 'var(--color-gold-dark)', letterSpacing: '0.08em', fontWeight: '600', display: 'block', marginBottom: '0.5rem' }}>
+                      Standard Sanctuary Specifications
+                    </span>
+                    <ul style={{ paddingLeft: '1.1rem', margin: 0, display: 'flex', flexDirection: 'column', gap: '0.35rem' }}>
+                      <li><strong>In-Room:</strong> AC, minibar, balcony, free Wi-Fi, safety deposit box, all-day hot water, hairdryer, iron, toiletries (no kitchenette).</li>
+                      <li><strong>Extra Bed Policy:</strong> All chambers are double or triple occupancy; <em>no extra bed/cot option</em> is available.</li>
+                      <li><strong>Check-in / Check-out:</strong> 2:00 PM / 12:00 PM.</li>
+                    </ul>
+                  </div>
 
                   {/* Specs Grid */}
                   <div style={{
@@ -698,24 +717,36 @@ export default function SuitesPage({ onOpenBooking }) {
           <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
             {[
               {
-                question: "What are the check-in and check-out times?",
-                answer: <span>Check-in begins at <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>2:00 PM</strong>, and check-out is until <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>12:00 PM</strong>. Early check-in or late check-out can be requested and is subject to availability.</span>
+                question: "What are the check-in/out times and bedding policies?",
+                answer: <span>Check-in is from <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>2:00 PM</strong>, and check-out is until <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>12:00 PM</strong>. Please note that all our rooms are designed as luxury sanctuaries for up to 2 or 3 guests, and <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>we do not offer extra beds or cot options</strong>.</span>
               },
               {
-                question: "What is your cancellation policy?",
-                answer: <span>Reservations can be modified or canceled free of charge up to <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>72 hours</strong> prior to your scheduled arrival. Cancellations made within <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>72 hours</strong> of arrival may be subject to a fee.</span>
+                question: "What in-room amenities are included?",
+                answer: <span>Each room is equipped with premium air conditioning (AC), a minibar, a private balcony, complimentary Wi-Fi, a safety deposit box, all-day hot water, a hairdryer, an iron, and luxury toiletries. Please note that <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>no kitchenettes are available</strong> in guest chambers.</span>
               },
               {
-                question: "Is high-speed Wi-Fi available at the hotel?",
-                answer: <span>Yes, <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>complimentary</strong> high-speed Wi-Fi is available in all guest rooms and throughout all common areas of the property.</span>
+                question: "What dining options and rates do you offer?",
+                answer: <span>We feature an <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>indoor formal restaurant</strong>, an <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>outdoor/rooftop casual restaurant</strong>, and full room service. We also offer a premium Sunset High Tea package for <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>LKR 4,500</strong>. Guests receive a complimentary welcome drink on arrival. Breakfast is included only on B&B rate plans. There is no dedicated bar (drinks are served via the restaurants only) and no separate lounge area.</span>
               },
               {
-                question: "Can I store my luggage before check-in or after check-out?",
-                answer: <span>Yes, we offer <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>complimentary secure luggage storage</strong> at the front desk, so you can explore the area hands-free before your room is ready or after you check out.</span>
+                question: "What are the wellness center facilities?",
+                answer: <span>Our brand new <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>Shadara Wellness</strong> center offers professional Ayurveda treatments, spa and body massages, and dedicated sauna/steam facilities to aid in physical and mental rejuvenation.</span>
               },
               {
-                question: "Is guest parking available on-site?",
-                answer: <span>Yes, <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>complimentary secure self-parking</strong> is available on-site for all staying guests. No prior reservation is required.</span>
+                question: "What other guest services and parking options are available?",
+                answer: <span>We offer a 24/7 front desk, daily housekeeping, laundry service, airport transfers, currency exchange, a tour desk / excursion bookings, and secure luggage storage. We also feature an event/function space (no separate meeting room) and <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>complimentary secured parking</strong> guarded 24/7 with a dedicated security guard and CCTV surveillance.</span>
+              },
+              {
+                question: "What are your house rules regarding pets, smoking, and children?",
+                answer: <span>Golden Sky is a <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>fully non-smoking property</strong>. Pets are not allowed on the premises. Children of all ages are welcome, and we do not have any age restrictions for staying guests.</span>
+              },
+              {
+                question: "What are the booking, payment, and cancellation terms?",
+                answer: <span>We support both <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>pay-on-booking</strong> (online) and <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>pay-at-property</strong>. We accept credit/debit cards, cash, bank transfers, and online payments. A free cancellation window is available up to 72 hours before arrival.</span>
+              },
+              {
+                question: "Are there specific features or services not available at the resort?",
+                answer: <span>To ensure transparency, please note that we do <strong style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>not have an on-site swimming pool, gift shop, bicycle rentals, backup generators, or an on-call doctor</strong>. Additionally, the property does not currently offer accessibility features. Our staff mainly communicates in Sinhala and English.</span>
               }
             ].map((faq, index) => {
               const isOpen = openFaqIndex === index;

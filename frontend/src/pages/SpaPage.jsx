@@ -6,7 +6,8 @@ const API_BASE = "http://localhost:5000/api";
 const spaMetadata = {
   "Royal Lotus Relaxation Therapy": { tag: "Signature Ritual", duration: "90 Mins", focus: "Full-body restoration" },
   "Kandy Spiced Herbal Glow": { tag: "Exfoliation & Mud", duration: "75 Mins", focus: "Rejuvenation & detox" },
-  "Hanthana Herbal Wellness Massage": { tag: "Herbal Compression", duration: "60 Mins", focus: "Deep muscle relief" }
+  "Hanthana Herbal Wellness Massage": { tag: "Herbal Compression", duration: "60 Mins", focus: "Deep muscle relief" },
+  "Hanthana Peak Sunrise Yoga": { tag: "Sunrise Wellness", duration: "75 Mins", focus: "Mindfulness & alignment" }
 };
 
 export default function SpaPage({ onOpenBooking }) {
@@ -76,19 +77,23 @@ export default function SpaPage({ onOpenBooking }) {
           id: `fallback-s${index + 1}`,
           name,
           type: "SPA",
-          price: name.includes("Lotus") ? 18000 : (name.includes("Glow") ? 15000 : 10000),
-          capacity: 1,
+          price: name.includes("Lotus") ? 18000 : (name.includes("Glow") ? 15000 : (name.includes("Massage") ? 10000 : 6000)),
+          capacity: name.includes("Yoga") ? 10 : 1,
           description: name.includes("Lotus") 
             ? "A restorative head-to-toe warm oil massage using native Sri Lankan lotus oil and deep tissue pressure techniques to release stored tension."
             : (name.includes("Glow") 
                 ? "An organic body scrub blending mountain cardamom, cinnamon, and volcanic clay. Restores skin luster and improves circulation under misty breezes."
-                : "A private restorative treatment using warm herbal compresses and organic botanical oils focused on muscle relief and physical relaxation."),
+                : (name.includes("Massage")
+                    ? "A private restorative treatment using warm herbal compresses and organic botanical oils focused on muscle relief and physical relaxation."
+                    : "A guided sunrise Hatha yoga and breathwork session on our panoramic outdoor deck, surrounded by the misty peaks of Kandy.")),
           amenities: name.includes("Lotus")
             ? "Pure Lotus Oil, Deep Tissue Massage, Warm Copper Wash, Hibiscus Tea"
             : (name.includes("Glow")
                 ? "Cardamom Cinnamon Scrub, Volcanic Clay Wrap, Herbal Steam Box, Lemongrass Oil"
-                : "Herbal Compresses, Local Botanical Oils, Bird Audio Ambient, Breathing Coach"),
-          imageUrl: `/images/20260418_1${index === 0 ? '11209' : (index === 1 ? '05523' : '11748')}_1.jpg`
+                : (name.includes("Massage")
+                    ? "Herbal Compresses, Local Botanical Oils, Bird Audio Ambient, Breathing Coach"
+                    : "Sunrise Session, Guided Hatha Yoga, Organic Herbal Tea, Premium Mats & Blocks")),
+          imageUrl: `/images/spa_therapy_${index + 1}.jpg`
         }));
         setTherapies(fallbackSpa);
       } finally {
@@ -103,13 +108,13 @@ export default function SpaPage({ onOpenBooking }) {
   };
 
   return (
-    <div className="page-transition" style={{ backgroundColor: '#f2f4f0', minHeight: '100vh' }}>
+    <div className="page-transition" style={{ backgroundColor: 'var(--color-bg-ivory)', minHeight: '100vh' }}>
       
       {/* 1. HERO BANNER */}
       <section className="page-hero-banner" style={{
         position: 'relative',
         height: '55vh',
-        background: 'linear-gradient(rgba(24, 23, 21, 0.45), rgba(24, 23, 21, 0.7)), url("/images/20260418_111209_1.jpg")',
+        background: 'linear-gradient(rgba(14, 13, 11, 0.45), rgba(14, 13, 11, 0.7)), url("/images/spa_hero.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'scroll',
@@ -124,7 +129,7 @@ export default function SpaPage({ onOpenBooking }) {
             Wellness & Healing
           </span>
           <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', color: '#fff', fontFamily: 'var(--font-serif)', margin: '0.5rem 0 1rem 0' }}>
-            Golden Shanti <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Wellness Spa</span>
+            Shadara <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Wellness Center</span>
           </h1>
           <p style={{ maxWidth: '600px', color: 'rgba(255,255,255,0.8)', margin: '0 auto', fontSize: '1rem', lineHeight: '1.6' }}>
             Experience restorative Sri Lankan therapies, cardamon scrubs, and botanical wraps in our high-altitude chambers.
@@ -136,13 +141,13 @@ export default function SpaPage({ onOpenBooking }) {
       <section className="container responsive-section-padding" style={{ paddingBottom: '2rem' }}>
         <div className="responsive-layout-grid" style={{ gap: '3rem', alignItems: 'center', textAlign: 'left', marginBottom: '4rem' }}>
           <div>
-            <span style={{ fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>The Shanti Philosophy</span>
+            <span style={{ fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>The Shadara Philosophy</span>
             <h2 style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', marginTop: '0.3rem', marginBottom: '1.2rem', lineHeight: '1.2' }}>
               Curative Rituals <br />
               <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>of the Mountain Mist</span>
             </h2>
             <p style={{ lineHeight: '1.75', color: 'var(--color-text-muted)', fontSize: '0.95rem', marginBottom: '2rem' }}>
-              Set high on the Hanthana peaks, Golden Shanti Spa blends ancient Hela Wedakama (traditional Sri Lankan wellness) with classical herbal therapies. We source organic cardamom, wild forest honey, and native lotus extracts from our private reservation to blend customized aromatic oils for your journey. Each treatment is tailored to your unique energy profile, harnessing the local micro-climate and pure alpine mist to accelerate cellular recovery, soothe the nervous system, and restore deep, natural equilibrium.
+              Set high on the Hanthana peaks, Shadara Wellness blends ancient Hela Wedakama (traditional Sri Lankan wellness) with classical herbal therapies. We source organic cardamom, wild forest honey, and native lotus extracts from our private reservation to blend customized aromatic oils for your journey. Each treatment is tailored to your unique energy profile, harnessing the local micro-climate and pure alpine mist to accelerate cellular recovery, soothe the nervous system, and restore deep, natural equilibrium.
             </p>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', borderTop: '1px solid rgba(212,175,55,0.18)', paddingTop: '1.8rem' }}>
               <div style={{ fontSize: '0.9rem', color: 'var(--color-text-dark)', lineHeight: '1.6' }}>
@@ -164,8 +169,8 @@ export default function SpaPage({ onOpenBooking }) {
             boxShadow: '0 15px 40px rgba(0,0,0,0.03)'
           }}>
             <img 
-              src="/images/20260418_111209_1.jpg" 
-              alt="Botanical Shanti Spa Lounge at Golden Sky Hotel & Wellness" 
+              src="/images/spa_hero.jpg" 
+              alt="Botanical Shadara Wellness Lounge at Golden Sky Hotel & Wellness" 
               loading="lazy"
               decoding="async"
               style={{

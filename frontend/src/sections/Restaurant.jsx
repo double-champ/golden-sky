@@ -11,7 +11,7 @@ const dayoutPackages = [
     inclusions: [
       "Welcome fresh fruit elixir on arrival",
       "Sumptuous organic lunch buffet at The Canopy",
-      "Access to the panoramic main infinity pool (2 Hours)",
+      "Access to the panoramic main viewing deck & viewpoints",
       "Complimentary Ceylon high-tea platter in the evening",
       "Free Wi-Fi and relaxation cabin access"
     ]
@@ -26,7 +26,7 @@ const dayoutPackages = [
       "Welcome detox shot & custom wellness review",
       "curated 3-course organic spa-lunch",
       "30-minute herbal steam bath & sauna access",
-      "Access to infinity pool & yoga meditation lawns",
+      "Access to panoramic forest deck & yoga meditation lawns",
       "15% Discount on all full-length spa therapies",
       "Evening herbal infusion tea with local treats"
     ]
@@ -37,7 +37,7 @@ const dinnerOptions = [
   {
     id: "dn1",
     name: "Hanthana Sunset High Tea",
-    price: "LKR 4,000",
+    price: "LKR 4,500",
     audience: "Per Tier (Serves 2)",
     description: "A gorgeous collection of local and international pastries served alongside single-estate organic Hanthana tea.",
     timing: "Daily 3:00 PM - 6:00 PM"
@@ -109,8 +109,8 @@ export default function Restaurant({ onOpenBooking }) {
             {/* General Highlights */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', color: 'var(--color-text-muted)' }}>
               <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
-                <Waves size={18} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
-                <span style={{ fontSize: '0.9rem' }}>Infinity pool entry included in Dayout Packages.</span>
+                <Compass size={18} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
+                <span style={{ fontSize: '0.9rem' }}>Panoramic viewing deck access included in Dayout Packages.</span>
               </div>
               <div style={{ display: 'flex', gap: '0.8rem', alignItems: 'center' }}>
                 <Coffee size={18} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />

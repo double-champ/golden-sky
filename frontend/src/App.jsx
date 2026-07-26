@@ -63,11 +63,11 @@ export default function App() {
   // (Prevents jarring off-white or ivory viewport stripes on dark landing/rooftop headers)
   useEffect(() => {
     if (currentView === 'home') {
-      document.body.style.backgroundColor = '#181715';
+      document.body.style.backgroundColor = '#0e0d0b';
     } else if (currentView === 'spa') {
-      document.body.style.backgroundColor = '#f2f4f0';
+      document.body.style.backgroundColor = '#faf8f4';
     } else if (currentView === 'rooftop') {
-      document.body.style.backgroundColor = '#141311';
+      document.body.style.backgroundColor = '#0e0d0b';
     } else {
       document.body.style.backgroundColor = 'var(--color-bg-ivory)';
     }
@@ -102,42 +102,41 @@ export default function App() {
   };
 
   useEffect(() => {
-    // Scroll reveal observer
-    const revealObserver = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          entry.target.classList.add('active');
-        }
-      });
-    }, { threshold: 0.08 });
-
-    // Function to scan and observe all unobserved .reveal elements
-    const observeElements = () => {
-      const elements = document.querySelectorAll('.reveal:not([data-observed])');
+    if (isLoading) return;
+    
+    const handleReveal = () => {
+      const elements = document.querySelectorAll('.reveal');
       elements.forEach((el) => {
-        el.setAttribute('data-observed', 'true');
-        revealObserver.observe(el);
+        const rect = el.getBoundingClientRect();
+        // Reveal if element top is within viewport
+        if (rect.top < window.innerHeight * 0.92) {
+          el.classList.add('active');
+        }
       });
     };
 
-    // Run initial scan
-    observeElements();
+    // Run reveal checks once after loader hides to reveal visible sections
+    const timer = setTimeout(handleReveal, 100);
 
-    // Set up MutationObserver to detect lazy loaded page mounts and observe new elements
+    window.addEventListener('scroll', handleReveal);
+    window.addEventListener('resize', handleReveal);
+    
+    // Set up MutationObserver to run handleReveal whenever lazy page content mounts
     const mutationObserver = new MutationObserver(() => {
-      observeElements();
+      handleReveal();
     });
-
-    mutationObserver.observe(document.body, {
-      childList: true,
-      subtree: true
+    mutationObserver.observe(document.body, { 
+      childList: true, 
+      subtree: true 
     });
 
     return () => {
-      revealObserver.disconnect();
+      clearTimeout(timer);
+      window.removeEventListener('scroll', handleReveal);
+      window.removeEventListener('resize', handleReveal);
       mutationObserver.disconnect();
     };
-  }, [currentView]);
+  }, [isLoading, currentView]);
 
   return (
     <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh' }}>

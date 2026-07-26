@@ -131,7 +131,7 @@ export default function Footer({ onViewChange, onOpenBooking }) {
                     outline: 'none'
                   }}
                 >
-                  Golden Shanti Spa
+                  Shadara Wellness
                 </button>
               </li>
               <li>

@@ -8,52 +8,52 @@ export default function AboutPage({ onOpenBooking }) {
 
   const galleryItems = [
     {
+      url: "/images/20260418_085140_1.jpg",
+      title: "The Courtyard Fountain",
+      category: "Guest Memories",
+      caption: "The soothing sound of the stone fountain welcoming guests to the sanctuary."
+    },
+    {
+      url: "/images/20260418_063431_2.jpg",
+      title: "Royal Kandyan Chamber",
+      category: "Wellness",
+      caption: "Plush, handcrafted local teak wood beds and royal fabrics designed for deep rest."
+    },
+    {
       url: "/images/20260418_112608_1.jpg",
       title: "Misty Valley Ridges",
-      category: "Guest Memories",
+      category: "Explorations",
       caption: "Stunning valley views captured from the outdoor canopy platforms by our guests."
     },
     {
-      url: "/images/20260418_065800_1.jpg",
-      title: "Morning Sunrays on Balcony",
-      category: "Wellness",
-      caption: "Guests relaxing on the private wooden balconies during the golden sunrise."
-    },
-    {
-      url: "/images/20260418_102057_1.jpg",
-      title: "Botanical Shanti Spa Lounge",
-      category: "Wellness",
-      caption: "Soothing architectural stone spaces where our herbal therapies are practiced."
-    },
-    {
-      url: "/images/20260418_072718_1.jpg",
-      title: "Sunsets over Aura Bar",
+      url: "/images/20260418_092315_1.jpg",
+      title: "Zen Pathway",
       category: "Explorations",
-      caption: "A panoramic guest spot overlooking the high-altitude forest landscape."
+      caption: "Handcrafted stone-paved walkway bordered by native green ferns and mountain flora."
     },
     {
-      url: "/images/20260418_114222_1.jpg",
-      title: "Starlit Aura Fire-pit",
-      category: "Guest Memories",
-      caption: "Sharing stories around the stone fire pits as night settles over Kandy's peaks."
+      url: "/images/spa_hero.jpg",
+      title: "Copper Bath Ritual",
+      category: "Wellness",
+      caption: "Relaxing therapeutic copper tubs ready for warm lotus oil herbal baths."
     },
     {
-      url: "/images/20260418_064528_1.jpg",
-      title: "Hanthana Peak Vista",
-      category: "Explorations",
-      caption: "A view of the rolling mountain peaks directly outside the resort grounds."
+      url: "/images/20260418_085423_1.jpg",
+      title: "Glasshouse Dining",
+      category: "Culinary",
+      caption: "Our light-filled greenhouse restaurant where fresh herbal teas and morning buffets are served."
     },
     {
       url: "/images/20260418_095058_1.jpg",
-      title: "Ceylon High Tea Deck",
+      title: "Sunset High Tea Deck",
       category: "Culinary",
       caption: "Gourmet High Tea setups ready for visitors on the sunset balcony."
     },
     {
-      url: "/images/20260418_074232_1.jpg",
-      title: "Organic Gastronomic Platters",
+      url: "/images/20260418_095209_2.jpg",
+      title: "Artisan Dessert Plates",
       category: "Culinary",
-      caption: "Artisan breakfast courses designed by our chefs using fresh regional farm picks."
+      caption: "Local wild strawberries and organic honey confectioneries prepared fresh daily."
     }
   ];
 
@@ -97,22 +97,67 @@ export default function AboutPage({ onOpenBooking }) {
     }
   ];
 
-  const [carouselIndex, setCarouselIndex] = useState(0);
+  const scrollRef = React.useRef(null);
+  const extendedExperiences = [...experiences, ...experiences, ...experiences];
 
-  const nextSlide = () => {
-    setCarouselIndex((prev) => (prev + 1) % experiences.length);
+  const getCardOffset = () => {
+    const container = scrollRef.current;
+    if (container && container.children.length > 1) {
+      const firstCard = container.children[0];
+      const secondCard = container.children[1];
+      return secondCard.getBoundingClientRect().left - firstCard.getBoundingClientRect().left;
+    }
+    return 382; // fallback card width + gap
   };
 
-  const prevSlide = () => {
-    setCarouselIndex((prev) => (prev - 1 + experiences.length) % experiences.length);
+  const scrollLeft = () => {
+    if (scrollRef.current) {
+      const offset = getCardOffset();
+      scrollRef.current.scrollBy({ left: -offset, behavior: 'smooth' });
+    }
   };
 
-  // Automated scrolling effect
+  const scrollRight = () => {
+    if (scrollRef.current) {
+      const offset = getCardOffset();
+      scrollRef.current.scrollBy({ left: offset, behavior: 'smooth' });
+    }
+  };
+
+  // Infinite Scroll Silent Jump Logic
   useEffect(() => {
-    const timer = setInterval(() => {
-      nextSlide();
-    }, 5000);
-    return () => clearInterval(timer);
+    const container = scrollRef.current;
+    if (!container) return;
+
+    const offset = getCardOffset();
+    const totalItems = experiences.length;
+    const middleOffset = totalItems * offset;
+
+    // Set initial scroll to the start of the middle block
+    const initTimer = setTimeout(() => {
+      container.scrollLeft = middleOffset;
+    }, 150);
+
+    const handleScroll = () => {
+      const currentOffset = getCardOffset();
+      const currentMiddleOffset = totalItems * currentOffset;
+
+      // Jump if user scrolls into first cloned block
+      if (container.scrollLeft < currentOffset) {
+        container.scrollLeft += currentMiddleOffset;
+      }
+      // Jump if user scrolls into third cloned block
+      else if (container.scrollLeft > currentMiddleOffset * 2 - container.clientWidth) {
+        container.scrollLeft -= currentMiddleOffset;
+      }
+    };
+
+    container.addEventListener('scroll', handleScroll);
+
+    return () => {
+      clearTimeout(initTimer);
+      container.removeEventListener('scroll', handleScroll);
+    };
   }, [experiences.length]);
 
 
@@ -123,7 +168,7 @@ export default function AboutPage({ onOpenBooking }) {
       <section className="page-hero-banner" style={{
         position: 'relative',
         height: '55vh',
-        background: 'linear-gradient(rgba(24, 23, 21, 0.45), rgba(24, 23, 21, 0.7)), url("/images/20260418_112608_1.jpg")',
+        background: 'linear-gradient(rgba(14, 13, 11, 0.45), rgba(14, 13, 11, 0.7)), url("/images/20260418_112608_1.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'scroll',
@@ -224,7 +269,7 @@ export default function AboutPage({ onOpenBooking }) {
 
       {/* 2.5 UNIQUE LOCAL EXPERIENCES CAROUSEL */}
       <section className="container animate-slide-up responsive-section-padding" style={{ paddingBottom: '4rem' }}>
-        <div style={{ textAlign: 'left', marginBottom: '3.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '2rem' }}>
+        <div style={{ textAlign: 'left', marginBottom: '2.5rem', display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', flexWrap: 'wrap', gap: '2rem' }}>
           <div>
             <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>Kandy Explorations</span>
             <h2 style={{ fontSize: '3rem', fontFamily: 'var(--font-serif)', marginTop: '0.5rem', color: 'var(--color-text-dark)', lineHeight: 1.1 }}>
@@ -232,141 +277,154 @@ export default function AboutPage({ onOpenBooking }) {
               <span className="text-gold-gradient" style={{ fontStyle: 'italic', fontWeight: '400' }}>Encounters</span>
             </h2>
           </div>
-          <p style={{ maxWidth: '480px', fontSize: '0.92rem', color: 'var(--color-text-muted)', lineHeight: '1.7', margin: 0 }}>
-            Embark on automated, elite guided journeys to discover regional historic gems and breathtaking wilderness.
-          </p>
+          <div style={{ display: 'flex', alignItems: 'flex-end', gap: '2.5rem', flexWrap: 'wrap' }}>
+            <p style={{ maxWidth: '420px', fontSize: '0.92rem', color: 'var(--color-text-muted)', lineHeight: '1.7', margin: 0 }}>
+              Embark on personalized, elite guided journeys to discover regional historic gems and breathtaking wilderness.
+            </p>
+            {/* Scroll navigation arrows */}
+            <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '0.2rem' }}>
+              <button 
+                onClick={scrollLeft}
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  background: '#ffffff',
+                  border: '1px solid rgba(207,168,81,0.25)',
+                  color: 'var(--color-gold-dark)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 15px rgba(14,13,11,0.04)',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-gold)'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = 'var(--color-gold-dark)'; }}
+              >
+                <ChevronLeft size={20} />
+              </button>
+              <button 
+                onClick={scrollRight}
+                style={{
+                  width: '44px',
+                  height: '44px',
+                  borderRadius: '50%',
+                  background: '#ffffff',
+                  border: '1px solid rgba(207,168,81,0.25)',
+                  color: 'var(--color-gold-dark)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  boxShadow: '0 4px 15px rgba(14,13,11,0.04)',
+                  transition: 'all 0.3s ease'
+                }}
+                onMouseEnter={(e) => { e.currentTarget.style.background = 'var(--color-gold)'; e.currentTarget.style.color = '#fff'; }}
+                onMouseLeave={(e) => { e.currentTarget.style.background = '#ffffff'; e.currentTarget.style.color = 'var(--color-gold-dark)'; }}
+              >
+                <ChevronRight size={20} />
+              </button>
+            </div>
+          </div>
         </div>
 
-        {/* Carousel Window */}
-        <div style={{ position: 'relative', borderRadius: '30px', overflow: 'hidden', boxShadow: '0 25px 60px rgba(0,0,0,0.06)', width: '100%' }}>
-          <div style={{
-            display: 'flex',
-            width: '100%',
-            transition: 'transform 0.8s cubic-bezier(0.25, 1, 0.5, 1)',
-            transform: `translateX(-${carouselIndex * 100}%)`
-          }}>
-            {experiences.map((exp, idx) => (
-              <div 
-                key={idx} 
-                className="experience-carousel-item"
-              >
-                {/* Image panel with Ken Burns animation */}
-                <div style={{ position: 'relative', overflow: 'hidden', minHeight: '350px' }}>
-                  <img 
-                    src={exp.image} 
-                    alt={exp.title} 
-                    loading="lazy"
-                    decoding="async"
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                    className={carouselIndex === idx ? 'ken-burns-image' : ''}
-                  />
-                  <div style={{
-                    position: 'absolute',
-                    top: 0,
-                    left: 0,
-                    width: '100%',
-                    height: '100%',
-                    background: 'linear-gradient(to right, rgba(28,27,24,0.9) 0%, rgba(28,27,24,0.2) 60%, rgba(28,27,24,0) 100%)'
-                  }} />
-                  <div style={{
-                    position: 'absolute',
-                    bottom: '30px',
-                    left: '30px',
-                    background: 'rgba(212,175,55,0.15)',
-                    border: '1px solid rgba(212,175,55,0.4)',
-                    backdropFilter: 'blur(12px)',
-                    padding: '0.5rem 1.2rem',
-                    borderRadius: '30px',
-                    fontSize: '0.75rem',
-                    color: '#fff',
-                    fontWeight: '500',
-                    letterSpacing: '0.08em'
-                  }}>
-                    {exp.time}
-                  </div>
-                </div>
-
-                {/* Content side */}
-                <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', textAlign: 'left' }} className="responsive-block-padding">
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--color-gold)', marginBottom: '1.2rem' }}>
-                    <Sparkles size={14} />
-                    <span style={{ fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.2em', textTransform: 'uppercase' }}>
-                      Exclusive Tour 0{idx + 1}
-                    </span>
-                  </div>
-                  <h3 style={{ fontSize: '2.4rem', fontFamily: 'var(--font-serif)', color: '#fff', marginBottom: '1.2rem', lineHeight: '1.2' }}>
-                    {exp.title}
-                  </h3>
-                  <p style={{ fontSize: '0.98rem', color: 'rgba(255,255,255,0.7)', lineHeight: '1.8', marginBottom: '2.5rem' }}>
-                    {exp.desc}
-                  </p>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '1.5rem' }}>
-                    <div style={{ display: 'flex', gap: '0.5rem' }}>
-                      <button 
-                        onClick={prevSlide}
-                        style={{
-                          width: '40px',
-                          height: '40px',
-                          borderRadius: '50%',
-                          background: 'rgba(255,255,255,0.06)',
-                          border: '1px solid rgba(255,255,255,0.15)',
-                          color: '#fff',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          transition: 'var(--transition-fast)'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-gold)'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
-                      >
-                        <ChevronLeft size={18} />
-                      </button>
-                      <button 
-                        onClick={nextSlide}
-                        style={{
-                          width: '40px',
-                          height: '40px',
-                          borderRadius: '50%',
-                          background: 'rgba(255,255,255,0.06)',
-                          border: '1px solid rgba(255,255,255,0.15)',
-                          color: '#fff',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          transition: 'var(--transition-fast)'
-                        }}
-                        onMouseEnter={(e) => e.currentTarget.style.background = 'var(--color-gold)'}
-                        onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(255,255,255,0.06)'}
-                      >
-                        <ChevronRight size={18} />
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-          {/* Dots Indicator inside container */}
-          <div style={{ position: 'absolute', bottom: '25px', right: '40px', display: 'flex', gap: '0.5rem', zIndex: 10 }}>
-            {experiences.map((_, idx) => (
-              <button
-                key={idx}
-                onClick={() => setCarouselIndex(idx)}
-                style={{
-                  width: carouselIndex === idx ? '28px' : '8px',
-                  height: '8px',
-                  borderRadius: '10px',
-                  background: carouselIndex === idx ? 'var(--color-gold)' : 'rgba(255,255,255,0.3)',
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'all 0.4s ease'
-                }}
+        {/* Horizontal Scrolling Card Deck */}
+        <div 
+          ref={scrollRef}
+          style={{ 
+            display: 'flex', 
+            gap: '2rem', 
+            overflowX: 'auto', 
+            padding: '1rem 0.5rem 2.5rem 0.5rem', 
+            scrollbarWidth: 'none', 
+            scrollBehavior: 'smooth'
+          }} 
+          className="hide-scrollbar"
+        >
+          {extendedExperiences.map((exp, idx) => (
+            <div 
+              key={idx}
+              style={{
+                flex: '0 0 350px',
+                height: '480px',
+                position: 'relative',
+                borderRadius: '24px',
+                overflow: 'hidden',
+                boxShadow: '0 15px 35px rgba(14, 13, 11, 0.1)',
+                border: '1px solid rgba(207, 168, 81, 0.22)',
+                cursor: 'pointer',
+                transition: 'all 0.4s ease'
+              }}
+              className="experience-card-deck-item"
+            >
+              <img 
+                src={exp.image} 
+                alt={exp.title} 
+                loading="lazy"
+                decoding="async"
+                style={{ width: '100%', height: '100%', objectFit: 'cover', transition: 'transform 0.6s ease' }} 
+                className="deck-img"
               />
-            ))}
-          </div>
+              {/* Dark Ambient Vignette Overlay */}
+              <div style={{
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                width: '100%',
+                height: '100%',
+                background: 'linear-gradient(to top, rgba(14, 13, 11, 0.95) 0%, rgba(14, 13, 11, 0.4) 50%, rgba(14, 13, 11, 0) 100%)',
+                zIndex: 2,
+                pointerEvents: 'none'
+              }} />
+              
+              {/* Time Location Badge */}
+              <div style={{
+                position: 'absolute',
+                top: '20px',
+                left: '20px',
+                background: 'rgba(14, 13, 11, 0.65)',
+                border: '1px solid rgba(207, 168, 81, 0.4)',
+                backdropFilter: 'blur(8px)',
+                padding: '0.4rem 1rem',
+                borderRadius: '30px',
+                fontSize: '0.7rem',
+                color: 'var(--color-gold)',
+                fontWeight: '600',
+                zIndex: 3
+              }}>
+                {exp.time}
+              </div>
+
+              {/* Glass Content Card */}
+              <div 
+                style={{
+                  position: 'absolute',
+                  bottom: '20px',
+                  left: '20px',
+                  right: '20px',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  backdropFilter: 'blur(20px)',
+                  borderRadius: '16px',
+                  padding: '1.2rem',
+                  color: '#fff',
+                  zIndex: 3,
+                  transition: 'all 0.4s ease',
+                  maxHeight: '85px',
+                  overflow: 'hidden'
+                }}
+                className="deck-glass-panel"
+              >
+                <h4 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: '#fff', marginBottom: '0.5rem', lineHeight: '1.2' }}>
+                  {exp.title}
+                </h4>
+                <p style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: '1.5', opacity: 0, transition: 'all 0.4s ease', marginTop: '0.5rem', margin: 0 }} className="deck-desc">
+                  {exp.desc}
+                </p>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
@@ -383,10 +441,10 @@ export default function AboutPage({ onOpenBooking }) {
         <div 
           className="responsive-layout-grid responsive-block-padding"
           style={{
-            backgroundColor: 'var(--color-primary)',
-            border: '1px solid rgba(212,175,55,0.28)',
+            background: 'linear-gradient(135deg, #ffffff 40%, #faf5e6 85%, #f2e3be 100%)',
+            border: '1px solid rgba(207, 168, 81, 0.22)',
             borderRadius: '24px',
-            boxShadow: '0 25px 60px rgba(0,0,0,0.18)',
+            boxShadow: '0 25px 60px rgba(14, 13, 11, 0.05)',
             alignItems: 'center'
           }}
         >
@@ -395,8 +453,8 @@ export default function AboutPage({ onOpenBooking }) {
             height: '350px',
             borderRadius: '16px',
             overflow: 'hidden',
-            border: '1px solid rgba(212,175,55,0.22)',
-            boxShadow: '0 8px 30px rgba(0,0,0,0.2)'
+            border: '1px solid rgba(207, 168, 81, 0.22)',
+            boxShadow: '0 8px 30px rgba(14, 13, 11, 0.05)'
           }}>
             <iframe 
               src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3957.5186591038593!2d80.63216708532454!3d7.281654800000002!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3ae367a8324dcca5%3A0x3c71179c8ca99fa0!2sGolden+Sky+Hotel+%26+Wellness!5e0!3m2!1sen!2slk!4v1718567123456"
@@ -404,8 +462,7 @@ export default function AboutPage({ onOpenBooking }) {
               height="100%" 
               style={{ 
                 border: 0,
-                filter: 'invert(90%) hue-rotate(180deg) grayscale(0.25) contrast(1.2)',
-                opacity: 0.85
+                opacity: 0.95
               }} 
               allowFullScreen="" 
               loading="lazy" 
@@ -416,27 +473,17 @@ export default function AboutPage({ onOpenBooking }) {
 
           {/* Details & Location Description */}
           <div style={{ textAlign: 'left' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-gold)', marginBottom: '0.8rem' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-gold-dark)', marginBottom: '0.8rem' }}>
               <MapPin size={18} />
               <span style={{ fontSize: '0.72rem', fontWeight: '600', letterSpacing: '0.1em', textTransform: 'uppercase' }}>Our Location</span>
             </div>
-            <h3 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-serif)', color: '#ffffff', marginBottom: '1rem' }}>
+            <h3 style={{ fontSize: '1.8rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)', marginBottom: '1rem' }}>
               Hanthana Range, <br />
               <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Kandy, Sri Lanka</span>
             </h3>
-            <p style={{ fontSize: '0.9rem', color: 'rgba(255,255,255,0.72)', lineHeight: '1.6', marginBottom: '2rem' }}>
+            <p style={{ fontSize: '0.9rem', color: 'var(--color-text-muted)', lineHeight: '1.6', marginBottom: '0.5rem' }}>
               Golden Sky Resort is situated on a lush private estate along the slopes of the Hanthana Mountains, just a 20-minute drive from Kandy’s historic city center. Our remote altitude isolates us from urban noise, offering a cooling alpine micro-climate and pure, mist-fresh air.
             </p>
-
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-              <button 
-                className="btn-gold-solid" 
-                style={{ width: 'fit-content' }}
-                onClick={() => onOpenBooking('STAY', '')}
-              >
-                Book Your Mountain Escape
-              </button>
-            </div>
           </div>
         </div>
       </section>

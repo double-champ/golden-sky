@@ -25,13 +25,13 @@ const signatureCocktails = [
 export default function RooftopPage({ onOpenBooking }) {
 
   return (
-    <div className="page-transition" style={{ backgroundColor: '#141311', color: '#fff', minHeight: '100vh', paddingBottom: '6rem' }}>
+    <div className="page-transition" style={{ backgroundColor: '#0e0d0b', color: '#fff', minHeight: '100vh', paddingBottom: '6rem' }}>
       
       {/* 1. HERO BANNER */}
       <section className="page-hero-banner" style={{
         position: 'relative',
         height: '60vh',
-        background: 'linear-gradient(rgba(20, 19, 17, 0.35), rgba(20, 19, 17, 0.95)), url("/images/20260418_112422_1.jpg")',
+        background: 'linear-gradient(rgba(14, 13, 11, 0.35), rgba(14, 13, 11, 0.95)), url("/images/20260418_112422_1.jpg")',
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         display: 'flex',

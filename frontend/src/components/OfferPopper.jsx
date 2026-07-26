@@ -9,7 +9,7 @@ const OFFERS = [
     discount: "20% OFF ALL SUITES",
     description: "Enjoy 20% off when you book for 3+ nights. Includes complimentary Hanthana Sunset High Tea.",
     type: "STAY",
-    packageName: "Hanthana Misty Suite",
+    packageName: "Standard Room 01",
     cta: "Book Stay"
   },
   {
@@ -92,13 +92,13 @@ export default function OfferPopper({ onOpenBooking }) {
             bottom: '2rem',
             right: '2rem',
             width: '340px',
-            backgroundColor: 'rgba(24, 23, 21, 0.95)',
+            backgroundColor: 'rgba(14, 13, 11, 0.95)',
             backdropFilter: 'blur(20px)',
             WebkitBackdropFilter: 'blur(20px)',
-            border: '1px solid rgba(212, 175, 55, 0.35)',
+            border: '1px solid rgba(207, 168, 81, 0.35)',
             borderRadius: '20px',
             padding: '1.5rem',
-            boxShadow: '0 15px 45px rgba(0, 0, 0, 0.35), 0 0 20px rgba(212, 175, 55, 0.1)',
+            boxShadow: '0 15px 45px rgba(0, 0, 0, 0.35), 0 0 20px rgba(207, 168, 81, 0.15)',
             zIndex: 10002, // Just above WhatsApp/sticky layers, below BookingForm modal
             display: 'flex',
             flexDirection: 'column',
@@ -297,11 +297,11 @@ export default function OfferPopper({ onOpenBooking }) {
               width: '56px',
               height: '56px',
               borderRadius: '50%',
-              backgroundColor: 'rgba(24, 23, 21, 0.95)',
+              backgroundColor: 'rgba(14, 13, 11, 0.95)',
               backdropFilter: 'blur(20px)',
               WebkitBackdropFilter: 'blur(20px)',
-              border: '1px solid rgba(212, 175, 55, 0.5)',
-              boxShadow: '0 8px 25px rgba(212, 175, 55, 0.25), 0 0 15px rgba(212, 175, 55, 0.1)',
+              border: '1px solid rgba(207, 168, 81, 0.5)',
+              boxShadow: '0 8px 25px rgba(207, 168, 81, 0.35), 0 0 15px rgba(207, 168, 81, 0.15)',
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
@@ -325,15 +325,15 @@ export default function OfferPopper({ onOpenBooking }) {
                 height: '10px',
                 backgroundColor: 'var(--color-gold)',
                 borderRadius: '50%',
-                border: '2px solid rgba(24, 23, 21, 0.95)'
+                border: '2px solid rgba(14, 13, 11, 0.95)'
               }} />
             </div>
             {isFloatingHovered && (
               <div style={{
                 position: 'absolute',
                 right: '70px',
-                backgroundColor: 'rgba(24, 23, 21, 0.95)',
-                border: '1px solid rgba(212, 175, 55, 0.3)',
+                backgroundColor: 'rgba(14, 13, 11, 0.95)',
+                border: '1px solid rgba(207, 168, 81, 0.3)',
                 padding: '0.4rem 0.8rem',
                 borderRadius: '8px',
                 fontSize: '0.75rem',

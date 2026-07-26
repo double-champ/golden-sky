@@ -13,7 +13,7 @@ const initialMockBookings = [
     targetDate: new Date(Date.now() + 86400000 * 2).toISOString(),
     durationDays: 3,
     guestsCount: 2,
-    roomOrPackageName: "Hanthana Misty Suite",
+    roomOrPackageName: "Standard Room 01",
     specialRequests: "Anniversary celebration setup, high floor if possible.",
     status: "CONFIRMED",
     createdAt: new Date().toISOString()
@@ -41,7 +41,7 @@ const initialMockBookings = [
     targetDate: new Date(Date.now() + 86400000 * 3).toISOString(),
     durationDays: null,
     guestsCount: 1,
-    roomOrPackageName: "Sacred Lotus Shanti Therapy",
+    roomOrPackageName: "Sacred Lotus Shadara Therapy",
     specialRequests: "Prefers female therapist.",
     status: "CONFIRMED",
     createdAt: new Date().toISOString()
@@ -113,7 +113,7 @@ export default function AdminDashboard({ onGoBack }) {
       } else if (b.type === 'SPA') {
         estimatedRevenue += b.roomOrPackageName.includes('Lotus') ? 18000 * b.guestsCount : (b.roomOrPackageName.includes('Spiced') ? 15000 * b.guestsCount : 10000 * b.guestsCount);
       } else if (b.type === 'DINING') {
-        estimatedRevenue += b.roomOrPackageName.includes('Dinner') ? 9500 * b.guestsCount : 4000 * b.guestsCount;
+        estimatedRevenue += b.roomOrPackageName.includes('Dinner') ? 9500 * b.guestsCount : 4500 * b.guestsCount;
       }
     });
 
@@ -291,7 +291,7 @@ export default function AdminDashboard({ onGoBack }) {
                     <strong style={{ letterSpacing: '0.05em', color: 'var(--color-text-dark)' }}>
                       {cat === 'STAY' && 'ROOM STAYS & SUITES'}
                       {cat === 'DAYOUT' && 'DAYOUT PACKAGES (THE CANOPY)'}
-                      {cat === 'SPA' && 'GOLDEN SHANTI SPA'}
+                      {cat === 'SPA' && 'SHADARA WELLNESS'}
                       {cat === 'DINING' && 'ROOFTOP & DINE-IN'}
                     </strong>
                     <span style={{ color: 'var(--color-gold-dark)' }}>{count} Bookings ({percent.toFixed(0)}%)</span>

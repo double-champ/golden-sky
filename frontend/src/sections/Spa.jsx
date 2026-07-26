@@ -33,7 +33,7 @@ const therapies = [
 
 export default function SpaSanctuary({ onOpenBooking }) {
   // Let's use one of the serene close-up photos for the spa background preview
-  const spaImage = "/images/20260418_105523_1.jpg";
+  const spaImage = "/images/spa_section.jpg";
 
   return (
     <section id="spa" style={{ padding: '8rem 0', backgroundColor: '#060e0a', position: 'relative' }}>
@@ -65,7 +65,7 @@ export default function SpaSanctuary({ onOpenBooking }) {
             }} />
             <img 
               src={spaImage} 
-              alt="Golden Shanti Spa Sanctuary" 
+              alt="Shadara Wellness Sanctuary" 
               loading="lazy"
               decoding="async"
               style={{ 
@@ -99,7 +99,7 @@ export default function SpaSanctuary({ onOpenBooking }) {
               The Wellness Sanctuary
             </p>
             <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontFamily: 'var(--font-serif)', fontWeight: '400', marginBottom: '1.5rem' }}>
-              Golden Shanti <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Wellness Spa</span>
+              Shadara <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Wellness Center</span>
             </h2>
             <p style={{ marginBottom: '2.5rem', color: 'var(--color-text-muted)' }}>
               Detoxify body and mind. Guided by experienced therapists, our treatments integrate fresh Sri Lankan herbs, holistic oils, and soothing thermal therapies in a serene mountainside cabin environment.

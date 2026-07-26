@@ -202,12 +202,12 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
 
         .luxury-header.scrolled {
           height: 70px;
-          background-color: rgba(24, 23, 21, 0.45);
+          background-color: rgba(14, 13, 11, 0.85);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
-          border-bottom: 1px solid rgba(212, 175, 55, 0.15);
+          border-bottom: 1px solid var(--color-border-gold);
           padding: 0 3rem;
-          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+          box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
         }
 
         .header-left {
