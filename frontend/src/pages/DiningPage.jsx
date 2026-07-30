@@ -1,12 +1,9 @@
 import React, { useState, useEffect } from 'react';
 import { Utensils, Check, ChevronRight, Coffee, Waves, Loader2, Sparkles } from 'lucide-react';
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
 
 const diningMetadata = {
-  "Hanthana Escape Dayout": { audience: "Per Person (Min 2 Pax)", type: "DAYOUT" },
-  "Golden Wellness Dayout": { audience: "Per Person", type: "DAYOUT" },
-  "Royal Heritage Dayout": { audience: "Per Person (Min 4 Pax)", type: "DAYOUT" },
   "Curated 5-Course Dinner": { timing: "Daily 7:00 PM - 10:30 PM", type: "DINING" },
   "Hanthana Sunset High Tea": { timing: "Daily 3:00 PM - 6:00 PM", type: "DINING" },
   "Aura Rooftop Fire-pit Dining": { timing: "Fri & Sat 7:00 PM - 11:00 PM", type: "DINING" }
@@ -22,16 +19,12 @@ export default function DiningPage({ onOpenBooking }) {
         const response = await fetch(`${API_BASE}/rooms`);
         if (!response.ok) throw new Error("Failed fetch");
         const data = await response.json();
-        // Filter for DAYOUT and DINING items
-        const filtered = data.filter(r => r.type === 'DAYOUT' || r.type === 'DINING');
+        // Filter for DINING items
+        const filtered = data.filter(r => r.type === 'DINING');
         setItems(filtered);
       } catch (err) {
-        console.warn("Backend API offline. Loading fallback dayout and dining options...");
-        // Fallback mock items list representing the seeded packages
+        console.warn("Backend API offline. Loading fallback dining options...");
         const fallbackImages = [
-          "/images/dining_escape.jpg",
-          "/images/dining_wellness.jpg",
-          "/images/dining_heritage.jpg",
           "/images/dining_dinner.jpg",
           "/images/dining_hightea.jpg",
           "/images/dining_rooftop.jpg"
@@ -39,27 +32,19 @@ export default function DiningPage({ onOpenBooking }) {
         const fallbackItems = Object.keys(diningMetadata).map((name, index) => ({
           id: `fallback-d${index + 1}`,
           name,
-          type: diningMetadata[name].type,
-          price: name.includes("Escape") ? 6500 : (name.includes("Wellness") ? 12500 : (name.includes("Heritage") ? 9500 : (name.includes("Dinner") ? 9500 : (name.includes("High Tea") ? 4500 : 15000)))),
-          capacity: name.includes("Heritage") ? 4 : (name.includes("Escape") ? 2 : 1),
-          description: name.includes("Escape")
-            ? "Our classic dayout package designed to offer a peaceful mountain escape with gourmet buffet dining and access to our scenic viewpoints."
-            : (name.includes("Wellness")
-                ? "An elevated package that combines healthy 3-course organic lunches with private herbal steam baths and wellness review consultations."
-                : (name.includes("Heritage")
-                    ? "Includes a guided mountain peak trek, tour of a historic tea factory, customized high tea experience, and panoramic forest deck access."
-                    : (name.includes("Dinner")
-                        ? "A fine-dining gastronomic tour showcasing Kandyan heritage spices, fresh mountain greens, and organic mountain harvests."
-                        : (name.includes("High Tea")
-                            ? "A gorgeous collection of local and international pastries served alongside single-estate organic Hanthana tea."
-                            : "Private starlit dining around copper fire-pits, including custom mixology drink pairings and a dedicated chef.")))),
-          amenities: name.includes("Escape")
-            ? "Welcome Fruit Elixir, Organic Lunch Buffet, Scenic View Deck Access, Ceylon High Tea Platter"
-            : (name.includes("Wellness")
-                ? "Welcome Detox Shot, Curated 3-Course Organic Lunch, 30-min Herbal Steam Bath, Yoga Lawn access"
-                : (name.includes("Heritage")
-                    ? "Guided Mountain Trek, Tea Factory Tour, Historic High Tea, Buffet Lunch, Viewing Deck Access"
-                    : "Organic cardamon, Cinnamon infusions, Sunset views, Cardamon tea bar")),
+          type: "DINING",
+          price: name.includes("Dinner") ? 9500 : (name.includes("High Tea") ? 4500 : 15000),
+          capacity: 1,
+          description: name.includes("Dinner")
+            ? "A fine-dining gastronomic tour showcasing Kandyan heritage spices, fresh mountain greens, and organic mountain harvests."
+            : (name.includes("High Tea")
+                ? "A gorgeous collection of local and international pastries served alongside single-estate organic Hanthana tea."
+                : "Private starlit dining around copper fire-pits, including custom mixology drink pairings and a dedicated chef."),
+          amenities: name.includes("Dinner")
+            ? "Organic cardamom, Cinnamon infusions, Sunset views, Cardamon tea bar"
+            : (name.includes("High Tea")
+                ? "Single-estate Tea, Custom Scones, Fresh Jam, Clotted Cream"
+                : "Private Chef, Fire-pit Table, Customized Drinks, Skyline Views"),
           imageUrl: fallbackImages[index]
         }));
         setItems(fallbackItems);
@@ -70,8 +55,7 @@ export default function DiningPage({ onOpenBooking }) {
     fetchDining();
   }, []);
 
-  const dayoutPackages = items.filter(i => i.type === 'DAYOUT');
-  const diningOptions = items.filter(i => i.type === 'DINING');
+  const diningOptions = items;
 
   return (
     <div className="page-transition" style={{ backgroundColor: 'var(--color-bg-ivory)', minHeight: '100vh' }}>
@@ -95,10 +79,10 @@ export default function DiningPage({ onOpenBooking }) {
             Highland Gastronomy
           </span>
           <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', color: '#fff', fontFamily: 'var(--font-serif)', margin: '0.5rem 0 1rem 0' }}>
-            The Canopy <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Dine & Day-outs</span>
+            The Canopy <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Dine-in</span>
           </h1>
           <p style={{ maxWidth: '600px', color: 'rgba(255,255,255,0.8)', margin: '0 auto', fontSize: '1rem', lineHeight: '1.6' }}>
-            Indulge in organic harvests from Kandy's mountain ranges paired with scenic forest backdrops and premium day packages.
+            Indulge in organic harvests from Kandy's mountain ranges paired with scenic forest backdrops and premium dining selections.
           </p>
         </div>
       </section>
@@ -111,74 +95,8 @@ export default function DiningPage({ onOpenBooking }) {
         </div>
       ) : (
         <>
-          {/* 2. DAY OUTING PACKAGES (GRID LAYOUT) */}
-          <section className="container responsive-section-padding" style={{ paddingBottom: '2rem' }}>
-            <span style={{ fontSize: '0.72rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-gold)', display: 'block', textAlign: 'center', marginBottom: '0.3rem' }}>01 / EXCURSIONS</span>
-            <h2 style={{ fontSize: '2.3rem', fontFamily: 'var(--font-serif)', textAlign: 'center', marginBottom: '3rem' }}>
-              Mountain Escape <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Day-out Packages</span>
-            </h2>
-
-            <div className="responsive-layout-grid">
-              {dayoutPackages.map((pkg) => {
-                const meta = diningMetadata[pkg.name] || { audience: "Per Person" };
-                return (
-                  <div 
-                    key={pkg.id}
-                    className="glass-panel"
-                    style={{
-                      borderRadius: '20px',
-                      padding: '2.2rem',
-                      border: '1px solid rgba(212,175,55,0.18)',
-                      backgroundColor: '#fff',
-                      boxShadow: '0 8px 30px rgba(0,0,0,0.01)',
-                      textAlign: 'left',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      justifyContent: 'space-between'
-                    }}
-                  >
-                    <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '0.8rem' }}>
-                        <h3 style={{ fontSize: '1.35rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)' }}>{pkg.name}</h3>
-                        <div style={{ textAlign: 'right' }}>
-                          <span style={{ fontSize: '1.25rem', color: 'var(--color-gold-dark)', fontWeight: '600', fontFamily: 'var(--font-serif)', display: 'block' }}>
-                            LKR {pkg.price.toLocaleString()}
-                          </span>
-                          <span style={{ fontSize: '0.62rem', color: 'var(--color-text-muted)', textTransform: 'uppercase' }}>{meta.audience}</span>
-                        </div>
-                      </div>
-
-                      <p style={{ fontSize: '0.88rem', color: 'var(--color-text-muted)', lineHeight: '1.5', marginBottom: '1.5rem' }}>
-                        {pkg.description}
-                      </p>
-
-                      <h4 style={{ fontSize: '0.72rem', textTransform: 'uppercase', color: 'var(--color-gold)', letterSpacing: '0.08em', marginBottom: '0.6rem', fontWeight: '600' }}>Package Inclusions</h4>
-                      <ul style={{ listStyle: 'none', display: 'flex', flexDirection: 'column', gap: '0.5rem', fontSize: '0.82rem', paddingLeft: 0, marginBottom: '2rem' }}>
-                        {pkg.amenities.split(',').map((feat, i) => (
-                          <li key={i} style={{ display: 'flex', gap: '0.5rem', alignItems: 'center', color: 'var(--color-text-muted)' }}>
-                            <Check size={12} style={{ color: 'var(--color-gold)', flexShrink: 0 }} />
-                            <span>{feat.trim()}</span>
-                          </li>
-                        ))}
-                      </ul>
-                    </div>
-
-                    <button 
-                      className="btn-gold-solid" 
-                      style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '0.5rem', marginTop: 'auto' }}
-                      onClick={() => onOpenBooking('DAYOUT', pkg.name)}
-                    >
-                      <span>Book Day Package</span>
-                      <ChevronRight size={14} />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </section>
-
-          {/* 3. PREMIUM DINING OPTIONS (luxurious menu format with dot leaders) */}
-          <section className="container responsive-section-padding" style={{ paddingBottom: '6rem' }}>
+          {/* PREMIUM DINING OPTIONS */}
+          <section className="container responsive-section-padding" style={{ paddingBottom: '6rem', paddingTop: '5rem' }}>
             <div 
               className="responsive-block-padding"
               style={{
@@ -198,7 +116,7 @@ export default function DiningPage({ onOpenBooking }) {
                 <Sparkles size={16} />
               </div>
 
-              <span style={{ fontSize: '0.72rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-gold)', display: 'block', textAlign: 'center', marginBottom: '0.5rem', marginTop: '0.8rem' }}>02 / DINING MENU</span>
+              <span style={{ fontSize: '0.72rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-gold)', display: 'block', textAlign: 'center', marginBottom: '0.5rem', marginTop: '0.8rem' }}>DINING MENU</span>
               <h2 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-serif)', textAlign: 'center', marginBottom: '3rem' }}>
                 Sunset Dine-in <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Selections</span>
               </h2>
@@ -209,14 +127,19 @@ export default function DiningPage({ onOpenBooking }) {
                   return (
                     <div key={item.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', textAlign: 'left' }}>
                       {/* Classic menu dot-leader display */}
-                      <div className="menu-item-header">
+                      <div className="menu-item-header" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
                         <span className="menu-item-name" style={{ fontFamily: 'var(--font-serif)', fontSize: '1.2rem', fontWeight: '500' }}>
                           {item.name}
                         </span>
-                        <div className="menu-item-dots" />
-                        <span className="menu-item-price" style={{ fontSize: '1.2rem' }}>
-                          LKR {item.price.toLocaleString()}
-                        </span>
+                        <div className="menu-item-dots" style={{ flexGrow: 1, borderBottom: '1px dotted rgba(0,0,0,0.2)', margin: '0 1rem' }} />
+                        <div style={{ textAlign: 'right' }}>
+                          <span className="menu-item-price" style={{ fontSize: '1.25rem', color: 'var(--color-gold-dark)', fontWeight: '600', fontFamily: 'var(--font-serif)', display: 'block' }}>
+                            LKR {item.price.toLocaleString()}
+                          </span>
+                          <span style={{ fontSize: '0.62rem', color: 'var(--color-text-muted)', textTransform: 'uppercase', display: 'block', marginTop: '0.2rem' }}>
+                            Per Person
+                          </span>
+                        </div>
                       </div>
 
                       {/* Timings / operational info */}

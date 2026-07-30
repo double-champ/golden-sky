@@ -8,9 +8,10 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
   const navItems = [
     { label: 'Home', view: 'home' },
     { label: 'About', view: 'about' },
-    { label: 'Suites', view: 'suites' },
+    { label: 'Chambers', view: 'suites' },
     { label: 'Spa', view: 'spa' },
-    { label: 'Dine & Dayouts', view: 'dining' },
+    { label: 'Day-outs', view: 'dayout' },
+    { label: 'Dining', view: 'dining' },
     { label: 'Rooftop Bar', view: 'rooftop' }
   ];
 
@@ -30,7 +31,7 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
   return (
     <>
       {/* Luxury Sticky Header */}
-      <header className={`luxury-header ${scrolled ? 'scrolled' : ''}`}>
+      <header className={`luxury-header ${scrolled || currentView !== 'home' ? 'scrolled' : ''}`}>
         <div className="header-left">
           <button
             onClick={() => setMenuOpen(true)}
@@ -52,11 +53,6 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
             alt="Golden Sky Logo" 
             className="header-logo"
           />
-          {currentView === 'home' && (
-            <span className="header-title">
-              Golden Sky
-            </span>
-          )}
         </div>
 
         <div className="header-right">
@@ -201,7 +197,7 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
         }
 
         .luxury-header.scrolled {
-          height: 70px;
+          height: 80px;
           background-color: rgba(14, 13, 11, 0.85);
           backdrop-filter: blur(20px);
           -webkit-backdrop-filter: blur(20px);
@@ -264,13 +260,13 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
         }
 
         .header-logo {
-          height: 52px;
+          height: 80px;
           object-fit: contain;
           transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .luxury-header.scrolled .header-logo {
-          height: 34px;
+          height: 60px;
         }
 
         .header-title {
@@ -360,10 +356,10 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
             letter-spacing: 0.1em;
           }
           .header-logo {
-            height: 34px;
+            height: 62px;
           }
           .luxury-header.scrolled .header-logo {
-            height: 26px;
+            height: 50px;
           }
           .reserve-text {
             display: none;

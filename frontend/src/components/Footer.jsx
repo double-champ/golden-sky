@@ -1,7 +1,28 @@
-import React from 'react';
-import { Phone, Mail, MapPin } from 'lucide-react';
+import React, { useState } from 'react';
+import { Phone, Mail, MapPin, ShieldAlert, Lock, X } from 'lucide-react';
 
 export default function Footer({ onViewChange, onOpenBooking }) {
+  const [showAdminLogin, setShowAdminLogin] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
+
+  const handleAdminLogin = (e) => {
+    e.preventDefault();
+    if (username.toLowerCase() === 'admin' && password === 'admin123') {
+      setShowAdminLogin(false);
+      setUsername('');
+      setPassword('');
+      setLoginError('');
+      if (onViewChange) {
+        onViewChange('admin');
+      }
+    } else {
+      setLoginError('Invalid username or password. Access denied.');
+      setPassword('');
+    }
+  };
+
   return (
     <footer style={{ 
       backgroundColor: '#030504', 
@@ -109,12 +130,37 @@ export default function Footer({ onViewChange, onOpenBooking }) {
                     outline: 'none'
                   }}
                 >
-                  Suites &amp; Villas
+                  Chambers &amp; Villas
                 </button>
               </li>
               <li>
+                <a 
+                  href="https://shadharawellness.com/" 
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="nav-link"
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    textAlign: 'left', 
+                    font: 'inherit',
+                    padding: '0.4rem 0',
+                    margin: 0,
+                    textTransform: 'capitalize', 
+                    fontSize: '0.9rem',
+                    cursor: 'pointer',
+                    display: 'block',
+                    color: 'rgba(255, 255, 255, 0.8)',
+                    textDecoration: 'none',
+                    outline: 'none'
+                  }}
+                >
+                  Shadara Wellness
+                </a>
+              </li>
+              <li>
                 <button 
-                  onClick={() => onViewChange && onViewChange('spa')} 
+                  onClick={() => onViewChange && onViewChange('dayout')} 
                   className="nav-link"
                   style={{ 
                     background: 'none', 
@@ -131,7 +177,7 @@ export default function Footer({ onViewChange, onOpenBooking }) {
                     outline: 'none'
                   }}
                 >
-                  Shadara Wellness
+                  Mountain Day-outs
                 </button>
               </li>
               <li>
@@ -153,7 +199,7 @@ export default function Footer({ onViewChange, onOpenBooking }) {
                     outline: 'none'
                   }}
                 >
-                  The Canopy Restaurant
+                  The Canopy Dining
                 </button>
               </li>
               <li>
@@ -311,9 +357,174 @@ export default function Footer({ onViewChange, onOpenBooking }) {
           <p style={{ margin: 0 }} className="footer-copyright">
             © {new Date().getFullYear()} Golden Sky Hotel & Wellness. All Rights Reserved.
           </p>
-          <div className="footer-spacer" style={{ width: '300px' }} />
+          <div className="footer-spacer" style={{ width: '300px', display: 'flex', justifyContent: 'flex-end' }}>
+            <button 
+              onClick={() => setShowAdminLogin(true)}
+              style={{
+                background: 'none',
+                border: 'none',
+                color: 'var(--color-text-muted)',
+                fontSize: '0.72rem',
+                letterSpacing: '0.05em',
+                textTransform: 'uppercase',
+                cursor: 'pointer',
+                opacity: 0.6,
+                transition: 'opacity 0.3s ease',
+                outline: 'none',
+                padding: '0.4rem 0'
+              }}
+              onMouseEnter={(e) => e.target.style.opacity = 1}
+              onMouseLeave={(e) => e.target.style.opacity = 0.6}
+            >
+              Staff Portal
+            </button>
+          </div>
         </div>
       </div>
+
+      {/* Staff Portal Access Modal */}
+      {showAdminLogin && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: 'rgba(10, 9, 8, 0.85)',
+          backdropFilter: 'blur(8px)',
+          zIndex: 99999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center'
+        }}>
+          <div className="glass-panel" style={{
+            maxWidth: '380px',
+            width: '90%',
+            padding: '2.5rem 2rem',
+            backgroundColor: '#1c1b18',
+            border: '1px solid rgba(212, 175, 55, 0.3)',
+            borderRadius: '20px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.5)',
+            textAlign: 'center',
+            position: 'relative'
+          }}>
+            <button 
+              onClick={() => { setShowAdminLogin(false); setUsername(''); setPassword(''); setLoginError(''); }}
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                background: 'none',
+                border: 'none',
+                color: 'rgba(255,255,255,0.6)',
+                cursor: 'pointer'
+              }}
+            >
+              <X size={18} />
+            </button>
+
+            <div style={{
+              width: '60px',
+              height: '60px',
+              borderRadius: '50%',
+              backgroundColor: 'rgba(212, 175, 55, 0.1)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              margin: '0 auto 1.5rem auto',
+              border: '1px solid rgba(212,175,55,0.3)'
+            }}>
+              <Lock size={24} style={{ color: 'var(--color-gold)' }} />
+            </div>
+
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: '#fff', margin: '0 0 0.5rem 0' }}>
+              Staff Portal Access
+            </h3>
+            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1.8rem', lineHeight: '1.4' }}>
+              Please login with your staff credentials to manage rooms, bookings, and review logs.
+            </p>
+
+            <form onSubmit={handleAdminLogin} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
+              <div>
+                <label style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: '0.3rem', fontWeight: '500', marginLeft: '0.8rem' }}>Username</label>
+                <input 
+                  type="text"
+                  placeholder="admin"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  autoFocus
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1.2rem',
+                    borderRadius: '30px',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                    color: '#fff',
+                    fontSize: '0.85rem',
+                    outline: 'none',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = 'var(--color-gold)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                />
+              </div>
+
+              <div>
+                <label style={{ fontSize: '0.72rem', color: 'rgba(255,255,255,0.6)', display: 'block', marginBottom: '0.3rem', fontWeight: '500', marginLeft: '0.8rem' }}>Password</label>
+                <input 
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  style={{
+                    width: '100%',
+                    padding: '0.75rem 1.2rem',
+                    borderRadius: '30px',
+                    border: '1px solid rgba(255,255,255,0.1)',
+                    backgroundColor: 'rgba(255,255,255,0.04)',
+                    color: '#fff',
+                    fontSize: '0.85rem',
+                    outline: 'none',
+                    transition: 'all 0.3s ease'
+                  }}
+                  onFocus={(e) => e.target.style.borderColor = 'var(--color-gold)'}
+                  onBlur={(e) => e.target.style.borderColor = 'rgba(255,255,255,0.1)'}
+                />
+              </div>
+              
+              {loginError && (
+                <div style={{ color: '#ff4757', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '0.3rem', justifyContent: 'center', marginTop: '0.2rem' }}>
+                  <ShieldAlert size={12} />
+                  <span>{loginError}</span>
+                </div>
+              )}
+
+              <button 
+                type="submit" 
+                className="btn-gold-solid"
+                style={{
+                  padding: '0.8rem',
+                  borderRadius: '30px',
+                  fontSize: '0.8rem',
+                  letterSpacing: '0.1em',
+                  textTransform: 'uppercase',
+                  fontWeight: '600',
+                  marginTop: '0.5rem',
+                  cursor: 'pointer',
+                  border: 'none',
+                  outline: 'none',
+                  width: '100%',
+                  display: 'flex',
+                  justifyContent: 'center',
+                  alignItems: 'center'
+                }}
+              >
+                Authenticate
+              </button>
+            </form>
+          </div>
+        </div>
+      )}
 
       <style>{`
         .footer-designed-by {

@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { MapPin, Compass, ShieldCheck, Sparkles, Clock, Camera, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import Testimonials from '../components/Testimonials';
 
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+
 export default function AboutPage({ onOpenBooking }) {
   const [activeCategory, setActiveCategory] = useState('All');
+  const [expandedCard, setExpandedCard] = useState(null);
   const [lightboxImage, setLightboxImage] = useState(null);
 
   const galleryItems = [
@@ -129,18 +132,19 @@ export default function AboutPage({ onOpenBooking }) {
     const container = scrollRef.current;
     if (!container) return;
 
-    const offset = getCardOffset();
-    const totalItems = experiences.length;
-    const middleOffset = totalItems * offset;
+    // Center on initial middle card
+    const middleIndex = Math.floor(experiences.length);
+    const cardWidth = 320;
+    const gap = 32;
+    const initialScroll = (middleIndex * (cardWidth + gap)) - (container.clientWidth / 2) + (cardWidth / 2);
+    container.scrollLeft = initialScroll;
 
-    // Set initial scroll to the start of the middle block
-    const initTimer = setTimeout(() => {
-      container.scrollLeft = middleOffset;
-    }, 150);
-
+    // Set scroll handler for infinite looping
+    let isJumping = false;
     const handleScroll = () => {
-      const currentOffset = getCardOffset();
-      const currentMiddleOffset = totalItems * currentOffset;
+      if (isJumping) return;
+      const currentOffset = container.scrollLeft;
+      const currentMiddleOffset = experiences.length * (cardWidth + gap);
 
       // Jump if user scrolls into first cloned block
       if (container.scrollLeft < currentOffset) {
@@ -155,7 +159,6 @@ export default function AboutPage({ onOpenBooking }) {
     container.addEventListener('scroll', handleScroll);
 
     return () => {
-      clearTimeout(initTimer);
       container.removeEventListener('scroll', handleScroll);
     };
   }, [experiences.length]);
@@ -168,7 +171,7 @@ export default function AboutPage({ onOpenBooking }) {
       <section className="page-hero-banner" style={{
         position: 'relative',
         height: '55vh',
-        background: 'linear-gradient(rgba(14, 13, 11, 0.45), rgba(14, 13, 11, 0.7)), url("/images/20260418_112608_1.jpg")',
+        background: `linear-gradient(rgba(14, 13, 11, 0.45), rgba(14, 13, 11, 0.7)), url("${content.aboutHeroImage ? (content.aboutHeroImage.startsWith('/raw-images/') ? `${API_BASE.replace('/api', '')}${content.aboutHeroImage}` : content.aboutHeroImage) : "/images/20260418_112608_1.jpg"}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         backgroundAttachment: 'scroll',
@@ -183,10 +186,10 @@ export default function AboutPage({ onOpenBooking }) {
             Our Heritage
           </span>
           <h1 style={{ fontSize: 'clamp(2.5rem, 6vw, 4.5rem)', color: '#fff', fontFamily: 'var(--font-serif)', margin: '0.5rem 0 1rem 0' }}>
-            About <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Golden Sky</span>
+            {heroTitleNode}
           </h1>
           <p style={{ maxWidth: '600px', color: 'rgba(255,255,255,0.8)', margin: '0 auto', fontSize: '1rem', lineHeight: '1.6' }}>
-            Learn the story behind our eco-conscious mountain sanctuary, perched 780m above the Kandy Valley.
+            {aboutHeroSubtitle}
           </p>
         </div>
       </section>
@@ -195,18 +198,15 @@ export default function AboutPage({ onOpenBooking }) {
       <section className="container responsive-section-padding" style={{ paddingBottom: '2rem' }}>
         <div className="responsive-layout-grid" style={{ alignItems: 'center', textAlign: 'left', marginBottom: '4rem' }}>
           <div>
-            <span style={{ fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>01 / PHILOSOPHY</span>
+            <span style={{ fontSize: '0.7rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>PHILOSOPHY</span>
             <h2 style={{ fontSize: '2.4rem', fontFamily: 'var(--font-serif)', marginTop: '0.3rem', marginBottom: '1.5rem', lineHeight: '1.2' }}>
               Where Luxury Meets <br />
               <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Curative Serenity</span>
             </h2>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', color: 'var(--color-text-muted)', fontSize: '0.92rem', lineHeight: '1.75' }}>
-              <p>
-                Golden Sky Hotel & Wellness represents an architectural bridge between modern luxury and raw mountain environment. Built along the ridges of the Hanthana Mountain range in Kandy, Sri Lanka, our suites are crafted from hand-carved local granite and high-strength structural glass.
-              </p>
-              <p>
-                Each chamber is designed to merge the guest visually with the shifting mist valleys, offering an experience of deep isolation, peace, and ecological connection. We run on advanced eco-conscious principles, utilizing organic water recycling, low-carbon natural ventilations, and local farming cooperatives.
-              </p>
+              {paragraphs.map((p, index) => (
+                <p key={index}>{p}</p>
+              ))}
             </div>
           </div>
 
@@ -233,9 +233,9 @@ export default function AboutPage({ onOpenBooking }) {
               textAlign: 'left',
               boxShadow: '0 10px 30px rgba(0,0,0,0.015)'
             }}>
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', textTransform: 'uppercase', letterSpacing: '0.2em', display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Micro-Climate</span>
-              <span style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)', display: 'block', lineHeight: 1.1, marginBottom: '0.3rem' }}>18°C - 24°C</span>
-              <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0 }}>Refreshing alpine temperatures offering year-round serenity.</p>
+              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', textTransform: 'uppercase', letterSpacing: '0.2em', display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Heritage</span>
+              <span style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)', display: 'block', lineHeight: 1.1, marginBottom: '0.3rem' }}>{content.aboutStatHeritageVal || "Authentic"}</span>
+              <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0 }}>{content.aboutStatHeritageDesc || "Rooted in traditional culture, local Kandy heritage, and warm hospitality."}</p>
             </div>
 
             <div style={{
@@ -247,8 +247,8 @@ export default function AboutPage({ onOpenBooking }) {
               boxShadow: '0 10px 30px rgba(0,0,0,0.015)'
             }}>
               <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', textTransform: 'uppercase', letterSpacing: '0.2em', display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Nature</span>
-              <span style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)', display: 'block', lineHeight: 1.1, marginBottom: '0.3rem' }}>100% Organic</span>
-              <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0 }}>Lush mountain flora and botanicals cultivated surrounding the resort.</p>
+              <span style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)', display: 'block', lineHeight: 1.1, marginBottom: '0.3rem' }}>{content.aboutStatNatureVal || "Organic"}</span>
+              <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0 }}>{content.aboutStatNatureDesc || "Lush mountain flora and botanicals cultivated surrounding the resort."}</p>
             </div>
 
             <div style={{
@@ -260,8 +260,8 @@ export default function AboutPage({ onOpenBooking }) {
               boxShadow: '0 10px 30px rgba(0,0,0,0.015)'
             }}>
               <span style={{ fontSize: '0.65rem', color: 'var(--color-gold-dark)', textTransform: 'uppercase', letterSpacing: '0.2em', display: 'block', marginBottom: '0.5rem', fontWeight: 600 }}>Hosting</span>
-              <span style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)', display: 'block', lineHeight: 1.1, marginBottom: '0.3rem' }}>24/7 Butler</span>
-              <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0 }}>Private, personalized, and seamless service from our elite hosts.</p>
+              <span style={{ fontSize: '2.2rem', fontFamily: 'var(--font-serif)', color: 'var(--color-text-dark)', display: 'block', lineHeight: 1.1, marginBottom: '0.3rem' }}>{content.aboutStatWellnessVal || "24/7 Butler"}</span>
+              <p style={{ fontSize: '0.8rem', color: 'var(--color-text-muted)', margin: 0 }}>{content.aboutStatWellnessDesc || "Private, personalized, and seamless service from our elite hosts."}</p>
             </div>
           </div>
         </div>
@@ -337,14 +337,14 @@ export default function AboutPage({ onOpenBooking }) {
             gap: '2rem', 
             overflowX: 'auto', 
             padding: '1rem 0.5rem 2.5rem 0.5rem', 
-            scrollbarWidth: 'none', 
-            scrollBehavior: 'smooth'
+            scrollbarWidth: 'none'
           }} 
           className="hide-scrollbar"
         >
           {extendedExperiences.map((exp, idx) => (
             <div 
               key={idx}
+              onClick={() => setExpandedCard(expandedCard === idx ? null : idx)}
               style={{
                 flex: '0 0 350px',
                 height: '480px',
@@ -411,15 +411,26 @@ export default function AboutPage({ onOpenBooking }) {
                   color: '#fff',
                   zIndex: 3,
                   transition: 'all 0.4s ease',
-                  maxHeight: '85px',
+                  maxHeight: expandedCard === idx ? '380px' : '85px',
                   overflow: 'hidden'
                 }}
-                className="deck-glass-panel"
+                className={`deck-glass-panel ${expandedCard === idx ? 'is-active' : ''}`}
               >
                 <h4 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: '#fff', marginBottom: '0.5rem', lineHeight: '1.2' }}>
                   {exp.title}
                 </h4>
-                <p style={{ fontSize: '0.78rem', color: 'rgba(255, 255, 255, 0.75)', lineHeight: '1.5', opacity: 0, transition: 'all 0.4s ease', marginTop: '0.5rem', margin: 0 }} className="deck-desc">
+                <p 
+                  style={{ 
+                    fontSize: '0.78rem', 
+                    color: 'rgba(255, 255, 255, 0.75)', 
+                    lineHeight: '1.5', 
+                    opacity: expandedCard === idx ? 1 : 0, 
+                    transition: 'all 0.4s ease', 
+                    marginTop: '0.5rem', 
+                    margin: 0 
+                  }} 
+                  className="deck-desc"
+                >
                   {exp.desc}
                 </p>
               </div>
@@ -683,9 +694,9 @@ export default function AboutPage({ onOpenBooking }) {
       {/* 5. CUSTOMER REVIEWS SECTION */}
       <section className="container reveal" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>Testimonials</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>Reviews</span>
           <h2 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-serif)', marginTop: '0.5rem', marginBottom: '1rem', color: 'var(--color-text-dark)' }}>
-            Whispered Praises & <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Guest Memories</span>
+            Verified Guest <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Reviews</span>
           </h2>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.1rem', color: 'var(--color-gold)' }}>
             {Array(5).fill(0).map((_, i) => (

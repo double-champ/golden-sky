@@ -9,6 +9,7 @@ const Home = lazy(() => import('./pages/Home'));
 const SuitesPage = lazy(() => import('./pages/SuitesPage'));
 const SpaPage = lazy(() => import('./pages/SpaPage'));
 const DiningPage = lazy(() => import('./pages/DiningPage'));
+const DayoutPage = lazy(() => import('./pages/DayoutPage'));
 const RooftopPage = lazy(() => import('./pages/RooftopPage'));
 const AboutPage = lazy(() => import('./pages/AboutPage'));
 const AdminDashboard = lazy(() => import('./pages/AdminDashboard'));
@@ -20,12 +21,60 @@ export default function App() {
   // but clears when the tab is closed or user opens a fresh URL.
   const [currentView, setCurrentView] = useState(() => {
     const saved = sessionStorage.getItem('gs_view');
-    const valid = ['home', 'suites', 'spa', 'dining', 'rooftop', 'about'];
+    const valid = ['home', 'suites', 'spa', 'dining', 'dayout', 'rooftop', 'about', 'admin'];
     return valid.includes(saved) ? saved : 'home';
   });
   const [bookingModalOpen, setBookingModalOpen] = useState(false);
   const [bookingParams, setBookingParams] = useState({ type: 'STAY', package: '' });
   const [isLoading, setIsLoading] = useState(true);
+
+  // Dynamic Editable Page Copy State
+  const defaultPageContent = {
+    homeHeroTitle: "Experience Kandy's Misty Ranges",
+    homeHeroSubtitle: "Golden Sky Hotel & Wellness",
+    homeWelcomeTitle: "A sanctuary above the clouds",
+    homeWelcomeBody: "Golden Sky Hotel & Wellness is a premium luxury boutique hotel perched above Kandy's mist-veiled mountain ranges. Here, architectural elegance meets traditional Kandyan warmth, offering guests an intimate connection with pristine highland nature and organic wellness.",
+    aboutHeroTitle: "A Heritage of Warm Hospitality",
+    aboutHeroSubtitle: "Our Story & Sanctuary",
+    aboutStoryText: "Perched high in Kandy's mist-covered peaks, Golden Sky Hotel & Wellness was created as a sanctuary for travelers seeking deep connection with highland nature, traditional heritage, and holistic healing. Our residence blends modern luxury with local architectural beauty, featuring high-strength balconies, organic cardamom gardens, and panoramic views of the Hanthana mountain ranges. Guided by local hosts, we strive to make every guest feel like family, offering authentic organic meals and a peaceful retreat from the modern world.",
+    aboutStatHeritageVal: "Authentic",
+    aboutStatHeritageTitle: "Traditional Heritage",
+    aboutStatHeritageDesc: "Experience Kandyan culture, heritage spices, and warm local hospitality.",
+    aboutStatNatureVal: "Organic",
+    aboutStatNatureTitle: "Pristine Nature",
+    aboutStatNatureDesc: "Surrounded by organic forest ranges, cardamon orchards, and scenic mountain views.",
+    aboutStatWellnessVal: "Shadhara",
+    aboutStatWellnessTitle: "Wellness Gateway",
+    aboutStatWellnessDesc: "Seamless luxury integration with the Shadhara brand redirection portal.",
+    spaGatewayTitle: "Shadhara Wellness Sanctuary",
+    spaGatewayDescription: "To offer a fully immersive journey into authentic Sri Lankan Ayurvedic healing, Shadhara Wellness has transitioned to a dedicated digital platform. We invite you to explore the treatment catalog, consult with therapists, and manage reservations directly on our new website.",
+    spaWhatsappLink: "https://wa.me/94714831035?text=Hello%20Shadhara%20Wellness%2C%20I%20would%20like%20to%20inquire%20about%20a%20wellness%20booking.",
+    spaExternalLink: "https://shadharawellness.com/",
+    rooftopHeroTitle: "Rooftop Bar & Lounge",
+    rooftopHeroSubtitle: "Highland Vistas & Fire-pits",
+    rooftopDescription: "Perched at Kandy's highest peak. Feel the mountain wind, watch the twilight shadows settle over the valley, and gather around glowing fireplace hearths.",
+    rooftopTimings: "Daily 5:00 PM - 11:30 PM",
+    rooftopFeatures: "Starlit Fire-pits, Custom Mixology, Cardamom-infused Ceylon Arrack, Scenic Balconies"
+  };
+
+  const [pageContent, setPageContent] = useState(defaultPageContent);
+
+  const fetchPageContent = async () => {
+    const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+    try {
+      const res = await fetch(`${API_BASE}/page-content`);
+      if (res.ok) {
+        const data = await res.json();
+        setPageContent(data);
+      }
+    } catch (err) {
+      console.warn("Failed to fetch page-content, using fallbacks.");
+    }
+  };
+
+  useEffect(() => {
+    fetchPageContent();
+  }, []);
 
   // Initial loading screen timer
   useEffect(() => {
@@ -84,7 +133,7 @@ export default function App() {
       return;
     }
     if (isLoading) return;
-    if (['home', 'suites', 'spa', 'dining', 'rooftop', 'about', 'admin'].includes(view)) {
+    if (['home', 'suites', 'spa', 'dining', 'dayout', 'rooftop', 'about', 'admin'].includes(view)) {
       setIsLoading(true);
       setTimeout(() => {
         setCurrentView(view);
@@ -167,25 +216,33 @@ export default function App() {
             <Home 
               onViewChange={handleViewChange} 
               onOpenBooking={handleOpenBooking}
+              pageContent={pageContent}
             />
           )}
           {currentView === 'suites' && (
             <SuitesPage onOpenBooking={handleOpenBooking} />
           )}
           {currentView === 'spa' && (
-            <SpaPage onOpenBooking={handleOpenBooking} />
+            <SpaPage onOpenBooking={handleOpenBooking} pageContent={pageContent} />
           )}
           {currentView === 'dining' && (
             <DiningPage onOpenBooking={handleOpenBooking} />
           )}
+          {currentView === 'dayout' && (
+            <DayoutPage onOpenBooking={handleOpenBooking} />
+          )}
           {currentView === 'rooftop' && (
-            <RooftopPage onOpenBooking={handleOpenBooking} />
+            <RooftopPage onOpenBooking={handleOpenBooking} pageContent={pageContent} />
           )}
           {currentView === 'about' && (
-            <AboutPage onOpenBooking={handleOpenBooking} />
+            <AboutPage onOpenBooking={handleOpenBooking} pageContent={pageContent} />
           )}
           {currentView === 'admin' && (
-            <AdminDashboard onGoBack={() => handleViewChange('home')} />
+            <AdminDashboard 
+              onGoBack={() => handleViewChange('home')} 
+              pageContent={pageContent} 
+              onRefreshPageContent={fetchPageContent} 
+            />
           )}
         </Suspense>
       </main>

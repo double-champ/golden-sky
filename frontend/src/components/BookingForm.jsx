@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { X, Calendar, User, Mail, Phone, FileText, CheckCircle, AlertTriangle } from 'lucide-react';
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
 
 const ROOM_CATEGORIES = {
   "Standard Room 01": "Standard rooms",

@@ -56,7 +56,7 @@ export default function Rooms({ onOpenBooking }) {
             Curated Accommodations
           </p>
           <h2 style={{ fontSize: 'clamp(2rem, 4vw, 3rem)', fontFamily: 'var(--font-serif)', fontWeight: '400' }}>
-            Luxury Suites & <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Sanctuary Villas</span>
+            Luxury Chambers & <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Sanctuary Villas</span>
           </h2>
           <p style={{ maxWidth: '600px', margin: '1rem auto 0 auto', color: 'var(--color-text-muted)' }}>
             Each space is designed to blend seamlessly with Kandy's misty atmosphere, utilizing natural materials, large windows, and state-of-the-art luxury amenities.

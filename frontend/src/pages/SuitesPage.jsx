@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Maximize2, Users, BedDouble, Check, X, Calendar, ArrowRight, Loader2, Sparkles } from 'lucide-react';
 
-const API_BASE = "http://localhost:5000/api";
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
 
 const roomMetadata = {
   "Standard Room 01": { size: "65 m²", bed: "King Bed", category: "Standard rooms" },

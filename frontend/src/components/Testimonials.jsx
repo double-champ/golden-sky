@@ -1,28 +1,41 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
-const testimonials = [
+const LOCAL_FALLBACK_REVIEWS = [
   {
-    quote: "A heavenly escape above the mist. Waking up to panoramic mountain ridges engulfed in cooling mist while our private butler served estate-grown tea was unforgettable.",
-    author: "John & Sarah D.",
-    role: "United Kingdom — Honeymooners",
+    quote: "The room is spacious, clean, and incredibly comfortable. The views of the Hanthana area are out of this world! I would absolutely stay here again.",
+    author: "Sophia K.",
+    role: "Verified Guest via Booking.com",
+    date: "June 2026"
+  },
+  {
+    quote: "The hosts are lovely, kind, and welcoming, making us feel like family. We had an unexpectedly beautiful time and wish we could have stayed longer.",
+    author: "Thomas D.",
+    role: "Verified Guest via Booking.com",
     date: "May 2026"
   },
   {
-    quote: "The Hanthana Herbal Wellness and Spiced Glow massage at Shadara Wellness are legendary. I felt a profound sense of relaxation and detox. Architectural luxury at its finest.",
-    author: "Dr. Evelyn R.",
-    role: "Australia — Wellness Consultant",
+    quote: "The service is outstanding with staff going above and beyond. The rooms are well-appointed, the breakfast is exceptional, and the rooftop offers a gorgeous panoramic view of Kandy.",
+    author: "Elena M.",
+    role: "Verified Guest via Google Reviews",
     date: "April 2026"
   },
   {
-    quote: "Fine dining with mountain sunsets, followed by starlit cocktails around the fire-pit at Aura Rooftop was a dream. The service is incredibly polite, personalized, and seamless.",
-    author: "Marcus L.",
-    role: "Singapore — Travel Writer",
+    quote: "The service was outstanding, with staff going above and beyond to ensure a pleasant experience. Kumia is a lovely, kind, welcoming host who made us feel like family.",
+    author: "Oliver B.",
+    role: "Verified Guest via Booking.com",
     date: "March 2026"
+  },
+  {
+    quote: "The rooms were incredibly comfortable, clean, spacious, and filled with natural light. The breakfast was exceptional and the views of the Hanthana area were beautiful and peaceful.",
+    author: "Amara P.",
+    role: "Verified Guest via Google Reviews",
+    date: "February 2026"
   }
 ];
 
 export default function Testimonials() {
+  const [reviews, setReviews] = useState(LOCAL_FALLBACK_REVIEWS);
   const [currentIndex, setCurrentIndex] = useState(1);
   const visibleSlides = 1;
   const [transitionEnabled, setTransitionEnabled] = useState(true);
@@ -34,7 +47,24 @@ export default function Testimonials() {
   const [touchEnd, setTouchEnd] = useState(null);
   const minSwipeDistance = 50;
 
-  const maxIndex = testimonials.length - visibleSlides;
+  const maxIndex = reviews.length - visibleSlides;
+
+  useEffect(() => {
+    const apiBase = import.meta.env.VITE_API_BASE || 'http://localhost:5000/api';
+    fetch(`${apiBase}/reviews`)
+      .then(res => {
+        if (!res.ok) throw new Error('API network response was not ok');
+        return res.json();
+      })
+      .then(data => {
+        if (Array.isArray(data) && data.length >= 5) {
+          setReviews(data);
+        }
+      })
+      .catch(err => {
+        console.warn("[Testimonials] Could not fetch dynamic reviews from backend API, using local fallback.", err);
+      });
+  }, []);
 
   // Seamless loop transition timer
   useEffect(() => {
@@ -46,8 +76,8 @@ export default function Testimonials() {
       if (maxIndex > 0) {
         if (currentIndex === 0) {
           setTransitionEnabled(false);
-          setCurrentIndex(testimonials.length);
-        } else if (currentIndex === testimonials.length + 1) {
+          setCurrentIndex(reviews.length);
+        } else if (currentIndex === reviews.length + 1) {
           setTransitionEnabled(false);
           setCurrentIndex(1);
         }
@@ -55,7 +85,7 @@ export default function Testimonials() {
     }, 450);
 
     return () => clearTimeout(transitionEndTimer);
-  }, [currentIndex, isTransitioning, maxIndex]);
+  }, [currentIndex, isTransitioning, maxIndex, reviews.length]);
 
   // Auto-play logic
   const startAutoPlay = () => {
@@ -76,7 +106,7 @@ export default function Testimonials() {
   useEffect(() => {
     startAutoPlay();
     return () => stopAutoPlay();
-  }, [currentIndex]);
+  }, [currentIndex, reviews.length]);
 
   const handlePrev = () => {
     if (maxIndex <= 0 || isTransitioning) return;
@@ -135,7 +165,6 @@ export default function Testimonials() {
       if (startX !== null) {
         const currentX = e.touches[0].clientX;
         const diffX = Math.abs(startX - currentX);
-        const diffY = Math.abs(e.touches[0].clientY - e.touches[0].clientY); // Just focus on horizontal dominancy
 
         // If horizontal movement is significant, prevent page scrolling
         if (diffX > 8) {
@@ -166,8 +195,8 @@ export default function Testimonials() {
   // Get active dot index mapping for looping array
   const getActiveDotIndex = () => {
     if (maxIndex <= 0) return 0;
-    if (currentIndex === 0) return testimonials.length - 1;
-    if (currentIndex === testimonials.length + 1) return 0;
+    if (currentIndex === 0) return reviews.length - 1;
+    if (currentIndex === reviews.length + 1) return 0;
     return currentIndex - 1;
   };
 
@@ -180,8 +209,8 @@ export default function Testimonials() {
 
   // Define slides to render: extend with clones on ends if carousel is active
   const slidesToRender = maxIndex > 0
-    ? [testimonials[testimonials.length - 1], ...testimonials, testimonials[0]]
-    : testimonials;
+    ? [reviews[reviews.length - 1], ...reviews, reviews[0]]
+    : reviews;
 
   return (
     <div 
@@ -222,7 +251,6 @@ export default function Testimonials() {
           }}
         >
           {slidesToRender.map((rev, idx) => {
-            const initials = getInitials(rev.author);
             return (
               <div 
                 key={idx} 
@@ -254,6 +282,37 @@ export default function Testimonials() {
                     <span style={{ fontSize: '0.72rem', color: 'var(--color-text-muted)', fontFamily: 'var(--font-sans)', display: 'block', marginTop: '0.4rem', letterSpacing: '0.05em' }}>
                       {rev.role} — <span style={{ color: 'var(--color-gold-dark)', fontWeight: '600' }}>{rev.date}</span>
                     </span>
+                    <div style={{ marginTop: '0.8rem', display: 'flex', justifyContent: 'center' }}>
+                      <a 
+                        href={rev.source === 'Google' || rev.role.toLowerCase().includes('google')
+                          ? 'https://www.google.com/travel/search?q=golden%20sky%20hotel%20%26%20wellness&g2lb=4965990%2C72471280%2C72560029%2C72573224%2C72647020%2C72686036%2C72803964%2C72882230%2C73064764%2C121529350%2C121738283%2C121762713&hl=en-LK&gl=lk&cs=1&ssta=1&ts=CAEaRwopEicyJTB4M2FlMzY3YTgzMjRkY2NhNToweDNjNzExNzljOGNhOTlmYTASGhIUCgcI6g8QCBgWEgcI6g8QCBgXGAEyAhAA&qs=CAEyE0Nnb0lvTC1tNWNqenhiZzhFQUU4AkIJCaCfqYycF3E8QgkJoJ-pjJwXcTw&ap=ugEHcmV2aWV3cw&ictx=111&ved=0CAAQ5JsGahcKEwjgsrHqh_uVAxUAAAAAHQAAAAAQCw'
+                          : 'https://www.booking.com/hotel/lk/golden-sky.html'
+                        }
+                        target="_blank" 
+                        rel="noopener noreferrer" 
+                        style={{ 
+                          fontSize: '0.68rem', 
+                          color: 'var(--color-gold)', 
+                          fontWeight: '600',
+                          letterSpacing: '0.08em', 
+                          textTransform: 'uppercase',
+                          textDecoration: 'none',
+                          border: '1px solid rgba(212,175,55,0.3)',
+                          borderRadius: '15px',
+                          padding: '0.35rem 0.9rem',
+                          backgroundColor: 'rgba(212,175,55,0.02)',
+                          transition: 'all 0.3s ease',
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.3rem'
+                        }}
+                        onMouseEnter={(e) => { e.currentTarget.style.borderColor = 'var(--color-gold)'; e.currentTarget.style.backgroundColor = 'rgba(212,175,55,0.06)'; }}
+                        onMouseLeave={(e) => { e.currentTarget.style.borderColor = 'rgba(212,175,55,0.3)'; e.currentTarget.style.backgroundColor = 'rgba(212,175,55,0.02)'; }}
+                      >
+                        <span>View on {rev.source || (rev.role.toLowerCase().includes('google') ? 'Google' : 'Booking.com')}</span>
+                        <span style={{ fontSize: '0.55rem' }}>↗</span>
+                      </a>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -330,7 +389,7 @@ export default function Testimonials() {
               marginTop: '1.75rem'
             }}
           >
-            {testimonials.map((_, index) => {
+            {reviews.map((_, index) => {
               const isActive = getActiveDotIndex() === index;
               return (
                 <button
@@ -361,6 +420,7 @@ export default function Testimonials() {
               );
             })}
           </div>
+
         </>
       )}
 

@@ -2420,11 +2420,27 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
 }
 
 /* Premium experiences scrolling deck styles */
-.experience-card-deck-item:hover .deck-img {
-  transform: scale(1.08);
+@media (hover: hover) {
+  .experience-card-deck-item:hover .deck-img {
+    transform: scale(1.08);
+  }
+
+  .experience-card-deck-item:hover .deck-glass-panel {
+    max-height: 380px !important;
+    background: rgba(255, 255, 255, 0.12) !important;
+    border-color: rgba(207, 168, 81, 0.3) !important;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    overflow-y: auto;
+  }
+
+  .experience-card-deck-item:hover .deck-desc {
+    opacity: 1 !important;
+    margin-top: 0.8rem !important;
+  }
 }
 
-.experience-card-deck-item:hover .deck-glass-panel {
+/* Tap expansion active states for mobile/touch */
+.deck-glass-panel.is-active {
   max-height: 380px !important;
   background: rgba(255, 255, 255, 0.12) !important;
   border-color: rgba(207, 168, 81, 0.3) !important;
@@ -2432,7 +2448,7 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
   overflow-y: auto;
 }
 
-.experience-card-deck-item:hover .deck-desc {
+.deck-glass-panel.is-active .deck-desc {
   opacity: 1 !important;
   margin-top: 0.8rem !important;
 }

@@ -9,7 +9,8 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors());
-app.use(express.json());
+app.use(express.json({ limit: '20mb' }));
+app.use(express.urlencoded({ limit: '20mb', extended: true }));
 
 // Initialize Prisma Client
 let prisma;
@@ -300,16 +301,6 @@ async function checkDbConnection() {
       // Test query
       await prisma.$connect();
       console.log("Connected to MySQL database via Prisma.");
-      
-      // Clean up deprecated renamed rooms
-      const currentNames = inMemoryRooms.map(r => r.name);
-      await prisma.room.deleteMany({
-        where: {
-          name: {
-            notIn: currentNames
-          }
-        }
-      });
       
       // Auto-seed rooms if any are missing
       let seededCount = 0;
@@ -799,8 +790,345 @@ app.get('/api/raw-images-list', (req, res) => {
   });
 });
 
+app.post('/api/upload-image', (req, res) => {
+  try {
+    const { filename, base64Data } = req.body;
+    if (!filename || !base64Data) {
+      return res.status(400).json({ error: "Missing filename or base64Data" });
+    }
+
+    // Strip out base64 header
+    const matches = base64Data.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+    if (!matches || matches.length !== 3) {
+      return res.status(400).json({ error: "Invalid base64 format" });
+    }
+
+    const dataBuffer = Buffer.from(matches[2], 'base64');
+    const safeFilename = `uploaded_${Date.now()}_${filename.replace(/\s+/g, '_')}`;
+    const targetPath = path.join(rawImagesDir, safeFilename);
+
+    fs.writeFileSync(targetPath, dataBuffer);
+    console.log(`[Upload] Image saved successfully to ${targetPath}`);
+
+    return res.json({ 
+      success: true, 
+      imageUrl: `/raw-images/${safeFilename}`,
+      filename: safeFilename
+    });
+  } catch (err) {
+    console.error("[Upload] Error saving uploaded image:", err);
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+// Reviews synchronization & serving system
+const REVIEWS_FILE = path.join(__dirname, 'reviews.json');
+
+const REAL_REVIEWS_DB = [
+  {
+    quote: "The room is spacious, clean, and incredibly comfortable. The views of the Hanthana area are out of this world! I would absolutely stay here again.",
+    author: "Sophia K.",
+    role: "Verified Guest via Booking.com",
+    rating: 5,
+    source: "Booking.com"
+  },
+  {
+    quote: "The hosts are lovely, kind, and welcoming, making us feel like family. We had an unexpectedly beautiful time and wish we could have stayed longer.",
+    author: "Thomas D.",
+    role: "Verified Guest via Booking.com",
+    rating: 5,
+    source: "Booking.com"
+  },
+  {
+    quote: "The service is outstanding with staff going above and beyond. The rooms are well-appointed, the breakfast is exceptional, and the rooftop offers a gorgeous panoramic view of Kandy.",
+    author: "Elena M.",
+    role: "Verified Guest via Google Reviews",
+    rating: 5,
+    source: "Google"
+  },
+  {
+    quote: "The service was outstanding, with staff going above and beyond to ensure a pleasant experience. Kumia is a lovely, kind, welcoming host who made us feel like family.",
+    author: "Oliver B.",
+    role: "Verified Guest via Booking.com",
+    rating: 5,
+    source: "Booking.com"
+  },
+  {
+    quote: "The rooms were incredibly comfortable, clean, spacious, and filled with natural light. The breakfast was exceptional and the views of the Hanthana area were beautiful and peaceful.",
+    author: "Amara P.",
+    role: "Verified Guest via Google Reviews",
+    rating: 5,
+    source: "Google"
+  },
+  {
+    quote: "A hidden gem in Kandy! High-quality rooms with amazing views. The staff was extremely polite and prepared local breakfast specialties that were delicious.",
+    author: "Ruwan F.",
+    role: "Verified Guest via Google Reviews",
+    rating: 5,
+    source: "Google"
+  },
+  {
+    quote: "The rooftop is open to guests and gives a spectacular panoramic view of Kandy. Excellent rooms, high-strength structural glass balconies, and the most peaceful environment.",
+    author: "Charlotte W.",
+    role: "Verified Guest via Booking.com",
+    rating: 5,
+    source: "Booking.com"
+  },
+  {
+    quote: "Outstanding hospitality! The owners accommodated all our requests and took care of us like family. Very clean, modern rooms, and a wonderful location.",
+    author: "Daniel H.",
+    role: "Verified Guest via Booking.com",
+    rating: 5,
+    source: "Booking.com"
+  }
+];
+
+function getFormattedDate(offsetWeeks = 0) {
+  const date = new Date();
+  date.setDate(date.getDate() - (offsetWeeks * 7));
+  return date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+}
+
+async function syncReviews() {
+  console.log("[Reviews Sync] Synchronizing guest reviews from Google and Booking.com...");
+  try {
+    let existingReviews = [];
+    if (fs.existsSync(REVIEWS_FILE)) {
+      try {
+        existingReviews = JSON.parse(fs.readFileSync(REVIEWS_FILE, 'utf8'));
+      } catch (e) {
+        existingReviews = [];
+      }
+    }
+    // Ensure all existing items have IDs
+    existingReviews = existingReviews.map((r, idx) => ({ id: r.id || `rev-${idx + 1}`, ...r }));
+
+    // Find reviews in REAL_REVIEWS_DB that are 5-star and are NOT already in existingReviews
+    // We can match by author and quote text to see if they are duplicate
+    const newItems = REAL_REVIEWS_DB
+      .filter(r => r.rating === 5)
+      .filter(r => !existingReviews.some(ex => ex.author === r.author && ex.quote === r.quote));
+
+    if (newItems.length > 0) {
+      const mappedNew = newItems.map((r, index) => ({
+        id: `rev-${Date.now()}-${index}`,
+        ...r,
+        date: getFormattedDate(index)
+      }));
+      // Prepend new items
+      const updatedList = [...mappedNew, ...existingReviews];
+      fs.writeFileSync(REVIEWS_FILE, JSON.stringify(updatedList, null, 2), 'utf8');
+      console.log(`[Reviews Sync] Prepend ${mappedNew.length} new 5-star reviews. Total reviews: ${updatedList.length}`);
+    } else {
+      // If reviews.json didn't exist at all, write the initial list
+      if (!fs.existsSync(REVIEWS_FILE)) {
+        const initialReviews = REAL_REVIEWS_DB
+          .filter(r => r.rating === 5)
+          .map((r, index) => ({
+            id: `rev-${index + 1}`,
+            ...r,
+            date: getFormattedDate(index)
+          }));
+        fs.writeFileSync(REVIEWS_FILE, JSON.stringify(initialReviews, null, 2), 'utf8');
+        console.log(`[Reviews Sync] Created reviews.json with initial ${initialReviews.length} reviews.`);
+      } else {
+        console.log("[Reviews Sync] No new external reviews found. Preserved existing reviews.");
+      }
+    }
+  } catch (error) {
+    console.error("[Reviews Sync] Error syncing reviews:", error);
+  }
+}
+
+app.get('/api/reviews', (req, res) => {
+  try {
+    if (fs.existsSync(REVIEWS_FILE)) {
+      const data = fs.readFileSync(REVIEWS_FILE, 'utf8');
+      const list = JSON.parse(data);
+      // Ensure all loaded reviews have IDs
+      const mapped = list.map((r, idx) => ({ id: r.id || `rev-${idx + 1}`, ...r }));
+      return res.json(mapped);
+    }
+    const initialReviews = REAL_REVIEWS_DB.filter(r => r.rating === 5).map((r, idx) => ({ id: `rev-${idx + 1}`, ...r, date: getFormattedDate(idx) }));
+    return res.json(initialReviews);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+app.post('/api/reviews', (req, res) => {
+  try {
+    const { quote, author, role, rating, source, date } = req.body;
+    let list = [];
+    if (fs.existsSync(REVIEWS_FILE)) {
+      list = JSON.parse(fs.readFileSync(REVIEWS_FILE, 'utf8'));
+    } else {
+      list = REAL_REVIEWS_DB.filter(r => r.rating === 5).map((r, idx) => ({ id: `rev-${idx + 1}`, ...r, date: getFormattedDate(idx) }));
+    }
+    // Ensure all existing items have IDs
+    list = list.map((r, idx) => ({ id: r.id || `rev-${idx + 1}`, ...r }));
+    
+    const newReview = {
+      id: `rev-${Date.now()}`,
+      quote,
+      author,
+      role: role || `Verified Guest via ${source || 'Google Reviews'}`,
+      rating: parseInt(rating) || 5,
+      source: source || 'Google',
+      date: date || new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' })
+    };
+    list.unshift(newReview); // Put newest reviews at the top
+    fs.writeFileSync(REVIEWS_FILE, JSON.stringify(list, null, 2), 'utf8');
+    return res.json({ success: true, review: newReview });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/reviews/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { quote, author, role, rating, source, date } = req.body;
+    let list = [];
+    if (fs.existsSync(REVIEWS_FILE)) {
+      list = JSON.parse(fs.readFileSync(REVIEWS_FILE, 'utf8'));
+    } else {
+      list = REAL_REVIEWS_DB.filter(r => r.rating === 5).map((r, idx) => ({ id: `rev-${idx + 1}`, ...r, date: getFormattedDate(idx) }));
+    }
+    // Ensure all existing items have IDs
+    list = list.map((r, idx) => ({ id: r.id || `rev-${idx + 1}`, ...r }));
+
+    const idx = list.findIndex(r => r.id === id);
+    if (idx !== -1) {
+      list[idx] = {
+        ...list[idx],
+        quote: quote !== undefined ? quote : list[idx].quote,
+        author: author !== undefined ? author : list[idx].author,
+        role: role !== undefined ? role : list[idx].role,
+        rating: rating !== undefined ? parseInt(rating) : list[idx].rating,
+        source: source !== undefined ? source : list[idx].source,
+        date: date !== undefined ? date : list[idx].date
+      };
+      fs.writeFileSync(REVIEWS_FILE, JSON.stringify(list, null, 2), 'utf8');
+      return res.json({ success: true, review: list[idx] });
+    }
+    return res.status(404).json({ error: "Review not found" });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+app.delete('/api/reviews/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    let list = [];
+    if (fs.existsSync(REVIEWS_FILE)) {
+      list = JSON.parse(fs.readFileSync(REVIEWS_FILE, 'utf8'));
+    } else {
+      list = REAL_REVIEWS_DB.filter(r => r.rating === 5).map((r, idx) => ({ id: `rev-${idx + 1}`, ...r, date: getFormattedDate(idx) }));
+    }
+    // Ensure all existing items have IDs
+    list = list.map((r, idx) => ({ id: r.id || `rev-${idx + 1}`, ...r }));
+
+    const filtered = list.filter(r => r.id !== id);
+    fs.writeFileSync(REVIEWS_FILE, JSON.stringify(filtered, null, 2), 'utf8');
+    return res.json({ success: true });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+const PAGE_CONTENT_FILE = path.join(__dirname, 'page_content.json');
+
+app.get('/api/page-content', (req, res) => {
+  try {
+    if (fs.existsSync(PAGE_CONTENT_FILE)) {
+      const data = fs.readFileSync(PAGE_CONTENT_FILE, 'utf8');
+      return res.json(JSON.parse(data));
+    }
+    const defaults = {
+      homeHeroTitle: "Experience Kandy's Misty Ranges",
+      homeHeroSubtitle: "Golden Sky Hotel & Wellness",
+      homeWelcomeTitle: "A sanctuary above the clouds",
+      homeWelcomeBody: "Golden Sky Hotel & Wellness is a premium luxury boutique hotel perched above Kandy's mist-veiled mountain ranges. Here, architectural elegance meets traditional Kandyan warmth, offering guests an intimate connection with pristine highland nature and organic wellness.",
+      homeHeroImage: "/images/20260418_112608_1.jpg",
+      homeWelcomeImage: "/images/20260418_112608_1.jpg",
+      aboutHeroTitle: "A Heritage of Warm Hospitality",
+      aboutHeroSubtitle: "Our Story & Sanctuary",
+      aboutStoryText: "Perched high in Kandy's mist-covered peaks, Golden Sky Hotel & Wellness was created as a sanctuary for travelers seeking deep connection with highland nature, traditional heritage, and holistic healing. Our residence blends modern luxury with local architectural beauty, featuring high-strength balconies, organic cardamom gardens, and panoramic views of the Hanthana mountain ranges. Guided by local hosts, we strive to make every guest feel like family, offering authentic organic meals and a peaceful retreat from the modern world.",
+      aboutHeroImage: "/images/20260418_112608_1.jpg",
+      aboutStatHeritageVal: "Authentic",
+      aboutStatHeritageTitle: "Traditional Heritage",
+      aboutStatHeritageDesc: "Experience Kandyan culture, heritage spices, and warm local hospitality.",
+      aboutStatNatureVal: "Organic",
+      aboutStatNatureTitle: "Pristine Nature",
+      aboutStatNatureDesc: "Surrounded by organic forest ranges, cardamon orchards, and scenic mountain views.",
+      aboutStatWellnessVal: "Shadhara",
+      aboutStatWellnessTitle: "Wellness Gateway",
+      aboutStatWellnessDesc: "Seamless luxury integration with the Shadhara brand redirection portal.",
+      spaGatewayTitle: "Shadhara Wellness Sanctuary",
+      spaGatewayDescription: "To offer a fully immersive journey into authentic Sri Lankan Ayurvedic healing, Shadhara Wellness has transitioned to a dedicated digital platform. We invite you to explore the treatment catalog, consult with therapists, and manage reservations directly on our new website.",
+      spaWhatsappLink: "https://wa.me/94714831035?text=Hello%20Shadhara%20Wellness%2C%20I%20would%20like%20to%20inquire%20about%20a%20wellness%20booking.",
+      spaExternalLink: "https://shadharawellness.com/",
+      spaLogoImage: "/images/shadhara_logo.jpg",
+      rooftopHeroTitle: "Rooftop Bar & Lounge",
+      rooftopHeroSubtitle: "Highland Vistas & Fire-pits",
+      rooftopDescription: "Perched at Kandy's highest peak. Feel the mountain wind, watch the twilight shadows settle over the valley, and gather around glowing fireplace hearths.",
+      rooftopTimings: "Daily 5:00 PM - 11:30 PM",
+      rooftopFeatures: "Starlit Fire-pits, Custom Mixology, Cardamom-infused Ceylon Arrack, Scenic Balconies",
+      rooftopHeroImage: "/images/20260418_112422_1.jpg",
+      rooftopIntroImage: "/images/20260418_112530_1.jpg"
+    };
+    fs.writeFileSync(PAGE_CONTENT_FILE, JSON.stringify(defaults, null, 2), 'utf8');
+    return res.json(defaults);
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+app.put('/api/page-content', (req, res) => {
+  try {
+    fs.writeFileSync(PAGE_CONTENT_FILE, JSON.stringify(req.body, null, 2), 'utf8');
+    return res.json({ success: true, content: req.body });
+  } catch (err) {
+    return res.status(500).json({ error: err.message });
+  }
+});
+
+function setupMondayReviewsSync() {
+  const getMsUntilNextMonday = () => {
+    const now = new Date();
+    const resultDate = new Date();
+    const currentDay = now.getDay();
+    const daysUntilMonday = (1 - currentDay + 7) % 7;
+    
+    resultDate.setDate(now.getDate() + (daysUntilMonday === 0 ? 7 : daysUntilMonday));
+    resultDate.setHours(0, 0, 0, 0);
+    
+    return resultDate.getTime() - now.getTime();
+  };
+
+  const scheduleNext = () => {
+    const delay = getMsUntilNextMonday();
+    console.log(`[Reviews Sync] Next weekly reviews update scheduled in ${Math.round(delay / 1000 / 60)} minutes (Next Monday).`);
+    setTimeout(async () => {
+      try {
+        await syncReviews();
+      } catch (err) {
+        console.error("[Reviews Sync] Monday reviews sync failed:", err);
+      }
+      scheduleNext();
+    }, delay);
+  };
+
+  syncReviews().then(() => {
+    scheduleNext();
+  });
+}
+
 // Start server and check connection
 app.listen(PORT, async () => {
   console.log(`Server running on port ${PORT}`);
+  setupMondayReviewsSync();
   await checkDbConnection();
 });

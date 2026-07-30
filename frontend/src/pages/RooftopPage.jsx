@@ -1,6 +1,8 @@
 import React from 'react';
 import { GlassWater, Moon, Music, ChevronRight, Flame, Star } from 'lucide-react';
 
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+
 const signatureCocktails = [
   {
     name: "Hanthana Mist",
@@ -22,7 +24,23 @@ const signatureCocktails = [
   }
 ];
 
-export default function RooftopPage({ onOpenBooking }) {
+export default function RooftopPage({ onOpenBooking, pageContent }) {
+  const content = pageContent || {};
+  const heroTitle = content.rooftopHeroTitle || "Rooftop Bar & Lounge";
+  const heroSubtitle = content.rooftopHeroSubtitle || "Highland Vistas & Fire-pits";
+  const description = content.rooftopDescription || "Perched at Kandy's highest peak. Feel the mountain wind, watch the twilight shadows settle over the valley, and gather around glowing fireplace hearths.";
+  const timings = content.rooftopTimings || "Daily 5:00 PM - 11:30 PM";
+
+  let titleNode = <span>{heroTitle}</span>;
+  if (heroTitle.toLowerCase().includes("&")) {
+    const parts = heroTitle.split(/(?=&)/i);
+    titleNode = (
+      <span>
+        {parts[0]} <br />
+        <span className="text-gold-gradient" style={{ fontStyle: 'italic', fontWeight: '400' }}>{parts[1]}</span>
+      </span>
+    );
+  }
 
   return (
     <div className="page-transition" style={{ backgroundColor: '#0e0d0b', color: '#fff', minHeight: '100vh', paddingBottom: '6rem' }}>
@@ -31,7 +49,7 @@ export default function RooftopPage({ onOpenBooking }) {
       <section className="page-hero-banner" style={{
         position: 'relative',
         height: '60vh',
-        background: 'linear-gradient(rgba(14, 13, 11, 0.35), rgba(14, 13, 11, 0.95)), url("/images/20260418_112422_1.jpg")',
+        background: `linear-gradient(rgba(14, 13, 11, 0.35), rgba(14, 13, 11, 0.95)), url("${content.rooftopHeroImage ? (content.rooftopHeroImage.startsWith('/raw-images/') ? `${API_BASE.replace('/api', '')}${content.rooftopHeroImage}` : content.rooftopHeroImage) : "/images/20260418_112422_1.jpg"}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         display: 'flex',
@@ -42,14 +60,13 @@ export default function RooftopPage({ onOpenBooking }) {
         <div className="container" style={{ width: '100%' }}>
           <div style={{ maxWidth: '750px' }}>
             <span style={{ fontSize: '0.72rem', fontWeight: '600', letterSpacing: '0.25em', textTransform: 'uppercase', color: 'var(--color-gold)', display: 'block', marginBottom: '0.8rem' }}>
-              Highland Vistas & Fire-pits
+              {heroSubtitle}
             </span>
             <h1 style={{ fontSize: 'clamp(2.6rem, 6vw, 4.5rem)', color: '#fff', fontFamily: 'var(--font-serif)', margin: '0 0 1.2rem 0', lineHeight: '1.15' }}>
-              Rooftop Bar <br />
-              <span className="text-gold-gradient" style={{ fontStyle: 'italic', fontWeight: '400' }}>& Lounge</span>
+              {titleNode}
             </h1>
             <p style={{ maxWidth: '580px', color: 'rgba(255,255,255,0.82)', fontSize: '1rem', lineHeight: '1.65', margin: 0 }}>
-              Perched at Kandy's highest peak. Feel the mountain wind, watch the twilight shadows settle over the valley, and gather around glowing fireplace hearths.
+              {description}
             </p>
           </div>
         </div>
@@ -75,7 +92,7 @@ export default function RooftopPage({ onOpenBooking }) {
               <div>
                 <span style={{ fontSize: '0.85rem', fontWeight: '600', color: '#fff', display: 'block' }}>Acoustic Sessions & Lounge Hours</span>
                 <span style={{ fontSize: '0.78rem', color: 'rgba(255,255,255,0.5)', lineHeight: '1.5', display: 'block' }}>
-                  Lounge Hours: <strong style={{ color: 'var(--color-gold)', fontWeight: '600' }}>Daily 5:00 PM – 11:30 PM</strong> (Sunset Happy Hour <strong style={{ color: 'var(--color-gold)', fontWeight: '600' }}>5:00 PM – 7:00 PM</strong>) <br />
+                  Lounge Hours: <strong style={{ color: 'var(--color-gold)', fontWeight: '600' }}>{timings}</strong> (Sunset Happy Hour <strong style={{ color: 'var(--color-gold)', fontWeight: '600' }}>5:00 PM – 7:00 PM</strong>) <br />
                   Acoustic Live: <strong style={{ color: 'var(--color-gold)', fontWeight: '600' }}>Friday & Saturday from 7:00 PM onwards</strong>
                 </span>
               </div>
@@ -91,7 +108,7 @@ export default function RooftopPage({ onOpenBooking }) {
             boxShadow: '0 20px 45px rgba(0,0,0,0.4)'
           }}>
             <img 
-              src="/images/20260418_112530_1.jpg" 
+              src={content.rooftopIntroImage ? (content.rooftopIntroImage.startsWith('/raw-images/') ? `${API_BASE.replace('/api', '')}${content.rooftopIntroImage}` : content.rooftopIntroImage) : "/images/20260418_112530_1.jpg"} 
               alt="Rooftop Bar & Lounge at Golden Sky Hotel & Wellness" 
               loading="lazy"
               decoding="async"

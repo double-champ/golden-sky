@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react';
 import { Sparkles, Calendar, Maximize2, Users, BedDouble, Clock, Check, X, ChevronRight, Waves, LayoutDashboard, Compass } from 'lucide-react';
 import Testimonials from '../components/Testimonials';
 
+const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
+
 // Suites comparison data
 const suitesList = [
   {
@@ -118,7 +120,7 @@ const diningOptionsList = [
   }
 ];
 
-export default function Home({ onViewChange, onOpenBooking }) {
+export default function Home({ onViewChange, onOpenBooking, pageContent }) {
   const [activeSlide, setActiveSlide] = useState(0);
   const [quickBooking, setQuickBooking] = useState({
     type: 'STAY',
@@ -126,19 +128,36 @@ export default function Home({ onViewChange, onOpenBooking }) {
     guests: '2'
   });
 
+  const content = pageContent || {};
+  const homeHeroTitle = content.homeHeroTitle || "Where Mist Meets Mountain";
+  const homeHeroSubtitle = content.homeHeroSubtitle || "Golden Sky Resort";
+  const homeWelcomeTitle = content.homeWelcomeTitle || "Mist, Mountains & Pure Serenity";
+  const homeWelcomeBody = content.homeWelcomeBody || "A unique hotel dashboard perched high above the clouds in Hanthana, Kandy. Select an interactive cell to explore our chambers, spa, and dining.";
+
+  let welcomeTitleNode = <span>{homeWelcomeTitle}</span>;
+  if (homeWelcomeTitle.toLowerCase().includes("serenity") || homeWelcomeTitle.includes("&")) {
+    const parts = homeWelcomeTitle.split(/(?=\bPure\b|\bSerenity\b|&)/i);
+    welcomeTitleNode = (
+      <span>
+        {parts[0]} <br />
+        <span className="text-gold-gradient" style={{ fontStyle: 'italic', fontWeight: '500' }}>{parts.slice(1).join(" ")}</span>
+      </span>
+    );
+  }
+
   const slides = [
     {
-      image: "/images/20260418_112608_1.jpg",
+      image: content.homeHeroImage ? (content.homeHeroImage.startsWith('/raw-images/') ? `${API_BASE.replace('/api', '')}${content.homeHeroImage}` : content.homeHeroImage) : "/images/20260418_112608_1.jpg",
       tag: "BOUTIQUE SANCTUARY",
-      title: "Where Mist Meets Mountain",
-      subtitle: "Golden Sky Resort",
+      title: homeHeroTitle,
+      subtitle: homeHeroSubtitle,
       desc: "A luxury mountain resort perched 780 meters above sea level in Hanthana, Kandy. Enjoy contemporary elegance, wellness spa therapies, and beautiful nature views."
     },
     {
       image: "/images/20260418_114222_1.jpg",
       tag: "INFINITY ESCAPE",
       title: "Chambers in the Clouds",
-      subtitle: "Canopy Villas & Suites",
+      subtitle: "Canopy Villas & Chambers",
       desc: "Luxury glass and stone villas featuring private outdoor jacuzzis, personal butler services, and panoramic views of the mountain sunset."
     },
     {
@@ -146,7 +165,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
       tag: "HOLISTIC RETREAT",
       title: "Botanical Rejuvenation",
       subtitle: "Shadara Wellness",
-      desc: "Rejuvenate your body and mind with our organic lotus oil massages, herbal body scrubs, and warm herbal compress sessions."
+      desc: "Rejuvenate your body and mind with our organic treatments, traditional Sri Lankan therapies, and wellness retreats at our new digital sanctuary."
     }
   ];
 
@@ -292,7 +311,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
           
           {/* Cell 1: Cinematic Greeting (span 2-2) */}
           <div className="bento-item span-2-2 reveal" style={{ border: 'none', background: '#1c1b18', cursor: 'pointer' }} onClick={() => onViewChange('about')}>
-            <img src="/images/20260418_112608_1.jpg" alt="Misty Hills" className="bento-img-bg bento-hero-pan" style={{ opacity: 0.6 }} loading="lazy" decoding="async" />
+            <img src={content.homeWelcomeImage ? (content.homeWelcomeImage.startsWith('/raw-images/') ? `${API_BASE.replace('/api', '')}${content.homeWelcomeImage}` : content.homeWelcomeImage) : "/images/20260418_112608_1.jpg"} alt="Misty Hills" className="bento-img-bg bento-hero-pan" style={{ opacity: 0.6 }} loading="lazy" decoding="async" />
             <div className="bento-dark-overlay" />
             <div className="bento-content" style={{ color: '#fff', maxWidth: '480px' }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem', color: 'var(--color-gold)', marginBottom: '0.8rem' }}>
@@ -300,22 +319,21 @@ export default function Home({ onViewChange, onOpenBooking }) {
                 <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.15em', textTransform: 'uppercase' }}>Boutique Sanctuary</span>
               </div>
               <h1 style={{ fontSize: 'clamp(2rem, 3.5vw, 3.2rem)', color: '#fff', lineHeight: '1.1', fontFamily: 'var(--font-serif)', marginBottom: '1rem' }}>
-                Mist, Mountains & <br />
-                <span className="text-gold-gradient" style={{ fontStyle: 'italic', fontWeight: '500' }}>Pure Serenity</span>
+                {welcomeTitleNode}
               </h1>
               <p style={{ color: 'rgba(255,255,255,0.75)', fontSize: '0.9rem', marginBottom: '1.5rem' }}>
-                A unique hotel dashboard perched high above the clouds in Hanthana, Kandy. Select an interactive cell to explore our chambers, spa, and dining.
+                {homeWelcomeBody}
               </p>
             </div>
           </div>
    
-          {/* Cell 2: Luxury Suites card (span 2-2) */}
+          {/* Cell 2: Luxury Chambers card (span 2-2) */}
           <div className="bento-item span-2-2 reveal" style={{ cursor: 'pointer' }} onClick={() => onViewChange('suites')}>
-            <img src="/images/20260418_064528_1.jpg" alt="Suites" className="bento-img-bg" loading="lazy" decoding="async" />
+            <img src="/images/20260418_064528_1.jpg" alt="Chambers" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>01 / ACCOMMODATIONS</span>
-              <h3 style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Luxury Suites</h3>
+              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>ACCOMMODATIONS</span>
+              <h3 style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Luxury Chambers</h3>
               <p style={{ fontSize: '0.8rem', color: 'rgba(255, 255, 255, 0.8)', marginTop: '0.5rem' }}>Chambers perched in the clouds with panoramic jacuzzis.</p>
             </div>
           </div>
@@ -325,7 +343,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
             <img src="/images/spa_section.jpg" alt="Spa" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>02 / HEALTH</span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>HEALTH</span>
               <h3 style={{ fontSize: '1.6rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Shadara Wellness</h3>
             </div>
           </div>
@@ -335,8 +353,8 @@ export default function Home({ onViewChange, onOpenBooking }) {
             <img src="/images/20260418_074232_1.jpg" alt="Restaurant" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>03 / CULINARY</span>
-              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Dine & Dayouts</h3>
+              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>CULINARY</span>
+              <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Canopy Dining</h3>
             </div>
           </div>
    
@@ -345,7 +363,7 @@ export default function Home({ onViewChange, onOpenBooking }) {
             <img src="/images/20260418_112422_1.jpg" alt="Rooftop" className="bento-img-bg" loading="lazy" decoding="async" />
             <div className="bento-overlay" />
             <div className="bento-content">
-              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>04 / BAR</span>
+              <span style={{ fontSize: '0.65rem', color: 'var(--color-gold)', display: 'block', textTransform: 'uppercase', letterSpacing: '0.1em', fontWeight: '600', marginBottom: '0.2rem' }}>BAR</span>
               <h3 style={{ fontSize: '1.25rem', fontFamily: 'var(--font-serif)', color: '#ffffff' }}>Aura Lounge</h3>
             </div>
           </div>
@@ -356,9 +374,9 @@ export default function Home({ onViewChange, onOpenBooking }) {
       {/* CUSTOMER REVIEWS SECTION */}
       <section className="container reveal" style={{ paddingTop: '3rem', paddingBottom: '6rem' }}>
         <div style={{ textAlign: 'center', marginBottom: '3.5rem' }}>
-          <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>Testimonials</span>
+          <span style={{ fontSize: '0.75rem', fontWeight: '600', letterSpacing: '0.2em', textTransform: 'uppercase', color: 'var(--color-gold)' }}>Reviews</span>
           <h2 style={{ fontSize: '2.5rem', fontFamily: 'var(--font-serif)', marginTop: '0.5rem', marginBottom: '1rem', color: 'var(--color-text-dark)' }}>
-            Whispered Praises & <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Guest Memories</span>
+            Verified Guest <span className="text-gold-gradient" style={{ fontStyle: 'italic' }}>Reviews</span>
           </h2>
           <div style={{ display: 'flex', justifyContent: 'center', gap: '0.1rem', color: 'var(--color-gold)' }}>
             {Array(5).fill(0).map((_, i) => (
