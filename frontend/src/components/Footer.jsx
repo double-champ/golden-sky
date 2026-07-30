@@ -9,7 +9,7 @@ export default function Footer({ onViewChange, onOpenBooking }) {
 
   const handleAdminLogin = (e) => {
     e.preventDefault();
-    if (username.toLowerCase() === 'admin' && password === 'admin123') {
+    if (username.toLowerCase() === 'admin' && password === 'adminadminadmin') {
       setShowAdminLogin(false);
       setUsername('');
       setPassword('');
