@@ -7,7 +7,13 @@ const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
 
 // Reusable Image Selection & Upload widget for Page Editing
 function PageImageSelector({ label, value, onChange, rawImages, API_BASE, isLive }) {
-  const [source, setSource] = useState('select'); // select, upload, custom
+  // Default to 'custom' in sandbox (no backend = no camera roll)
+  const defaultSource = () => {
+    if (value && value.startsWith('/raw-images/')) return 'select';
+    if (value && (value.startsWith('data:image/') || value.includes('uploaded_'))) return 'upload';
+    return 'custom';
+  };
+  const [source, setSource] = useState(defaultSource);
   const [uploading, setUploading] = useState(false);
 
   useEffect(() => {
@@ -19,8 +25,10 @@ function PageImageSelector({ label, value, onChange, rawImages, API_BASE, isLive
       } else {
         setSource('custom');
       }
+    } else if (!isLive) {
+      setSource('custom');
     }
-  }, [value]);
+  }, [value, isLive]);
 
   const handleUpload = async (e) => {
     const file = e.target.files[0];
@@ -39,7 +47,6 @@ function PageImageSelector({ label, value, onChange, rawImages, API_BASE, isLive
           const data = await res.json();
           onChange(data.imageUrl);
         } else {
-          alert("Server upload failed, saving to local sandbox.");
           onChange(reader.result);
         }
       } catch (err) {
@@ -50,11 +57,16 @@ function PageImageSelector({ label, value, onChange, rawImages, API_BASE, isLive
     };
   };
 
+  // Only show Camera Roll tab when live backend has images
+  const availableTabs = isLive && rawImages.length > 0
+    ? ['select', 'upload', 'custom']
+    : ['upload', 'custom'];
+
   return (
     <div style={{ marginBottom: '1.2rem' }}>
       <label style={{ fontSize: '0.78rem', color: '#bcbbba', textTransform: 'uppercase', display: 'block', marginBottom: '0.4rem', fontWeight: '600', letterSpacing: '0.05em' }}>{label}</label>
       <div style={{ display: 'flex', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', overflow: 'hidden', marginBottom: '0.5rem', maxWidth: '400px' }}>
-        {['select', 'upload', 'custom'].map(t => (
+        {availableTabs.map(t => (
           <button
             key={t}
             type="button"
@@ -83,9 +95,16 @@ function PageImageSelector({ label, value, onChange, rawImages, API_BASE, isLive
         </select>
       )}
       {source === 'upload' && (
-        <div style={{ border: '2px dashed rgba(212,175,55,0.3)', borderRadius: '8px', padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.01)', position: 'relative', cursor: 'pointer' }}>
-          <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }} />
-          {uploading ? <span style={{ color: '#d4af37', fontSize: '0.8rem' }}>Uploading...</span> : <span style={{ color: '#bcbbba', fontSize: '0.8rem' }}>Click or drop to upload local image</span>}
+        <div>
+          <div style={{ border: '2px dashed rgba(212,175,55,0.3)', borderRadius: '8px', padding: '1rem', textAlign: 'center', backgroundColor: 'rgba(255,255,255,0.01)', position: 'relative', cursor: 'pointer' }}>
+            <input type="file" accept="image/*" onChange={handleUpload} disabled={uploading} style={{ position: 'absolute', top: 0, left: 0, width: '100%', height: '100%', opacity: 0, cursor: 'pointer' }} />
+            {uploading ? <span style={{ color: '#d4af37', fontSize: '0.8rem' }}>Uploading...</span> : <span style={{ color: '#bcbbba', fontSize: '0.8rem' }}>Click or drop to upload local image</span>}
+          </div>
+          {!isLive && (
+            <p style={{ fontSize: '0.7rem', color: 'rgba(255,200,100,0.7)', marginTop: '0.4rem', marginBottom: 0 }}>
+              ⚠ Sandbox mode — uploaded images are saved locally in this browser only. Use Custom URL for permanent links.
+            </p>
+          )}
         </div>
       )}
       {source === 'custom' && (

@@ -111,14 +111,13 @@ export default function App() {
   // Dynamically update document body background to match active view theme
   // (Prevents jarring off-white or ivory viewport stripes on dark landing/rooftop headers)
   useEffect(() => {
-    if (currentView === 'home') {
-      document.body.style.backgroundColor = '#0e0d0b';
-    } else if (currentView === 'spa') {
+    if (currentView === 'spa') {
       document.body.style.backgroundColor = '#faf8f4';
-    } else if (currentView === 'rooftop') {
+    } else if (currentView === 'suites' || currentView === 'dining' || currentView === 'dayout' || currentView === 'about') {
       document.body.style.backgroundColor = '#0e0d0b';
     } else {
-      document.body.style.backgroundColor = 'var(--color-bg-ivory)';
+      // home, rooftop, admin — all dark
+      document.body.style.backgroundColor = '#0e0d0b';
     }
   }, [currentView]);
 
