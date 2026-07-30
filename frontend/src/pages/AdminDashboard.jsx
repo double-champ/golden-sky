@@ -196,42 +196,39 @@ export default function AdminDashboard({ onGoBack, pageContent, onRefreshPageCon
 
     // Sandbox fallbacks if MySQL backend is offline
     if (!liveSuccess) {
+      const SANDBOX_VERSION = 'v3'; // bump this to force-refresh all browsers
+      const cachedVersion = localStorage.getItem('golden_sky_sandbox_version');
+      if (cachedVersion !== SANDBOX_VERSION) {
+        // Clear stale old data so real seed is applied
+        localStorage.removeItem('golden_sky_rooms');
+        localStorage.removeItem('golden_sky_reviews');
+        localStorage.setItem('golden_sky_sandbox_version', SANDBOX_VERSION);
+      }
       // Accommodations fallback
       const savedRooms = localStorage.getItem('golden_sky_rooms');
       if (savedRooms) {
         setRooms(JSON.parse(savedRooms));
       } else {
         const mockRooms = [
-          {
-            id: "r-stay1",
-            name: "Standard Room 01",
-            type: "STAY",
-            description: "A quiet mountain retreat with views of the Hanthana range. Features a private jacuzzi and a scenic mountainside balcony.",
-            price: 10000,
-            capacity: 2,
-            amenities: "Mountain View, Jacuzzi, Private balcony, Wi-Fi, King Bed",
-            imageUrl: "/images/20260418_064528_1.jpg"
-          },
-          {
-            id: "r-day1",
-            name: "Hanthana Escape Dayout",
-            type: "DAYOUT",
-            description: "Our classic dayout package designed to offer a peaceful mountain escape with gourmet dining.",
-            price: 6500,
-            capacity: 1,
-            amenities: "Welcome drink, Guided nature trail, Buffet lunch, Infinity pool access",
-            imageUrl: "/images/dining_dayout.jpg"
-          },
-          {
-            id: "r-dining1",
-            name: "Curated 5-Course Dinner",
-            type: "DINING",
-            description: "A fine-dining gastronomic tour showcasing Kandyan heritage spices, fresh mountain greens, and organic harvests.",
-            price: 9500,
-            capacity: 1,
-            amenities: "5 Courses, Welcome mocktail, Live classical music, Valet parking",
-            imageUrl: "/images/dining_dinner.jpg"
-          }
+          // ── STAY ──────────────────────────────────────────────────────
+          { id: "db4df70c-87ee-448b-ae2c-1a4526f65e76", name: "Standard Room 01", type: "STAY", description: "A quiet mountain retreat with views of the Hanthana range. Features a private jacuzzi, organic Ceylon tea bar, and a scenic mountainside balcony.", price: 10000, capacity: 2, amenities: "Mountain View, Jacuzzi, Private balcony, Tea Bar, Wi-Fi, King Bed", imageUrl: "/images/20260418_064528_1.jpg" },
+          { id: "a8d23557-b8c3-43cc-9f9c-5897d4293152", name: "Standard Room 02", type: "STAY", description: "A dedicated wellness suite for rejuvenation. Features custom aromatherapy, a private soaking tub, and spaces for yoga and stretching.", price: 10000, capacity: 2, amenities: "Mountain View, Soaking Tub, Aroma Diffuser, Organic Bedding, Yoga Mat, Balcony, Wi-Fi", imageUrl: "/images/20260418_102057_1.jpg" },
+          { id: "9269dd02-9b02-42b8-9086-d966b7c7b58d", name: "Standard Room 03", type: "STAY", description: "A cozy cabin nestled in the pine woods, featuring a stone fireplace, open-sky rain shower, and a private patio.", price: 10000, capacity: 2, amenities: "Mountain View, Pine Forest View, Outdoor Shower, Fireplace, King Bed, Private Patio, Wi-Fi", imageUrl: "/images/20260418_063038_1.jpg" },
+          { id: "74dd411a-7006-4825-a3bf-73b67bda24bf", name: "Standard Room 05", type: "STAY", description: "A peaceful soundproof studio space complete with premium aromatherapy and organic cotton yoga mats.", price: 10000, capacity: 2, amenities: "Mountain View, Yoga Studio, Soundproof walls, Yoga mats, Organic tea bar, Wi-Fi", imageUrl: "/images/20260418_111748_1.jpg" },
+          { id: "3fbcf0b2-1640-45c6-9e43-0f9e2ef7bf3c", name: "Deluxe Double Room 01", type: "STAY", description: "A unique water villa suspended over a spring lotus pond. Features glass floor view panels and private sun decks.", price: 12000, capacity: 2, amenities: "City View, Glass Bottom, Spring Pond View, King Bed, Sun loungers, Coffee Machine, Organic toiletries", imageUrl: "/images/20260418_112608_1.jpg" },
+          { id: "6a4a0fb8-79ce-4e30-a3ab-0ad8e64fcd94", name: "Deluxe Double Room 02", type: "STAY", description: "A beautiful east-facing suite designed to catch the Kandy sunrise. Equipped with telescopes and private viewing decks.", price: 12000, capacity: 2, amenities: "City View, Sunrise View, Telescope, Outdoor Tea Deck, King Bed, Wi-Fi", imageUrl: "/images/20260418_072549_1.jpg" },
+          { id: "99922d87-a27c-46eb-bbb6-39a64bb8d689", name: "Deluxe Triple Room 01", type: "STAY", description: "A private standalone villa with glass walls overlooking the sunset. Features a private butler and an outdoor infinity deck.", price: 14000, capacity: 3, amenities: "Mountain View, Glass Walls, Mini Bar, Private Butler, Sun Deck, Air Conditioning", imageUrl: "/images/20260418_072549_1.jpg" },
+          { id: "fba25d2a-3475-4866-8f2d-0573f9437892", name: "Deluxe Triple Room 02", type: "STAY", description: "A spacious 2-bedroom mountainside estate with a private heated hot tub, fireplace lounge, and personal butler.", price: 14000, capacity: 3, amenities: "Mountain View, 2 Bedrooms, Private Butler, Luxury Hot Tub, Full Kitchen, Private Terrace, Cardamom tea bar", imageUrl: "/images/20260418_113827_1.jpg" },
+          { id: "c2797bd9-813a-405c-97c8-f546c9628d41", name: "Deluxe Triple Room 03", type: "STAY", description: "A quiet chalet surrounded by wild cardamom fields, featuring a wood-fired hot tub and scenic valley views.", price: 14000, capacity: 3, amenities: "Mountain View, Aromatherapy room, Cardamom fields view, King Bed, Fireplace, Rainshower, Organic bedding", imageUrl: "/images/20260418_062826_1.jpg" },
+          { id: "e8e3628d-3884-4373-9347-d699dcebf678", name: "Deluxe Family Suite", type: "STAY", description: "Our signature Haritha family suite featuring a private stargazing deck, a glass floor, and a dedicated butler team.", price: 17000, capacity: 3, amenities: "City View, Glass Floor, Private Stargazing Deck, Panoramic View, 24/7 Butler, Wine Cellar, Airport Transfer", imageUrl: "/images/20260418_114222_1.jpg" },
+          // ── DAYOUT ────────────────────────────────────────────────────
+          { id: "5b97f3a2-3d1e-4c2a-a1f0-8e9b7c6d5e4f", name: "Hanthana Escape Dayout", type: "DAYOUT", description: "Our classic dayout package designed to offer a peaceful mountain escape with gourmet dining.", price: 6500, capacity: 6, amenities: "Welcome drink, Guided nature trail, Buffet lunch, Infinity pool access", imageUrl: "/images/dining_dayout.jpg" },
+          { id: "756c071c-4b33-456d-bdf9-d21023be5ae7", name: "Golden Wellness Dayout", type: "DAYOUT", description: "A wellness day package combining healthy lunches, herbal steam baths, and priority spa lounge access.", price: 12500, capacity: 6, amenities: "Detox elixir, 3-course spa lunch, Steam bath (30 min), Yoga lawn, 15% Spa discount", imageUrl: "/images/dining_wellness.jpg" },
+          { id: "6fc5f879-8771-4dcc-88cb-68a68c8b2199", name: "Royal Heritage Dayout", type: "DAYOUT", description: "An active day package including a guided mountain trek, tea factory tour, and traditional high tea.", price: 9500, capacity: 8, amenities: "Guided mountain trek, Tea factory visit, Historic high tea, Buffet Lunch", imageUrl: "/images/dining_heritage.jpg" },
+          // ── DINING ────────────────────────────────────────────────────
+          { id: "4c2e1f8b-5a9d-4e3c-b7f2-9d6c8e1a0f5b", name: "Curated 5-Course Dinner", type: "DINING", description: "A fine-dining gastronomic tour showcasing Kandyan heritage spices, fresh mountain greens, and organic harvests.", price: 9500, capacity: 4, amenities: "5 Courses, Welcome mocktail, Live classical music, Valet parking", imageUrl: "/images/dining_dinner.jpg" },
+          { id: "a5952d89-eff0-491d-95bc-ceb23d37575e", name: "Hanthana Sunset High Tea", type: "DINING", description: "A selection of sweet and savory pastries served alongside single-estate organic tea.", price: 4500, capacity: 2, amenities: "Sweet & savory platters, Organic Hanthana tea, Valley sunset, Live flute music", imageUrl: "/images/dining_hightea.jpg" },
+          { id: "d0725a93-de01-483e-807b-5e2b77cd14ee", name: "Aura Rooftop Fire-pit Dining", type: "DINING", description: "A private starlit dining experience around copper fire pits with custom mixology pairings.", price: 15000, capacity: 4, amenities: "Private fire-pit table, Mixology pairings, Private chef service, Starlit skies", imageUrl: "/images/dining_rooftop.jpg" }
         ];
         localStorage.setItem('golden_sky_rooms', JSON.stringify(mockRooms));
         setRooms(mockRooms);
@@ -243,27 +240,18 @@ export default function AdminDashboard({ onGoBack, pageContent, onRefreshPageCon
         setReviews(JSON.parse(savedReviews));
       } else {
         const mockReviews = [
-          {
-            id: "rev-1",
-            quote: "The room is spacious, clean, and incredibly comfortable. The views of the Hanthana area are out of this world! I would absolutely stay here again.",
-            author: "Sophia K.",
-            role: "Verified Guest via Booking.com",
-            rating: 5,
-            source: "Booking.com",
-            date: "July 2026"
-          },
-          {
-            id: "rev-2",
-            quote: "The hosts are lovely, kind, and welcoming, making us feel like family. We had an unexpectedly beautiful time and wish we could have stayed longer.",
-            author: "Thomas D.",
-            role: "Verified Guest via Booking.com",
-            rating: 5,
-            source: "Booking.com",
-            date: "July 2026"
-          }
+          { id: "rev-1", quote: "The room is spacious, clean, and incredibly comfortable. The views of the Hanthana area are out of this world! I would absolutely stay here again.", author: "Sophia K.", role: "Verified Guest via Booking.com", rating: 5, source: "Booking.com", date: "July 2026" },
+          { id: "rev-2", quote: "The hosts are lovely, kind, and welcoming, making us feel like family. We had an unexpectedly beautiful time and wish we could have stayed longer.", author: "Thomas D.", role: "Verified Guest via Booking.com", rating: 5, source: "Booking.com", date: "July 2026" },
+          { id: "rev-3", quote: "The service is outstanding with staff going above and beyond. The rooms are well-appointed, the breakfast is exceptional, and the rooftop offers a gorgeous panoramic view of Kandy.", author: "Elena M.", role: "Verified Guest via Google Reviews", rating: 5, source: "Google", date: "July 2026" },
+          { id: "rev-4", quote: "The service was outstanding, with staff going above and beyond to ensure a pleasant experience. Kumia is a lovely, kind, welcoming host who made us feel like family.", author: "Oliver B.", role: "Verified Guest via Booking.com", rating: 5, source: "Booking.com", date: "July 2026" },
+          { id: "rev-5", quote: "The rooms were incredibly comfortable, clean, spacious, and filled with natural light. The breakfast was exceptional and the views of the Hanthana area were beautiful and peaceful.", author: "Amara P.", role: "Verified Guest via Google Reviews", rating: 5, source: "Google", date: "July 2026" },
+          { id: "rev-6", quote: "A hidden gem in Kandy! High-quality rooms with amazing views. The staff was extremely polite and prepared local breakfast specialties that were delicious.", author: "Ruwan F.", role: "Verified Guest via Google Reviews", rating: 5, source: "Google", date: "June 2026" },
+          { id: "rev-7", quote: "The rooftop is open to guests and gives a spectacular panoramic view of Kandy. Excellent rooms, high-strength structural glass balconies, and the most peaceful environment.", author: "Charlotte W.", role: "Verified Guest via Booking.com", rating: 5, source: "Booking.com", date: "June 2026" },
+          { id: "rev-8", quote: "Outstanding hospitality! The owners accommodated all our requests and took care of us like family. Very clean, modern rooms, and a wonderful location.", author: "Daniel H.", role: "Verified Guest via Booking.com", rating: 5, source: "Booking.com", date: "June 2026" }
         ];
         localStorage.setItem('golden_sky_reviews', JSON.stringify(mockReviews));
         setReviews(mockReviews);
+      }
       }
     }
     setLoading(false);
