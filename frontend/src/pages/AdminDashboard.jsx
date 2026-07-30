@@ -252,7 +252,6 @@ export default function AdminDashboard({ onGoBack, pageContent, onRefreshPageCon
         localStorage.setItem('golden_sky_reviews', JSON.stringify(mockReviews));
         setReviews(mockReviews);
       }
-      }
     }
     setLoading(false);
   };
