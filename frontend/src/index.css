@@ -37,7 +37,7 @@
 }
 
 html, body {
-  background-color: var(--color-bg-ivory);
+  background-color: #0e0d0b;
   color: var(--color-text-dark);
   font-family: var(--font-sans);
   min-height: 100%;

@@ -1383,13 +1383,14 @@ export default function AdminDashboard({ onGoBack, pageContent, onRefreshPageCon
       {showRoomModal && (
         <div style={{
           position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', 
-          backgroundColor: 'rgba(10, 9, 8, 0.85)', backdropFilter: 'blur(8px)', zIndex: 99999, 
-          display: 'flex', alignItems: 'flex-start', justifyContent: 'center', overflowY: 'auto', padding: '2rem 1rem'
+          backgroundColor: 'rgba(10, 9, 8, 0.9)', backdropFilter: 'blur(8px)', zIndex: 99999, 
+          display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: '1rem'
         }}>
           <div style={{
             maxWidth: '560px', width: '100%', padding: '2rem', backgroundColor: '#161513', 
             border: '1px solid rgba(212, 175, 55, 0.25)', borderRadius: '24px', boxShadow: '0 25px 60px rgba(0,0,0,0.6)',
-            position: 'relative', margin: '2rem auto'
+            position: 'relative', margin: 'auto',
+            maxHeight: '90vh', overflowY: 'auto'
           }}>
             <button 
               onClick={() => setShowRoomModal(false)}
@@ -1648,13 +1649,14 @@ export default function AdminDashboard({ onGoBack, pageContent, onRefreshPageCon
       {showReviewModal && (
         <div style={{
           position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', 
-          backgroundColor: 'rgba(10, 9, 8, 0.85)', backdropFilter: 'blur(8px)', zIndex: 99999, 
-          display: 'flex', alignItems: 'flex-start', justifyContent: 'center', overflowY: 'auto', padding: '2rem 1rem'
+          backgroundColor: 'rgba(10, 9, 8, 0.9)', backdropFilter: 'blur(8px)', zIndex: 99999, 
+          display: 'flex', alignItems: 'center', justifyContent: 'center', overflowY: 'auto', padding: '1rem'
         }}>
           <div style={{
             maxWidth: '560px', width: '100%', padding: '2rem', backgroundColor: '#161513', 
             border: '1px solid rgba(212, 175, 55, 0.25)', borderRadius: '24px', boxShadow: '0 25px 60px rgba(0,0,0,0.6)',
-            position: 'relative', margin: '2rem auto'
+            position: 'relative', margin: 'auto',
+            maxHeight: '90vh', overflowY: 'auto'
           }}>
             <button 
               onClick={() => setShowReviewModal(false)}
