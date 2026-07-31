@@ -990,7 +990,7 @@ export default function AdminDashboard({ onGoBack, pageContent, onRefreshPageCon
                 </div>
 
                 {/* Sub tabs to choose which page copy to edit */}
-                <div style={{ display: 'flex', gap: '0.5rem', marginBottom: '2rem', backgroundColor: '#141311', padding: '0.4rem', borderRadius: '10px', display: 'inline-flex' }}>
+                <div style={{ gap: '0.5rem', marginBottom: '2rem', backgroundColor: '#141311', padding: '0.4rem', borderRadius: '10px', display: 'inline-flex' }}>
                   {[
                     { id: 'home', label: 'Home Page' },
                     { id: 'about', label: 'About Page' },

@@ -1,13 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { MapPin, Compass, ShieldCheck, Sparkles, Clock, Camera, X, ChevronLeft, ChevronRight } from 'lucide-react';
+import { useState, useEffect, useRef } from 'react';
+import { MapPin, Camera, X, ChevronLeft, ChevronRight } from 'lucide-react';
 import Testimonials from '../components/Testimonials';
 
 const API_BASE = import.meta.env.VITE_API_BASE || "http://localhost:5000/api";
 
-export default function AboutPage({ onOpenBooking }) {
+export default function AboutPage({ onOpenBooking, pageContent }) {
   const [activeCategory, setActiveCategory] = useState('All');
   const [expandedCard, setExpandedCard] = useState(null);
   const [lightboxImage, setLightboxImage] = useState(null);
+
+  const content = pageContent || {};
+  const aboutHeroTitle = content.aboutHeroTitle || "A Heritage of Warm Hospitality";
+  const aboutHeroSubtitle = content.aboutHeroSubtitle || "Our Story & Sanctuary";
+  const aboutStoryText = content.aboutStoryText || "Perched high in Kandy's mist-covered peaks, Golden Sky Hotel & Wellness was created as a sanctuary for travelers seeking deep connection with highland nature, traditional heritage, and holistic healing. Our residence blends modern luxury with local architectural beauty, featuring high-strength balconies, organic cardamom gardens, and panoramic views of the Hanthana mountain ranges. Guided by local hosts, we strive to make every guest feel like family, offering authentic organic meals and a peaceful retreat from the modern world.";
+
+  let heroTitleNode = <span>{aboutHeroTitle}</span>;
+  if (aboutHeroTitle.toLowerCase().includes("hospitality") || aboutHeroTitle.includes("&")) {
+    const parts = aboutHeroTitle.split(/(?=\bHospitality\b|&)/i);
+    heroTitleNode = (
+      <span>
+        {parts[0]} <br />
+        <span className="text-gold-gradient" style={{ fontStyle: 'italic', fontWeight: '400' }}>{parts[1] || parts[0]}</span>
+      </span>
+    );
+  } else if (aboutHeroTitle.includes(" ")) {
+    const words = aboutHeroTitle.split(" ");
+    const half = Math.ceil(words.length / 2);
+    const firstHalf = words.slice(0, half).join(" ");
+    const secondHalf = words.slice(half).join(" ");
+    heroTitleNode = (
+      <span>
+        {firstHalf} <br />
+        <span className="text-gold-gradient" style={{ fontStyle: 'italic', fontWeight: '400' }}>{secondHalf}</span>
+      </span>
+    );
+  }
+
+  const paragraphs = aboutStoryText.split('\n\n').filter(Boolean);
+  if (paragraphs.length === 0) {
+    paragraphs.push(aboutStoryText);
+  }
 
   const galleryItems = [
     {
@@ -100,7 +132,7 @@ export default function AboutPage({ onOpenBooking }) {
     }
   ];
 
-  const scrollRef = React.useRef(null);
+  const scrollRef = useRef(null);
   const extendedExperiences = [...experiences, ...experiences, ...experiences];
 
   const getCardOffset = () => {
@@ -207,6 +239,17 @@ export default function AboutPage({ onOpenBooking }) {
               {paragraphs.map((p, index) => (
                 <p key={index}>{p}</p>
               ))}
+              {onOpenBooking && (
+                <div style={{ marginTop: '1rem' }}>
+                  <button 
+                    className="btn-gold" 
+                    onClick={() => onOpenBooking('STAY', '')}
+                    style={{ padding: '0.8rem 2rem', fontSize: '0.82rem', borderRadius: '30px' }}
+                  >
+                    Reserve Your Sanctuary Experience
+                  </button>
+                </div>
+              )}
             </div>
           </div>
 

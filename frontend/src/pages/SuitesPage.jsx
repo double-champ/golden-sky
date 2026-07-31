@@ -359,7 +359,6 @@ export default function SuitesPage({ onOpenBooking }) {
               onClick={() => {
                 setPriceFilter('all');
                 setCapacityFilter('all');
-                setAmenityFilter('all');
                 setSelectedCategory('All Chambers');
                 setSortBy('default');
               }}

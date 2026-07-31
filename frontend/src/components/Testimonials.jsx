@@ -87,6 +87,20 @@ export default function Testimonials() {
     return () => clearTimeout(transitionEndTimer);
   }, [currentIndex, isTransitioning, maxIndex, reviews.length]);
 
+  const handlePrev = () => {
+    if (maxIndex <= 0 || isTransitioning) return;
+    setIsTransitioning(true);
+    setTransitionEnabled(true);
+    setCurrentIndex((prev) => prev - 1);
+  };
+
+  const handleNext = () => {
+    if (maxIndex <= 0 || isTransitioning) return;
+    setIsTransitioning(true);
+    setTransitionEnabled(true);
+    setCurrentIndex((prev) => prev + 1);
+  };
+
   // Auto-play logic
   const startAutoPlay = () => {
     stopAutoPlay();
@@ -107,20 +121,6 @@ export default function Testimonials() {
     startAutoPlay();
     return () => stopAutoPlay();
   }, [currentIndex, reviews.length]);
-
-  const handlePrev = () => {
-    if (maxIndex <= 0 || isTransitioning) return;
-    setIsTransitioning(true);
-    setTransitionEnabled(true);
-    setCurrentIndex((prev) => prev - 1);
-  };
-
-  const handleNext = () => {
-    if (maxIndex <= 0 || isTransitioning) return;
-    setIsTransitioning(true);
-    setTransitionEnabled(true);
-    setCurrentIndex((prev) => prev + 1);
-  };
 
   const viewportRef = useRef(null);
   const touchStartRef = useRef(null);
