@@ -357,26 +357,37 @@ export default function Footer({ onViewChange, onOpenBooking }) {
           <p style={{ margin: 0 }} className="footer-copyright">
             © {new Date().getFullYear()} Golden Sky Hotel & Wellness. All Rights Reserved.
           </p>
-          <div className="footer-spacer" style={{ width: '300px', display: 'flex', justifyContent: 'flex-end' }}>
+          <div className="footer-staff-portal" style={{ display: 'flex', justifyContent: 'flex-end', alignItems: 'center' }}>
             <button 
               onClick={() => setShowAdminLogin(true)}
               style={{
-                background: 'none',
-                border: 'none',
-                color: 'var(--color-text-muted)',
-                fontSize: '0.72rem',
-                letterSpacing: '0.05em',
+                background: 'rgba(207, 168, 81, 0.1)',
+                border: '1px solid rgba(207, 168, 81, 0.35)',
+                color: 'var(--color-gold)',
+                fontSize: '0.75rem',
+                fontWeight: '600',
+                letterSpacing: '0.08em',
                 textTransform: 'uppercase',
                 cursor: 'pointer',
-                opacity: 0.6,
-                transition: 'opacity 0.3s ease',
+                transition: 'all 0.3s ease',
                 outline: 'none',
-                padding: '0.4rem 0'
+                padding: '0.45rem 1.1rem',
+                borderRadius: '25px',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem'
               }}
-              onMouseEnter={(e) => e.target.style.opacity = 1}
-              onMouseLeave={(e) => e.target.style.opacity = 0.6}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.background = 'var(--color-gold)';
+                e.currentTarget.style.color = '#ffffff';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.background = 'rgba(207, 168, 81, 0.1)';
+                e.currentTarget.style.color = 'var(--color-gold)';
+              }}
             >
-              Staff Portal
+              <Lock size={13} />
+              <span>Staff Portal</span>
             </button>
           </div>
         </div>

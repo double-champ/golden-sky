@@ -1,9 +1,13 @@
 import React, { useState, useEffect } from 'react';
-import { Calendar, Menu, X } from 'lucide-react';
+import { Calendar, Menu, X, Lock } from 'lucide-react';
 
 export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [showStaffLogin, setShowStaffLogin] = useState(false);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
+  const [loginError, setLoginError] = useState('');
 
   const navItems = [
     { label: 'Home', view: 'home' },
@@ -14,6 +18,19 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
     { label: 'Dining', view: 'dining' },
     { label: 'Rooftop Bar', view: 'rooftop' }
   ];
+
+  const handleStaffLoginSubmit = (e) => {
+    e.preventDefault();
+    if (username.toLowerCase() === 'admin' && password === 'adminadminadmin') {
+      setShowStaffLogin(false);
+      setUsername('');
+      setPassword('');
+      setLoginError('');
+      onViewChange('admin');
+    } else {
+      setLoginError('Invalid username or password.');
+    }
+  };
 
   useEffect(() => {
     const handleScroll = () => {
@@ -82,17 +99,17 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
             display: 'flex',
             flexDirection: 'column',
             alignItems: 'center',
-            justifyContent: 'flex-start', // Align to top
+            justifyContent: 'flex-start',
             animation: 'fadeInOverlay 0.4s ease-out',
             overflowY: 'auto',
-            padding: '3.5rem 1rem 3rem 1rem' // Shift elements up on PC/mobile
+            padding: '3.5rem 1rem 3rem 1rem'
           }}
         >
           {/* Close Button */}
           <button
             onClick={() => setMenuOpen(false)}
             style={{
-              position: 'fixed', // Stay fixed while scrolling
+              position: 'fixed',
               top: '25px',
               left: '30px',
               width: '50px',
@@ -116,18 +133,18 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
           </button>
 
           {/* Luxury Navigation Links */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center', margin: '0' }}>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', alignItems: 'center', margin: '0', width: '100%', maxWidth: '400px' }}>
             <div 
               onClick={() => {
                 setMenuOpen(false);
                 onViewChange('home');
               }}
-              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '1rem', cursor: 'pointer' }}
+              style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '1.5rem', marginBottom: '0.5rem', cursor: 'pointer' }}
             >
               <img src="/logo.png" className="nav-menu-logo" alt="Golden Sky Logo" style={{ objectFit: 'contain' }} />
             </div>
             
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '1.2rem', alignItems: 'center', width: '100%' }}>
               {navItems.map((item) => {
                 const isActive = currentView === item.view;
                 return (
@@ -146,7 +163,7 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
                       cursor: 'pointer',
                       transition: 'all 0.3s ease',
                       position: 'relative',
-                      padding: '0.5rem 1rem',
+                      padding: '0.4rem 1rem',
                       outline: 'none'
                     }}
                     onMouseOver={(e) => { e.currentTarget.style.color = 'var(--color-gold)'; e.currentTarget.style.transform = 'scale(1.08)'; }}
@@ -167,7 +184,133 @@ export default function Navbar({ onOpenBooking, currentView, onViewChange }) {
                   </button>
                 );
               })}
+
+              {/* Dedicated Staff Portal Link in Mobile Menu */}
+              <div style={{ marginTop: '1.2rem', borderTop: '1px solid rgba(207, 168, 81, 0.2)', paddingTop: '1.2rem', width: '100%', display: 'flex', justifyContent: 'center' }}>
+                <button
+                  onClick={() => {
+                    setMenuOpen(false);
+                    setShowStaffLogin(true);
+                  }}
+                  style={{
+                    background: 'rgba(207, 168, 81, 0.12)',
+                    border: '1px solid var(--color-gold)',
+                    color: 'var(--color-gold)',
+                    padding: '0.65rem 1.6rem',
+                    borderRadius: '30px',
+                    fontSize: '0.8rem',
+                    fontFamily: 'var(--font-sans)',
+                    fontWeight: '600',
+                    letterSpacing: '0.12em',
+                    textTransform: 'uppercase',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '0.5rem',
+                    cursor: 'pointer',
+                    transition: 'all 0.3s ease'
+                  }}
+                >
+                  <Lock size={15} />
+                  <span>Staff Portal</span>
+                </button>
+              </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* Staff Portal Login Modal */}
+      {showStaffLogin && (
+        <div style={{
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          width: '100vw',
+          height: '100vh',
+          backgroundColor: 'rgba(10, 9, 8, 0.88)',
+          backdropFilter: 'blur(10px)',
+          zIndex: 99999,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '1rem'
+        }}>
+          <div className="glass-panel" style={{
+            maxWidth: '380px',
+            width: '100%',
+            padding: '2.5rem 1.8rem',
+            backgroundColor: '#1c1b18',
+            border: '1px solid rgba(212, 175, 55, 0.35)',
+            borderRadius: '20px',
+            boxShadow: '0 20px 50px rgba(0,0,0,0.6)',
+            textAlign: 'center',
+            position: 'relative'
+          }}>
+            <button 
+              onClick={() => { setShowStaffLogin(false); setUsername(''); setPassword(''); setLoginError(''); }}
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                background: 'none',
+                border: 'none',
+                color: 'rgba(255,255,255,0.6)',
+                cursor: 'pointer'
+              }}
+            >
+              <X size={20} />
+            </button>
+
+            <div style={{ width: '48px', height: '48px', borderRadius: '50%', backgroundColor: 'rgba(212, 175, 55, 0.1)', border: '1px solid rgba(212, 175, 55, 0.3)', display: 'flex', alignItems: 'center', justifyContent: 'center', margin: '0 auto 1.2rem auto', color: 'var(--color-gold)' }}>
+              <Lock size={22} />
+            </div>
+
+            <h3 style={{ fontFamily: 'var(--font-serif)', fontSize: '1.4rem', color: '#fff', margin: '0 0 0.4rem 0' }}>
+              Staff Portal Access
+            </h3>
+            <p style={{ fontSize: '0.8rem', color: 'rgba(255,255,255,0.6)', marginBottom: '1.8rem' }}>
+              Management &amp; Staff Content Management System
+            </p>
+
+            {loginError && (
+              <div style={{ backgroundColor: 'rgba(255, 80, 80, 0.15)', border: '1px solid rgba(255, 80, 80, 0.3)', color: '#ff8080', fontSize: '0.78rem', padding: '0.6rem', borderRadius: '8px', marginBottom: '1.2rem' }}>
+                {loginError}
+              </div>
+            )}
+
+            <form onSubmit={handleStaffLoginSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '1rem', textAlign: 'left' }}>
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.4rem' }}>Username</label>
+                <input 
+                  type="text"
+                  value={username}
+                  onChange={(e) => setUsername(e.target.value)}
+                  placeholder="admin"
+                  required
+                  style={{ width: '100%', padding: '0.75rem 1rem', backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '0.88rem', outline: 'none' }}
+                />
+              </div>
+
+              <div>
+                <label style={{ display: 'block', fontSize: '0.7rem', color: 'var(--color-gold)', textTransform: 'uppercase', letterSpacing: '0.1em', marginBottom: '0.4rem' }}>Password</label>
+                <input 
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="••••••••••••"
+                  required
+                  style={{ width: '100%', padding: '0.75rem 1rem', backgroundColor: 'rgba(255,255,255,0.05)', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '8px', color: '#fff', fontSize: '0.88rem', outline: 'none' }}
+                />
+              </div>
+
+              <button 
+                type="submit"
+                className="btn-gold"
+                style={{ marginTop: '0.8rem', padding: '0.8rem', fontSize: '0.78rem', width: '100%' }}
+              >
+                Authenticate &amp; Launch Portal
+              </button>
+            </form>
           </div>
         </div>
       )}

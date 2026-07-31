@@ -2461,3 +2461,112 @@ input[type="date"].booking-input::-webkit-calendar-picker-indicator:hover {
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* ============================================================
+   GLOBAL MOBILE & CROSS-DEVICE RESPONSIVENESS SUITE
+   ============================================================ */
+
+/* 1. Viewport & Body Protection */
+@media (max-width: 768px) {
+  html, body {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  .container {
+    padding-left: 1.2rem !important;
+    padding-right: 1.2rem !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .responsive-section-padding {
+    padding-top: 3rem !important;
+    padding-bottom: 3rem !important;
+  }
+
+  /* Responsive Headings */
+  h1 {
+    font-size: clamp(2.2rem, 7vw, 3.2rem) !important;
+    line-height: 1.15 !important;
+  }
+  h2 {
+    font-size: clamp(1.8rem, 6vw, 2.5rem) !important;
+    line-height: 1.2 !important;
+  }
+  h3 {
+    font-size: clamp(1.3rem, 5vw, 1.8rem) !important;
+  }
+}
+
+/* 2. Staff Portal & Admin Dashboard Mobile Optimization */
+@media (max-width: 768px) {
+  .footer-bottom-bar {
+    flex-direction: column !important;
+    text-align: center !important;
+    gap: 1rem !important;
+  }
+  .footer-staff-portal {
+    justify-content: center !important;
+    width: 100% !important;
+    margin-top: 0.5rem !important;
+  }
+  .footer-staff-portal button {
+    width: 100% !important;
+    max-width: 280px !important;
+    justify-content: center !important;
+    padding: 0.65rem 1.5rem !important;
+  }
+
+  /* Admin Dashboard Mobile Layout */
+  .admin-dashboard-container {
+    padding: 1rem !important;
+  }
+  .admin-stats-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+  }
+  .admin-sidebar {
+    width: 100% !important;
+    position: relative !important;
+  }
+  .admin-data-table-wrapper {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+}
+
+/* 3. Mobile Grid & Deck Layout Conversions */
+@media (max-width: 768px) {
+  .responsive-layout-grid {
+    grid-template-columns: 1fr !important;
+    gap: 2rem !important;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 1rem !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: 1fr !important;
+  }
+  
+  .experience-card-deck-item {
+    flex: 0 0 290px !important;
+    height: 420px !important;
+  }
+}
+
+/* 4. Modal Overlays Touch Fit */
+@media (max-width: 576px) {
+  .luxury-booking-modal {
+    width: 95% !important;
+    max-width: 95% !important;
+    padding: 1.8rem 1.2rem !important;
+    border-radius: 18px !important;
+  }
+}
+

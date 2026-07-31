@@ -91,6 +91,13 @@ export default function CustomCursor() {
     <>
       <div ref={cursorRef} className="custom-cursor" style={{ opacity: 0, pointerEvents: 'none' }} />
       <div ref={glowRef} className="custom-cursor-glow" style={{ opacity: 0, pointerEvents: 'none' }} />
+      <style>{`
+        @media (pointer: coarse), (max-width: 768px) {
+          .custom-cursor, .custom-cursor-glow {
+            display: none !important;
+          }
+        }
+      `}</style>
     </>
   );
 }
